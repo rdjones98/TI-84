@@ -2,7 +2,8 @@
 // Set up!
 var a_canvas = document.getElementById("a");
 var CANVAS = new Canvas(a_canvas);
-var ROM = new Rom(CANVAS);
+var GRAPHING = new Graphing(CANVAS);
+var ROM = new Rom(CANVAS, GRAPHING);
 var KEYPAD = new Keypad(ROM);
 
 // Add mouse click listener

@@ -1,18 +1,53 @@
 class	Rom
 {
-	constructor( aCanvas )
+	constructor( aCanvas, aGrapher )
 	{
 		this.canvas = aCanvas;
+    this.grapher = aGrapher;
+		this.grapher.setRom(this);
 
+		this.CALC = 1;
+		this.GRAPH = 2;
+
+    this.STATE = this.CALC;
     this.math = "";
 	}
 
-
+  xPressed()
+  {
+    this.grapher.xPressed();
+  }
+  graph()
+  {
+		this.STATE = this.GRAPH;
+    this.grapher.graph();
+  }
+	tracePressed()
+	{
+		this.STATE = this.GRAPH;
+    this.grapher.tracePressed();
+	}
+  yEqualsPressed()
+  {
+    this.STATE = this.GRAPH;
+    this.grapher.yEqualsPressed();
+  }
+	arrowPressed(anArrow)
+	{
+		if( this.STATE == this.GRAPH)
+			this.grapher.arrowPressed(anArrow);
+		else
+			alert("rom.arrowPressed");
+	}
   numberPressed( aNum )
   {
     this.canvas.draw(aNum);
 
-    this.math += aNum;
+    if( this.STATE == this.CALC)
+      this.math += aNum;
+    else
+      this.grapher.numberPressed(aNum);
+
   }
 
   plusPressed()
@@ -28,6 +63,24 @@ class	Rom
     this.math += "-";
   }
 
+  decimalPressed()
+  {
+    this.canvas.draw(".");
+    this.math  + '.';
+  }
+
+  negativePressed()
+  {
+    this.canvas.draw("-");
+    this.math  + '~';
+  }
+  clearPressed()
+  {
+    this.canvas.clearPressed();
+    this.math = "";
+  }
+
+
   enterPressed()
   {
     var res = this.doMath(this.math);
@@ -37,6 +90,10 @@ class	Rom
   }
 
   doMath( mathStr )
+  {
+    return this.doAllAdditionAndSubtraction( mathStr );
+  }
+  doAllAdditionAndSubtraction( mathStr )
   {
     var minusIdx = mathStr.indexOf("-");
     var plusIdx = mathStr.indexOf("+");
@@ -74,9 +131,7 @@ class	Rom
       var rStr = mathStr.substring(rIdx);
       var mStr = mathStr.substring(lIdx,rIdx);
 
-      alert(mStr);
       mathStr = lStr + this.addOrSub(mStr, oper) + rStr;
-      alert(mathStr);
 
       var minusIdx = mathStr.indexOf("-");
       var plusIdx = mathStr.indexOf("+");
@@ -84,8 +139,7 @@ class	Rom
     return mathStr;
   }
 
-
-
+  // Given an Operation of either + or -, do it
   addOrSub(aStr, anOper)
   {
     var idx = aStr.indexOf( anOper );
@@ -104,19 +158,22 @@ class	Rom
     return res;
   }
 
-
   findLeftIdx(aStr, anIdx)
   {
     for( var i=anIdx-1; i>=0; i--)
-      if( aStr.charAt(i) <'0' || aStr.charAt(i) > '9' )
+    {
+      var c = aStr.charAt(i);
+      if( ( c <'0' || c > '9') && (c != '.') )
         return i;
+    }
     return 0;
   }
   findRightIdx(aStr, anIdx)
   {
     for( var i=anIdx+1; i<aStr.length; i++)
     {
-      if( aStr.charAt(i) <'0' || aStr.charAt(i) > '9' )
+      var c = aStr.charAt(i);
+      if( ( c <'0' || c > '9') && (c != '.') )
         return i;
     }
     return aStr.length;
