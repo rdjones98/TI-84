@@ -1,5 +1,19 @@
+
 // Set up!
 var a_canvas = document.getElementById("a");
+var CANVAS = new Canvas(a_canvas);
+var ROM = new Rom(CANVAS);
+var KEYPAD = new Keypad(ROM);
+
+// Add mouse click listener
+function whatClicked(evt) {
+    KEYPAD.mouseClicked(evt);
+}
+var mouseListener = document.getElementById("b");
+mouseListener.addEventListener("click", whatClicked, false);
+// End listener
+
+/*
 var context = a_canvas.getContext("2d");
 
 // Draw the face
@@ -33,3 +47,4 @@ context.fill();
 // Write "Hello, World!"
 context.font = "30px Garamond";
 context.fillText("Hello, World!",15,175);
+*/
