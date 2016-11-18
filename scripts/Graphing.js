@@ -2,44 +2,49 @@ class	Graphing
 {
 	constructor( aCanvas )
 	{
-		this.canvas = aCanvas;
+		this._canvas = aCanvas;
+
+		// State consstants
 		this.GRAPH = 1;
-		this.YEQUALS = 2;
+		this.Y_EQUALS = new StateYEquals(aCanvas);
 		this.TRACE = 3;
 
-		this.STATE = this.GRAPH;
-
-		this.X    = this.canvas.X;
-		this.Y    = this.canvas.Y-20;
-		this.WIDTH = this.canvas.WIDTH;
-		this.HEIGHT = this.canvas.HEIGHT;
+		// Dimension constants
+		this.X    = this._canvas.X;
+		this.Y    = this._canvas.Y-20;
+		this.WIDTH = this._canvas.WIDTH;
+		this.HEIGHT = this._canvas.HEIGHT;
 		this.CENTER_X = 165;
 		this.CENTER_Y = 130;
+
+		this.FONT = "14px Courier";
+
+		this._state = this.GRAPH;
 
 		this.X_MIN = -10;
 		this.X_MAX = 10;
 		this.Y_MIN = -10
 		this.Y_MAX = 10;
-		this.FONT = "14px Courier";
 
 		this.TRACE_X = 0;
 		this.TRACE_Y = 0;
 
 		this.STEP_X = ( this.WIDTH - this.X ) / (  this.X_MAX - this.X_MIN );
 		this.STEP_Y = ( this.HEIGHT - this.Y ) / ( this.Y_MAX - this.Y_MIN );
-    this.Y1 = "-x+3";
+
 	}
+
 	setRom(aRom)
 	{
 		this.rom = aRom;
 	}
 	tracePressed()
 	{
-		this.STATE = this.TRACE;
+		this._state = this.TRACE;
 
-		var ctx = this.canvas.getContext();
+		var ctx = this._canvas.getContext();
 		ctx.font = this.FONT;
-		ctx.fillText("Y1=" + this.Y1, this.canvas.X, this.Y + this.canvas.DIGIT_H);
+		ctx.fillText("Y1=" + this.Y1, this._canvas.X, this.Y + this._canvas.DIGIT_H);
 		ctx.fillText("X="+this.TRACE_X, this.X, this.HEIGHT-2);
 		ctx.fillText("Y=" + this.evaluate(this.TRACE_X), this.CENTER_X+5, this.HEIGHT-2);
 
@@ -54,7 +59,7 @@ class	Graphing
 
 	arrowPressed(anArrow)
 	{
-		if( this.STATE == this.TRACE)
+		if( this._state == this.TRACE)
 		{
 				if(anArrow == "left" )
 					this.TRACE_X -= .5;
@@ -64,32 +69,46 @@ class	Graphing
 				this.graph();
 				this.tracePressed();
 			}
+		else if( this._state == this.Y_EQUALS)
+		{
+			if(anArrow == "left" )
+				this._state.cursorLeft();
+			else if( anArrow == "right")
+				this._state.cursorRight();
+			this.yEqualsPressed();
+		}
+
 	}
 
 
 	yEqualsPressed()
 	{
-		this.STATE = this.YEQUALS;
+		this._state = this.Y_EQUALS;
 
-		this.canvas.clearCanvas();
+		this._canvas.clearCanvas();
 
-		var ctx = this.canvas.getContext();
-		ctx.fillText("\Y1=", this.canvas.FOCUS_X, this.FOCUS_Y);
-		this.canvas.FOCUS_Y +=  this.canvas.DIGIT_H;
-		ctx.fillText("\Y2=", this.canvas.FOCUS_X, this.canvas.FOCUS_Y);
-		this.canvas.FOCUS_Y += this.canvas.DIGIT_H;
-		ctx.fillText("\Y3=", this.canvas.FOCUS_X, this.canvas.FOCUS_Y);
-		this.canvas.FOCUS_Y += this.canvas.DIGIT_H;
-		ctx.fillText("\Y4=", this.canvas.FOCUS_X, this.canvas.FOCUS_Y);
-		this.canvas.FOCUS_Y += this.canvas.DIGIT_H;
-		ctx.fillText("\Y5=", this.canvas.FOCUS_X, this.canvas.FOCUS_Y);
-		this.canvas.FOCUS_Y += this.canvas.DIGIT_H;
-		ctx.fillText("\Y6=", this.canvas.FOCUS_X, this.canvas.FOCUS_Y);
-		this.canvas.FOCUS_Y += this.canvas.DIGIT_H;
-		ctx.fillText("\Y7=", this.canvas.FOCUS_X, this.canvas.FOCUS_Y);
-		this.canvas.FOCUS_Y = this.canvas.Y;
-		this.canvas.FOCUS_X = this.canvas.X + 35;
-		this.canvas.drawFocusBox();
+		var ctx = this._canvas.getContext();
+		ctx.font = this._canvas.FONT;
+
+		var x = this._canvas.FOCUS_X;
+		var y = this._canvas.FOCUS_Y;
+
+		for( var i=0; i<7; i++)
+		{
+			var str = "/Y" + (i+1) + "=" + this._state._equations[i];
+			ctx.fillText(str, x, y);
+			y +=  this._canvas.DIGIT_H;
+		}
+
+		// if our state has not been set, default to 1st row
+		if(this._state._focusX==0)
+		{
+			this._state._focusX=this._canvas.X + 40;
+			this._state._focusY=this._canvas.Y;
+		}
+
+		//draw focus appropriately
+		this._canvas.drawFocusBox(this._state._focusX, this._state._focusY);
 	}
 
   numberPressed(aNum)
@@ -99,14 +118,14 @@ class	Graphing
 
   xPressed()
   {
-    this.canvas.draw("x");
+    this._canvas.draw("x");
     this.Y1 += "X";
   }
 
 	// Draw tick marks on graph
 	drawTickMarks()
 	{
-		var ctx = this.canvas.getContext();
+		var ctx = this._canvas.getContext();
 		for( var i=this.CENTER_X; i<=this.WIDTH; i+=this.STEP_X)
 		{
 			ctx.beginPath();
@@ -146,10 +165,10 @@ class	Graphing
 	}
   graph()
   {
-		this.STATE = this.GRAPH;
+		this._state = this.GRAPH;
 
-    this.canvas.clearCanvas();
-		var ctx = this.canvas.getContext();
+    this._canvas.clearCanvas();
+		var ctx = this._canvas.getContext();
 
 
 		// Draw axis

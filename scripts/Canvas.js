@@ -51,8 +51,12 @@ class	Canvas
 		this.FOCUS_Y += this.DIGIT_H;
 		this.drawFocusBox()
 	}
-	drawFocusBox()
+	drawFocusBox(anX, aY)
 	{
+		if( typeof anX != "undefined")
+			this.FOCUS_X = anX;
+		if( typeof aY != "undefined")
+			this.FOCUS_Y = aY;
 		this.context.fillRect(this.FOCUS_X,this.FOCUS_Y-14,10,15);
 	}
 	clearFocusBox()
