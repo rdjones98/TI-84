@@ -1,16 +1,13 @@
 
 // Set up!
-var a_canvas = document.getElementById("a");
-var CANVAS = new Canvas(a_canvas);
-var GRAPHING = new Graphing(CANVAS);
-var ROM = new Rom(CANVAS, GRAPHING);
+var ROM = new Rom();
 var KEYPAD = new Keypad(ROM);
 
 // Add mouse click listener
 function whatClicked(evt) {
     KEYPAD.mouseClicked(evt);
 }
-var mouseListener = document.getElementById("b");
+var mouseListener = document.getElementById("theCanvas");
 mouseListener.addEventListener("click", whatClicked, false);
 // End listener
 
