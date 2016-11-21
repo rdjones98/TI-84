@@ -1,3 +1,4 @@
+'use strict';
 
 // Set up!
 var ROM = new Rom();
@@ -9,40 +10,41 @@ function whatClicked(evt) {
 }
 var mouseListener = document.getElementById("theCanvas");
 mouseListener.addEventListener("click", whatClicked, false);
-// End listener
 
-/*
-var context = a_canvas.getContext("2d");
+// add key listeners
+document.addEventListener('keydown', (event) => {
+  const keyName = event.key;
 
-// Draw the face
-context.fillStyle = "yellow";
-context.beginPath();
-context.arc(95, 85, 40, 0, 2*Math.PI);
-context.closePath();
-context.fill();
-context.lineWidth = 2;
-context.stroke();
-context.fillStyle = "black";
+  if (keyName === 'Control') {
+      ROM.secondPressed();
+    return;
+  }
 
-// Draw the left eye
-context.beginPath();
-context.arc(75, 75, 5, 0, 2*Math.PI);
-context.closePath();
-context.fill();
 
-// Draw the right eye
-context.beginPath();
-context.arc(114, 75, 5, 0, 2*Math.PI);
-context.closePath();
-context.fill();
-
-// Draw the mouth
-context.beginPath();
-context.arc(95, 90, 26, Math.PI, 2*Math.PI, true);
-context.closePath();
-context.fill();
-
-// Write "Hello, World!"
-context.font = "30px Garamond";
-context.fillText("Hello, World!",15,175);
-*/
+  if(keyName=="Enter")
+    ROM.enterPressed();
+  else if(keyName=="1"|| keyName=="2" || keyName=="3"|| keyName=="4" || keyName=="5"|| keyName=="6" || keyName=="7"|| keyName=="8" || keyName=="9"|| keyName=="10" )
+    ROM.numberPressed(keyName);
+  else if(keyName=="+"|| keyName=="-" || keyName=="*"|| keyName=="/" || keyName=="^" || keyName=="(" || keyName==")")
+    ROM.operatorPressed(keyName);
+  else if(keyName=="ArrowRight"|| keyName=="ArrowLeft" || keyName=="ArrowUp"|| keyName=="ArrowDown")
+    ROM.arrowPressed(keyName);
+  else if(keyName=="Delete")
+    ROM.deletePressed();
+  else if(keyName=="g" || keyName == "G")
+    ROM.graphPressed();
+  else if(keyName=="y" || keyName == "Y")
+    ROM.yEqualsPressed();
+  else if(keyName=="x" || keyName == "X")
+    ROM.xPressed();
+  else if(keyName=="t" || keyName == "T")
+    ROM.tracePressed();
+  else if(keyName=="Backspace")
+  {
+    ROM.arrowPressed("ArrowLeft")
+    ROM.deletePressed();
+  }
+  else {
+    console.log(`${keyName}`);
+  }
+}, false);

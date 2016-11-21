@@ -1,11 +1,13 @@
-class	StateYEquals extends State
+class	StateYEquals
 {
-	constructor(aCanvas)
+	constructor(aCanvas, aRom)
 	{
-		super(aCanvas);
+		this.CANVAS = aCanvas;
+		this.ROM = aRom;
     this._equations = new Array("","","","","","","");
 		this._row = 0;
     this._col = 0;
+		this.OFFSET = 40;
 
   }
 
@@ -30,7 +32,7 @@ class	StateYEquals extends State
 	negativePressed()
 	{
 		this._col ++;
-		this._equations[this._row] += this.NEGATIVE;
+		this._equations[this._row] += this.CANVAS.NEGATIVE;
 		this.repaint();
 	}
 	decimalPressed()
@@ -41,7 +43,7 @@ class	StateYEquals extends State
 	}
 	operatorPressed(anOper)
 	{
-		this._col ++;
+		this._col += anOper.length;
 		this._equations[this._row] += anOper;
 		this.repaint();
 	}
@@ -49,37 +51,94 @@ class	StateYEquals extends State
 	{
 		this.repaint();
 	}
+	deletePressed()
+	{
+		var mathStr = this._equations[this._row];
+		if( mathStr.length >= this._col)
+		{
+			mathStr = mathStr.substring(0, this._col) + mathStr.substring(this._col+1);
+			this._equations[this._row] = mathStr;
+			this.repaint();
+		}
+	}
+	trigPressed(aTrigFunc)
+	{
+		if (this.ROM.is2ndPressed() )
+		{
+			this.ROM.secondPressed();
+			this.operatorPressed("a" + aTrigFunc);
+		}
+		else {
+			this.operatorPressed(aTrigFunc);
+		}
+	}
+	logPressed()
+	{
+		if (this.ROM.is2ndPressed() )
+		{
+			this.ROM.secondPressed();
+			this.numberPressed("1");
+			this.numberPressed("0");
+			this.operatorPressed("^");
+		}
+		else {
+			this.operatorPressed("log(");
+		}
+	}
+	lnPressed()
+	{
+		if (this.ROM.is2ndPressed() )
+		{
+			this.ROM.secondPressed();
+			this.numberPressed("e");
+			this.operatorPressed("^");
+		}
+		else {
+			this.operatorPressed("ln(");
+		}
+	}
+
 	repaint()
 	{
-		this.clearCanvas();
+		this.CANVAS.clearCanvas();
 
 		//draw focus appropriately before anything else so text will be on top
-		this.drawFocusBox(this.X + 40 + this._col*this.DIGIT_W, this.Y+this._row*this.DIGIT_H);
+		this.CANVAS.drawFocusBox(this.CANVAS.X + this.OFFSET + this._col*this.CANVAS.DIGIT_W, this.CANVAS.Y+this._row*this.CANVAS.DIGIT_H);
 
-		var ctx = this.CONTEXT;
-		ctx.font = this.FONT;
+		var ctx = this.CANVAS.CONTEXT;
+		ctx.font = this.CANVAS.FONT;
 
-		var x = this.X;
+		var x = this.CANVAS.X;
 
-		var y = this.Y;
+		var y = this.CANVAS.Y;
 		for( var i=0; i<7; i++)
 		{
-			y +=  this.DIGIT_H;
+			y +=  this.CANVAS.DIGIT_H;
 			var str = "/Y" + (i+1) + "=" + this._equations[i];
 			ctx.fillText(str, x, y);
 		}
 
+		if(this.ROM.is2ndPressed())
+		{
+			var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W + this.OFFSET;
+			var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
+			this.CANVAS.draw2ndButton(x,y);
+		}
 	}
 
+	enterPressed()
+	{
+		this.arrowPressed(this.ROM.getKeypad().A_DOWN);
+	}
 	arrowPressed(anArrow)
 	{
-			if(anArrow == "left" )
+			if(anArrow == this.ROM.getKeypad().A_LEFT )
 				this.cursorLeft();
-			else if( anArrow == "right")
+			if(anArrow == this.ROM.getKeypad().A_RIGHT )
 				this.cursorRight();
-			else if( anArrow == "up")
+			if(anArrow == this.ROM.getKeypad().A_UP )
 				this.cursorUp();
-			else if( anArrow == "down")
+			if(anArrow == this.ROM.getKeypad().A_DOWN )
 				this.cursorDown();
 			this.repaint();
 	}
@@ -104,9 +163,14 @@ class	StateYEquals extends State
   }
   cursorDown()
   {
-		if( this._row == this._equations.length )
+		if( this._row == this._equations.length-1 )
 			return;
 		this._row ++;
 		this._col = this._equations[this._row].length;
   }
+
+	getEquations()
+	{
+		return this._equations;
+	}
 }
