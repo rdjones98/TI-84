@@ -6,7 +6,7 @@ class	Rom
 	{
 		var theCanvas = document.getElementById("theCanvas");
 
-		this.VERSION = .17;
+		this.VERSION = .18;
 		// Handle to all State Managers
 		this.CANVAS = new Canvas(theCanvas);
 		this.STATE_Y_EQUALS   = new StateYEquals(this.CANVAS, this);

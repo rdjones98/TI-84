@@ -14,6 +14,7 @@ mouseListener.addEventListener("click", whatClicked, false);
 // add key listeners
 document.addEventListener('keydown', (event) => {
   const keyName = event.key;
+  const which = event.which;
 
   if(keyName=="Enter")
     ROM.enterPressed();
@@ -28,8 +29,14 @@ document.addEventListener('keydown', (event) => {
   }
   else if(keyName=="/")
     ROM.dividePressed();
-  else if(keyName=="ArrowRight"|| keyName=="ArrowLeft" || keyName=="ArrowUp"|| keyName=="ArrowDown")
-    ROM.arrowPressed(keyName);
+  else if(which==39)
+    ROM.arrowPressed("ArrowRight");
+  else if(which==37)
+    ROM.arrowPressed("ArrowLeft");
+  else if(which=38)
+    ROM.arrowPressed("ArrowUp");
+  else if(which=4=0)
+    ROM.arrowPressed("ArrowDown");
   else if(keyName=="Delete")
     ROM.deletePressed();
   else if(ROM.is2ndPressed() && (keyName=="a" || keyName == "A") )

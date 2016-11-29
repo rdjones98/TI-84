@@ -151,6 +151,6 @@ class	Keypad
 			this.rom.arrowPressed(this.A_UP);
 		else if ( 235 <= x && x <= 263 && 315 <= y && y <= 344)
 			this.rom.arrowPressed(this.A_DOWN);
-    console.log("(" + x + ", " + y+")");
+//    console.log("(" + x + ", " + y+")");
   }
 }
