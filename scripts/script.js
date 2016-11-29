@@ -33,9 +33,9 @@ document.addEventListener('keydown', (event) => {
     ROM.arrowPressed("ArrowRight");
   else if(which==37)
     ROM.arrowPressed("ArrowLeft");
-  else if(which=38)
+  else if(which==38)
     ROM.arrowPressed("ArrowUp");
-  else if(which=4=0)
+  else if(which==40)
     ROM.arrowPressed("ArrowDown");
   else if(keyName=="Delete")
     ROM.deletePressed();
