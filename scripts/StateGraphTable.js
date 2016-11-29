@@ -48,50 +48,31 @@ class	StateGraphTable
 	repaint()
 	{
     this.CANVAS.clearCanvas();
-		var ctx = this.CANVAS.CONTEXT;
-
 		this.drawTable();
 		this.drawFocusBox();
 
-		ctx.font = this.FONT;
 		for( var i=0; i<this.T_MAXROWS; i++ )
 		{
 			var y = this.DIGIT_H + this.T_ROW1 + i*this.DIGIT_H;
-
-			ctx.fillText(this.CURSORIDX + i, this.T_COL1, y);
+			this.CANVAS.print(this.CURSORIDX + i, this.T_COL1, y, this.CANVAS.SMALL_FONT);
 			if( this.IDX1 > -1 )
-				ctx.fillText( this.evaluate(this.IDX1, this.CURSORIDX + i), this.T_COL2, y);
+			{
+				var str = this.ROM.evaluate(this.IDX1, this.CURSORIDX + i);
+				this.CANVAS.print(this.CANVAS.formatNumber(str, 6), this.T_COL2, y, this.CANVAS.SMALL_FONT);
+			}
 			if( this.IDX2 > -1 )
-				ctx.fillText( this.evaluate(this.IDX2, this.CURSORIDX + i), this.T_COL3, y);
+				this.CANVAS.print(this.ROM.evaluate(this.IDX2, this.CURSORIDX + i), this.T_COL3, y, this.CANVAS.SMALL_FONT);
 		}
 	}
 	// Draw tick marks on graph
 	drawTable()
 	{
-		var ctx = this.CANVAS.CONTEXT;
+		this.CANVAS.drawLn(this.CANVAS.X, this.T_ROW1,this.CANVAS.WIDTH, this.T_ROW1);
+		this.CANVAS.drawLn(this.CANVAS.X, this.CANVAS.HEIGHT-this.DIGIT_H,this.CANVAS.WIDTH, this.CANVAS.HEIGHT-this.DIGIT_H);
+		this.CANVAS.drawLn(this.T_COL2-7, this.CANVAS.Y,this.T_COL2-7, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H);
+		this.CANVAS.drawLn(this.T_COL3-7, this.CANVAS.Y,this.T_COL3-7, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H);
 
-		ctx.beginPath();
-		ctx.moveTo(this.CANVAS.X, this.T_ROW1);
-		ctx.lineTo(this.CANVAS.WIDTH, this.T_ROW1);
-		ctx.stroke();
-
-		ctx.beginPath();
-		ctx.moveTo(this.CANVAS.X, this.CANVAS.HEIGHT-this.DIGIT_H);
-		ctx.lineTo(this.CANVAS.WIDTH, this.CANVAS.HEIGHT-this.DIGIT_H);
-		ctx.stroke();
-
-		ctx.beginPath();
-		ctx.moveTo(this.T_COL2-7, this.CANVAS.Y);
-		ctx.lineTo(this.T_COL2-7, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H);
-		ctx.stroke();
-
-		ctx.beginPath();
-		ctx.moveTo(this.T_COL3-7, this.CANVAS.Y);
-		ctx.lineTo(this.T_COL3-7, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H);
-		ctx.stroke();
-
-		ctx.font = this.CANVAS.FONT;
-		ctx.fillText("X",  this.T_COL2 - 40, this.CANVAS.Y + this.CANVAS.DIGIT_H );
+		this.CANVAS.print("X",  this.T_COL2 - 40, this.CANVAS.Y + this.CANVAS.DIGIT_H, this.CANVAS.FONT );
 
 		// Find the first 2 Y= that are filled out
 		this.IDX1 = -1;
@@ -110,17 +91,17 @@ class	StateGraphTable
 			}
 
 		if(this.IDX1 > -1)
-			ctx.fillText("Y" + (this.IDX1+1), this.T_COL2, this.CANVAS.Y + this.CANVAS.DIGIT_H );
+			this.CANVAS.print("Y" + (this.IDX1+1), this.T_COL2, this.CANVAS.Y + this.CANVAS.DIGIT_H );
 		if(this.IDX2 > -1)
-			ctx.fillText("Y" + (this.IDX2+1), this.T_COL3, this.CANVAS.Y + this.CANVAS.DIGIT_H );
-
+			this.CANVAS.print("Y" + (this.IDX2+1), this.T_COL3, this.CANVAS.Y + this.CANVAS.DIGIT_H );
+	}
+	secondPressed()
+	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
-		{
-			var x = this.CANVAS.WIDTH-this.CANVAS.DIGIT_W;
-			var y = this.CANVAS.Y;
-			this.CANVAS.draw2ndButton(x,y);
-		}
+			this.CANVAS.draw2ndButton();
+		else
+			this.repaint();
 	}
 
 	evaluate(anEquationIdx, anX)
@@ -166,7 +147,6 @@ class	StateGraphTable
 				else
 					this.CURSORIDX++;
 			}
-			this.repaint();
 	}
 
 }

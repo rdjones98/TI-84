@@ -23,6 +23,10 @@ class	StateGraphing
 
 	}
 
+	enterPressed()
+	{
+		// Do Nothing
+	}
 	clearPressed()
 	{
 			this.CANVAS.clearCanvas();
@@ -45,36 +49,14 @@ class	StateGraphing
 	// Draw tick marks on graph
 	drawTickMarks()
 	{
-		var ctx = this.CANVAS.CONTEXT;
 		for( var i=this.CENTER_X; i<=this.CANVAS.WIDTH; i+=this.STEP_X)
-		{
-			ctx.beginPath();
-			ctx.moveTo(i, this.CENTER_Y-3);
-			ctx.lineTo(i, this.CENTER_Y);
-			ctx.stroke();
-		}
+			this.CANVAS.drawLn(i, this.CENTER_Y-3,i, this.CENTER_Y);
 		for( var i=this.CENTER_X; i>=this.CANVAS.X; i-=this.STEP_X)
-		{
-			ctx.beginPath();
-			ctx.moveTo(i, this.CENTER_Y-3);
-			ctx.lineTo(i, this.CENTER_Y);
-			ctx.stroke();
-		}
+			this.CANVAS.drawLn(i, this.CENTER_Y-3,i, this.CENTER_Y);
 		for( var i=this.CENTER_Y; i<=this.CANVAS.HEIGHT; i+=this.STEP_Y)
-		{
-			ctx.beginPath();
-			ctx.moveTo(this.CENTER_X, i);
-			ctx.lineTo(this.CENTER_X+3, i);
-			ctx.stroke();
-		}
+			this.CANVAS.drawLn(this.CENTER_X, i, this.CENTER_X+3, i);
 		for( var i=this.CENTER_Y; i>=this.CANVAS.Y; i-=this.STEP_Y)
-		{
-			ctx.beginPath();
-			ctx.moveTo(this.CENTER_X, i);
-			ctx.lineTo(this.CENTER_X+3, i);
-			ctx.stroke();
-		}
-
+			this.CANVAS.drawLn(this.CENTER_X, i,this.CENTER_X+3, i);
 	}
   graphPressed()
   {
@@ -83,65 +65,52 @@ class	StateGraphing
 	repaint()
 	{
     this.CANVAS.clearCanvas();
-		var ctx = this.CANVAS.CONTEXT;
 
+		this.STEP_X = ( this.CANVAS.WIDTH - this.CANVAS.X ) / (  this.X_MAX - this.X_MIN );
+		this.STEP_Y = ( this.CANVAS.HEIGHT - this.CANVAS.Y ) / ( this.Y_MAX - this.Y_MIN );
+		this.CENTER_X = this.CANVAS.X + (0-this.X_MIN) * this.STEP_X ;
+		this.CENTER_Y = this.CANVAS.HEIGHT - (0-this.Y_MIN) * this.STEP_Y ;
 
 		// Draw axis
-		ctx.beginPath();
-		ctx.moveTo(this.CANVAS.X,     this.CENTER_Y);
-		ctx.lineTo(this.CANVAS.WIDTH, this.CENTER_Y);
-		ctx.stroke();
-		ctx.beginPath();
-		ctx.moveTo(this.CENTER_X, this.CANVAS.Y);
-		ctx.lineTo(this.CENTER_X, this.CANVAS.HEIGHT);
-		ctx.stroke();
+		this.CANVAS.drawLn(this.CANVAS.X, this.CENTER_Y, this.CANVAS.WIDTH, this.CENTER_Y)
+		this.CANVAS.drawLn(this.CENTER_X, this.CANVAS.Y, this.CENTER_X, this.CANVAS.HEIGHT);
 
 		// Draw tick marks on axis
 		this.drawTickMarks();
 
-		var ctx = this.CANVAS.CONTEXT;
 		// Graph all equations
 		for( var equ=0; equ<7; equ++)
 		{
-			var pathStarted = false;
-			for( var xCoord=this.X_MIN; xCoord<=this.X_MAX; xCoord+=.1)
+			if ( this.Y_EQUALS._equations[equ].length>0 )
 			{
-				var yCoord = this.CENTER_Y + this.evaluate(equ, xCoord) * -1 * this.STEP_Y;
-				if( !pathStarted && this.CANVAS.Y <= yCoord && yCoord <= this.CANVAS.HEIGHT)
+				var step = (this.X_MAX-this.X_MIN)/200;
+//				for( var xCoord=Number(this.X_MIN); xCoord<this.X_MAX; xCoord=Math.round((xCoord + step)*100)/100)
+				for( var xCoord=Number(this.X_MIN); xCoord<this.X_MAX; xCoord=this.ROM.fixRoundingError(xCoord + step))
 				{
-					ctx.beginPath();
-					ctx.moveTo(this.CENTER_X + xCoord * this.STEP_X,yCoord);
-					pathStarted = true;
+					var yCoord1 = this.ROM.evaluate(equ, xCoord) ;
+					yCoord1 = this.CENTER_Y + yCoord1 * -1 * this.STEP_Y;
+					var yCoord2 = this.ROM.evaluate(equ, xCoord+.1);
+					yCoord2 = this.CENTER_Y + yCoord2 * -1 * this.STEP_Y;
+
+					var x1 = this.CENTER_X + xCoord * this.STEP_X;
+					var x2 = this.CENTER_X + (xCoord+.1) * this.STEP_X;
+					this.CANVAS.drawLn(x1,yCoord1,x2,yCoord2);
 				}
-				else if( this.CANVAS.Y <= yCoord && yCoord <= this.CANVAS.HEIGHT )
-					ctx.lineTo(this.CENTER_X + xCoord * this.STEP_X, yCoord );
-				else if (yCoord < this.CANVAS.Y )
-					ctx.lineTo(this.CENTER_X + xCoord * this.STEP_X, this.CANVAS.Y );
-				else if (yCoord > this.CANVAS.HEIGHT )
-					ctx.lineTo(this.CENTER_X + xCoord * this.STEP_X, this.CANVAS.HEIGHT );
 			}
-			if(pathStarted)
-				ctx.stroke();
 		}
-
-		// draw 2nd Button Pressed Icon
-		if(this.ROM.is2ndPressed())
-		{
-			var x = this.CANVAS.WIDTH-this.CANVAS.DIGIT_W;
-			var y = this.CANVAS.Y;
-			this.CANVAS.draw2ndButton(x,y);
-		}
-
 	}
-	evaluate(anEquationIdx, anX)
-	{
-		var equ = this.Y_EQUALS._equations[anEquationIdx].replace(/X/g, "(" + anX + ")");
-		return this.ROM.doMath(equ);
-	}
+
 
 	arrowPressed(anArrow)
 	{
 		this.ROM.setTraceState().arrowPressed(anArrow);
 	}
-
+	secondPressed()
+	{
+		// draw 2nd Button Pressed Icon
+		if(this.ROM.is2ndPressed())
+			this.CANVAS.draw2ndButton();
+		else
+			this.repaint();
+	}
 }

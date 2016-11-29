@@ -11,19 +11,48 @@ class	StateCalculator
 		this._col = 0;
 	}
 
+	incrRow(aNum)
+	{
+		if( typeof aNum == "undefined")
+			aNum = 1;
+		this._row += aNum;
+	}
+	incrCol(aNum)
+	{
+		if( typeof aNum == "undefined")
+			aNum = 1;
+		this._col += aNum;
+	}
+	setCol(aNum)
+	{
+		this._col = aNum;
+	}
+	//button pressed events
 	clearPressed()
 	{
 		this.CANVAS.clearCanvas();
+		this._history = new Array("","","","","","","");
+		this._row = 0;
+		this.setCol(0);
+	}
+	matrixPressed(aMatrix)
+	{
+    this._history[this._row] += aMatrix;
+ 	  this.setCol(this._history[this._row].length);
+
+		this.ROM.secondPressed(false);
+
 	}
 	xPressed()
 	{
-		// Do Nothing
+		// xPressed
+
 	}
 	lnPressed()
 	{
 		if (this.ROM.is2ndPressed() )
 		{
-			this.ROM.secondPressed();
+			this.ROM.secondPressed(false);
 			this.numberPressed("e");
 			this.operatorPressed("^");
 		}
@@ -35,7 +64,7 @@ class	StateCalculator
 	{
 		if (this.ROM.is2ndPressed() )
 		{
-			this.ROM.secondPressed();
+			this.ROM.secondPressed(false);
 			this.numberPressed("1");
 			this.numberPressed("0");
 			this.operatorPressed("^");
@@ -49,7 +78,7 @@ class	StateCalculator
 	{
 		if (this.ROM.is2ndPressed() )
 		{
-			this.ROM.secondPressed();
+			this.ROM.secondPressed(false);
 			this.operatorPressed("a" + aTrigFunc);
 		}
 		else {
@@ -59,23 +88,42 @@ class	StateCalculator
 
 	operatorPressed(anOper)
   {
-	   this._history[this._row] += anOper;
-		 this._col += anOper.length;
-		 this.repaint();
+		if(this.ROM.is2ndPressed() && anOper == "/")
+		{
+	  	anOper = "e";
+		}
+		else if( this._history[this._row].length == 0 && this._row != 0 && this._history[this._row-1].startsWith("<R>"))
+		{
+			this._history[this._row] = this._history[this._row-1].substring(3);
+		}
+    this._history[this._row] += anOper;
+ 	  this.setCol(this._history[this._row].length);
+
+		this.ROM.secondPressed(false);
   }
 
 	numberPressed( aNum )
   {
 	   this._history[this._row] += aNum;
-		 this._col ++;
-		 this.repaint();
+		 this.incrCol();
   }
 
 	negativePressed()
   {
+		if(this.ROM.is2ndPressed())
+		{
+			for( var idx=this._row-1; idx>=0; idx-- )
+				if(!this._history[idx].startsWith("<R>") )
+				{
+					this._history[this._row] = this._history[idx]	;
+					break;
+				}
+		}
+		else
+		{
 	   this._history[this._row] += this.CANVAS.NEGATIVE;
-		 this._col ++;
-		 this.repaint();
+		 this.incrCol();
+	 	}
   }
 
 	deletePressed()
@@ -85,7 +133,6 @@ class	StateCalculator
 		{
 			mathStr = mathStr.substring(0, this._col) + mathStr.substring(this._col+1);
 			this._history[this._row] = mathStr;
-			this.repaint();
 		}
 	}
 	arrowPressed(anArrow)
@@ -93,40 +140,68 @@ class	StateCalculator
 			if(anArrow == this.ROM.getKeypad().A_LEFT )
 			{
 				if( this._col >0 )
-					this._col --;
+					this.incrCol( -1 );
 			}
 			else if( anArrow == this.ROM.getKeypad().A_RIGHT)
 			{
 				if( this._col < this._history[this._row].length)
-					this._col ++;
+					this.incrCol();
 			}
-			this.repaint();
 	}
 
 	enterPressed()
 	{
 		var str = this._history[this._row];
+		if(str.length==0)
+			return;
+		var bump = 0;
 		var res = this.doMath(str);
-		// if last row, delete first 2 and appedn new results so it doesn't scroll off screen
-		if(this._row == 6)
+		if( typeof res == "object")
 		{
-			this._history.splice(0,2);
-			this._history.push( "<R>" + res);
+			var tmp = ""
+			for(var i=0; i<res.length;i++)
+				tmp += "["+res[i]+"]";
+			bump = res.length-1;
+			res = tmp;
+		}
+		// if last row, delete first 2 and appedn new results so it doesn't scroll off screen
+		var cutoff = 6-bump;
+
+		if(this._row >= cutoff)
+		{
+			this._history.splice(0,bump+2);
+			if(bump > 0)
+			{
+				var pieces = res.split("]");
+				for(var i = 0; i<pieces.length-1; i++)
+					this._history.push( "<R>" + pieces[i] + "]");
+			}
+			else
+				this._history.push( "<R>" + res );
+
 			this._history.push("");
-			this._col = 0;
+			this.setCol(0);
+			this._row = 6;
 		}
 		else
 		{
-			this._history[this._row+1] = "<R>" + res;
+			if(bump > 0)
+			{
+				var pieces = res.split("]");
+				for(var i = 0; i<pieces.length-1; i++)
+					this._history[++this._row] = "<R>" + pieces[i] + "]";
+			}
+			else
+				this._history[++this._row] = "<R>" + res;
 
-			this._row +=2;
-			this._col = 0;
+			this._row ++ ;
+			this.setCol(0);
 		}
-
-		this.repaint();
+		this.ROM.secondPressed(false);
 	}
 
 
+	// Utility Methods
 	count(aStr, aChar)
 	{
 		var cnt = 0;
@@ -135,59 +210,38 @@ class	StateCalculator
 				cnt ++;
 		return cnt;
 	}
-	// Redraw screen based on contents of _history
-	repaint()
+
+
+	preProcessEandPI(anExpr, aSym, aVal)
 	{
-		this.CANVAS.clearCanvas();
-
-		var ctx = this.CANVAS.CONTEXT;
-		ctx.font = this.FONT;
-
-		//draw focus appropriately first so text can overwrite it
-		var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W;
-		var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
-		this.CANVAS.drawFocusBox(x, y);
-
-		// Start and top and being to redraw
-		x = this.CANVAS.X;
-		y = this.CANVAS.Y;
-
-		for( var i=0; i<7; i++)
+		var idx = anExpr.indexOf(aSym);
+		while(idx >-1)
 		{
-			y +=  this.CANVAS.DIGIT_H;
-
-			// If item starts with <R> then right justify
-			var str = this._history[i];
-			if( str.startsWith("<R>"))
-			{
-				str = str.substring(3);
-				ctx.textAlign="right";
-				ctx.fillText(str, this.CANVAS.WIDTH, y);
-				ctx.textAlign = "left";
-			}
-			else
-				ctx.fillText(str, x, y);
+			if( idx < anExpr.length-1 && anExpr.charAt(idx+1) >=0 && anExpr.charAt(idx+1) <= 9)
+				anExpr = anExpr.substring(0,idx+1) + "*" + anExpr.substring(idx+1);
+			if( idx > 0 && anExpr.charAt(idx-1) >=0 && anExpr.charAt(idx-1) <= 9)
+				anExpr = anExpr.substring(0,idx) + "*" + anExpr.substring(idx);
+			anExpr = anExpr.replace(aSym, aVal);
+			idx = anExpr.indexOf(aSym);
 		}
-		// draw 2nd Button Pressed Icon
-		if(this.ROM.is2ndPressed())
-		{
-			var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W;
-			var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
-			this.CANVAS.draw2ndButton(x,y);
-		}
-
+		return anExpr;
 	}
-
-
 	// pre process string so we can transform it to RPN
 	doMath(anExpr)
 	{
-		//if we have any "e", replace that with what E is
-		anExpr = anExpr.replace(/e/g, Math.E);
-
 		// if we have any "negative" signs:  \u02C9, replace with "-"
 		while(anExpr.indexOf(this.CANVAS.NEGATIVE)>-1)
 			anExpr = anExpr.replace(this.CANVAS.NEGATIVE, "-");
+
+		// Handle any matrices
+		var m = this.preProcessMatrices(anExpr);
+		if( m != null )
+			return m;
+
+
+		// Preproess E and PI
+		anExpr = this.preProcessEandPI(anExpr, this.CANVAS.PI, Math.PI);
+		anExpr = this.preProcessEandPI(anExpr, "e", Math.E);
 
 
 		// If we have -- then we either have a plus ex:  2--3=>2+3
@@ -231,6 +285,24 @@ class	StateCalculator
 		for( var i = num_clse; i<num_open; i++)
 			anExpr = anExpr + ")";
 
+		// Handle ANy Square Roots
+		var idx = anExpr.indexOf(this.CANVAS.SQRROOT);
+		while( idx > -1 )
+		{
+			var numP = 1;
+			var eIdx = idx+1;
+			for( ; eIdx<anExpr.length; eIdx++)
+			{
+				if( anExpr.charAt(eIdx) == '(')
+					numP ++;
+				else if( anExpr == ')' && --numP == 0)
+					break;
+			}
+			anExpr = anExpr.substring(0, idx) + anExpr.substring(idx+1, eIdx) + "^(1/2)" + anExpr.substring(eIdx);
+			idx = anExpr.indexOf(this.CANVAS.SQRROOT, idx+1);
+		}
+
+
 		// If we have 2(3+4) we need 2*(3+4)
 		for( var i=anExpr.length; i>0; i--)
 		{
@@ -247,8 +319,9 @@ class	StateCalculator
 		anExpr = this.preprocessLogAndTrig(anExpr, "sin(");
 		anExpr = this.preprocessLogAndTrig(anExpr, "cos(");
 		anExpr = this.preprocessLogAndTrig(anExpr, "tan(");
-		return calculate(anExpr);
+		return calculate(anExpr);	// From RegressionEngine
 	}
+
 	preprocessLogAndTrig(anExpr, aVal)
 	{
 		// if we have any ln functions, evaluate the () then call math.log()
@@ -285,6 +358,120 @@ class	StateCalculator
 			anExpr = anExpr.substring(0,idx) + res + anExpr.substring(eIdx+1);
 		}
 		return anExpr;
+	}
+
+	preProcessMatrices(anExpr)
+	{
+		var mIdx = anExpr.indexOf("rref(");
+		if( mIdx > -1 )
+		{
+			var cIdx = anExpr.indexOf("]");
+			var m = gaussJordan(this.ROM.getStateMatrix().getMatrix(anExpr.substring(mIdx+6, cIdx)));
+			return m;
+		}
+		mIdx = anExpr.indexOf("][");
+		if( mIdx > -1 )
+		{
+			var mA = anExpr.charAt(mIdx-1);
+			var mB = anExpr.charAt(mIdx+2)
+			var m = multiplyMatrix(this.ROM.getStateMatrix().getMatrix(mA), this.ROM.getStateMatrix().getMatrix(mB));
+			return m;
+		}
+		mIdx = anExpr.indexOf("]*[");
+		if( mIdx > -1 )
+		{
+			var mA = anExpr.charAt(mIdx-1);
+			var mB = anExpr.charAt(mIdx+3)
+			var m = multiplyMatrix(this.ROM.getStateMatrix().getMatrix(mA), this.ROM.getStateMatrix().getMatrix(mB));
+			return m;
+		}
+		mIdx = anExpr.indexOf("]+[");
+		if( mIdx > -1 )
+		{
+			var mA = anExpr.charAt(mIdx-1);
+			var mB = anExpr.charAt(mIdx+3)
+			var m = addMatrix(this.ROM.getStateMatrix().getMatrix(mA), this.ROM.getStateMatrix().getMatrix(mB));
+			return m;
+		}
+		mIdx = anExpr.indexOf("]-[");
+		if( mIdx > -1 )
+		{
+			var mA = anExpr.charAt(mIdx-1);
+			var mB = anExpr.charAt(mIdx+3)
+			var m = subtractMatrix(this.ROM.getStateMatrix().getMatrix(mA), this.ROM.getStateMatrix().getMatrix(mB));
+			return m;
+		}
+		mIdx = anExpr.indexOf("]/[");
+		if( mIdx > -1 )
+		{
+			return "ERR:CAN'T DIVIDE";
+		}
+		mIdx = anExpr.indexOf("]^-1");
+		if( mIdx > -1 )
+		{
+			var mA = anExpr.charAt(mIdx-1);
+			var m = inverseMatrix(this.ROM.getStateMatrix().getMatrix(mA));
+			return m;
+		}
+		mIdx = anExpr.indexOf("[");
+		if( mIdx > -1 )
+			return this.ROM.getStateMatrix().getMatrix(anExpr.charAt(mIdx+1));
+
+		return null;
+	}
+	// Redraw screen based on contents of _history
+	repaint()
+	{
+		this.CANVAS.clearCanvas();
+
+		//draw focus appropriately first so text can overwrite it
+		var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W;
+		var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
+		this.CANVAS.drawFocusBox(x, y);
+
+		// Start and top and being to redraw
+		x = this.CANVAS.X;
+		y = this.CANVAS.Y;
+
+		for( var i=0; i<7; i++)
+		{
+			y +=  this.CANVAS.DIGIT_H;
+
+			// If item starts with <R> then right justify
+			var str = this._history[i];
+			if( str.startsWith("<R>"))
+			{
+				str = str.substring(3);
+				// If it has "]" then its a matrix, print it accordingly
+				if(str.indexOf("]") > -1)
+					this.CANVAS.print(str, this.CANVAS.WIDTH, y,null,"black","right");
+				else // Else it is a numerical answer. Format the output
+					this.CANVAS.print(this.CANVAS.formatNumber(str,10), this.CANVAS.WIDTH, y,null,"black","right");
+			}
+			else
+				this.CANVAS.print(str, x, y);
+		}
+
+		if(this.ROM.is2ndPressed())
+		{
+			var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W;
+			var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
+			this.CANVAS.draw2ndButton(x,y);
+		}
 
 	}
+	secondPressed()
+	{
+			// draw 2nd Button Pressed Icon
+			if(this.ROM.is2ndPressed())
+			{
+				var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W;
+				var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
+				this.CANVAS.draw2ndButton(x,y);
+			}
+			else {
+					this.repaint();
+			}
+	}
+
 }
