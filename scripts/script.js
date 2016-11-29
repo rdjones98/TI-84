@@ -32,7 +32,7 @@ document.addEventListener('keydown', (event) => {
     ROM.arrowPressed(keyName);
   else if(keyName=="Delete")
     ROM.deletePressed();
-  else if(ROM.is2ndPressed() && (keyName=="a" || keyName == "a") )
+  else if(ROM.is2ndPressed() && (keyName=="a" || keyName == "A") )
     ROM.matrixPressed();
   else if(keyName=="g" || keyName == "G")
     ROM.graphPressed();
@@ -55,6 +55,8 @@ document.addEventListener('keydown', (event) => {
     ROM.modePressed();
   else if(keyName=="s" || keyName == "S")
     ROM.statPressed();
+  else if(keyName=="v" || keyName == "V")
+    alert(ROM.VERSION);
   else if(keyName=="z" || keyName == "Z")
     ROM.zoomPressed();
   else if(keyName=="Escape")
