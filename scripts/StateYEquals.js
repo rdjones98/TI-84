@@ -4,7 +4,7 @@ class	StateYEquals
 	{
 		this.CANVAS = aCanvas;
 		this.ROM = aRom;
-    this._equations = new Array("","1/2X-3","","","","","");
+    this._equations = new Array("","","","","","","");
 		this._row = 0;
     this._col = 0;
 		this.OFFSET = 40;
