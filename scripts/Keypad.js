@@ -1,7 +1,6 @@
-class	Keypad
+// class Keypad { constructor(aRom){}}
+function Keypad( aRom )
 {
-	constructor( aRom )
-	{
 		this.rom = aRom;
 		aRom.setKeypad(this);
 
@@ -55,7 +54,7 @@ class	Keypad
 		this.ROW10_MAX=622;
 	}
 
-  mouseClicked( evt )
+  Keypad.prototype.mouseClicked = function( evt )
   {
     var x = evt.clientX;
     var y = evt.clientY;
@@ -152,5 +151,4 @@ class	Keypad
 		else if ( 235 <= x && x <= 263 && 315 <= y && y <= 344)
 			this.rom.arrowPressed(this.A_DOWN);
 //    console.log("(" + x + ", " + y+")");
-  }
-}
+  };

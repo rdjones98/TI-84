@@ -1,8 +1,6 @@
-class	StateGraphTable
+//class	StateGraphTable{	constructor( aCanvas, aYEquals, aRom )	{
+function StateGraphTable(aCanvas, aYEquals, aRom)
 {
-	constructor( aCanvas, aYEquals, aRom )
-	{
-
 		this.CANVAS = aCanvas;
 		this.Y_EQUALS = aYEquals;
 		this.ROM = aRom;
@@ -24,28 +22,28 @@ class	StateGraphTable
 
 	}
 
-	clearPressed()
+StateGraphTable.prototype.clearPressed = function()
 	{
 		// do nothing
-	}
+	};
 
 
-  numberPressed(aNum)
+StateGraphTable.prototype.numberPressed = function(aNum)
   {
 		// do nothing
-  }
+  };
 
-  xPressed()
+StateGraphTable.prototype.xPressed = function()
   {
 		// do nothing
-  }
+  };
 
-	graphPressed()
+StateGraphTable.prototype.graphPressed = function()
   {
 		this.repaint();
-	}
+	};
 
-	repaint()
+StateGraphTable.prototype.repaint = function()
 	{
     this.CANVAS.clearCanvas();
 		this.drawTable();
@@ -63,9 +61,10 @@ class	StateGraphTable
 			if( this.IDX2 > -1 )
 				this.CANVAS.print(this.ROM.evaluate(this.IDX2, this.CURSORIDX + i), this.T_COL3, y, this.CANVAS.SMALL_FONT);
 		}
-	}
+	};
+
 	// Draw tick marks on graph
-	drawTable()
+StateGraphTable.prototype.drawTable = function()
 	{
 		this.CANVAS.drawLn(this.CANVAS.X, this.T_ROW1,this.CANVAS.WIDTH, this.T_ROW1);
 		this.CANVAS.drawLn(this.CANVAS.X, this.CANVAS.HEIGHT-this.DIGIT_H,this.CANVAS.WIDTH, this.CANVAS.HEIGHT-this.DIGIT_H);
@@ -94,17 +93,18 @@ class	StateGraphTable
 			this.CANVAS.print("Y" + (this.IDX1+1), this.T_COL2, this.CANVAS.Y + this.CANVAS.DIGIT_H );
 		if(this.IDX2 > -1)
 			this.CANVAS.print("Y" + (this.IDX2+1), this.T_COL3, this.CANVAS.Y + this.CANVAS.DIGIT_H );
-	}
-	secondPressed()
+	};
+
+StateGraphTable.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
 			this.CANVAS.draw2ndButton();
 		else
 			this.repaint();
-	}
+	};
 
-	evaluate(anEquationIdx, anX)
+StateGraphTable.prototype.evaluate = function(anEquationIdx, anX)
 	{
 		var equ = this.Y_EQUALS._equations[anEquationIdx].replace(/X/g, "(" + anX + ")");
 		var res = this.ROM.doMath(equ);
@@ -112,22 +112,23 @@ class	StateGraphTable
 		if( str.length > 7)
 			str = str.substring(0,7);
 		return str;
-	}
+	};
 
-	drawFocusBox()
+StateGraphTable.prototype.drawFocusBox = function()
 	{
 		var y = this.T_ROW1 + this.CURSORROW*this.DIGIT_H+2;
 
 		this.CANVAS.CONTEXT.fillStyle = "gray";
 		this.CANVAS.CONTEXT.fillRect(this.T_COL1, y, this.T_COL2-this.T_COL1-10,this.DIGIT_H);
 		this.CANVAS.CONTEXT.fillStyle = "black";
-	}
+	};
 
-	enterPressed()
+StateGraphTable.prototype.enterPressed = function()
 	{
 		// do nothing
-	}
-	arrowPressed(anArrow)
+	};
+
+StateGraphTable.prototype.arrowPressed = function(anArrow)
 	{
 			if(anArrow == this.ROM.getKeypad().A_LEFT )
 				this.cursorLeft();
@@ -147,6 +148,4 @@ class	StateGraphTable
 				else
 					this.CURSORIDX++;
 			}
-	}
-
-}
+	};

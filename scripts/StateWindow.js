@@ -1,6 +1,5 @@
-class StateWindow
-{
-  constructor(aCanvas, aGraph, aRom)
+//class StateWindow{  constructor(aCanvas, aGraph, aRom)
+function StateWindow(aCanvas, aGraph, aRom)
   {
     this.CANVAS = aCanvas;
     this.ROM = aRom;
@@ -13,7 +12,8 @@ class StateWindow
     this._col = 0;
   }
 
-  getWindowValue() {
+StateWindow.prototype.getWindowValue = function()
+{
     if( this._row == 0)
       return "" + this.GRAPH.X_MIN ;
     else if( this._row == 1)
@@ -22,8 +22,10 @@ class StateWindow
       return "" + this.GRAPH.Y_MIN ;
     else if( this._row == 4)
       return "" + this.GRAPH.Y_MAX ;
-  }
-  setWindowValue(aVal) {
+  };
+
+StateWindow.prototype.setWindowValue = function(aVal)
+{
     if( this._row == 0)
       this.GRAPH.X_MIN = aVal;
     else if( this._row == 1)
@@ -32,8 +34,8 @@ class StateWindow
       this.GRAPH.Y_MIN = aVal;
     else if( this._row == 4)
       this.GRAPH.Y_MAX = aVal;
-  }
-  deletePressed()
+  };
+StateWindow.prototype.deletePressed = function()
   {
     var str = this.getWindowValue()
     if(this._col <= str.length)
@@ -41,24 +43,27 @@ class StateWindow
       str = str.substring(0,this._col) +str.substring(this._col+1);
     }
     this.setWindowValue(str);
-  }
-  clearPressed()
+  };
+
+StateWindow.prototype.clearPressed = function()
 	{
 		this._col = 0;
     this.setWindowValue("");
 		this.repaint();
-	}
-  negativePressed()
+	};
+
+StateWindow.prototype.negativePressed = function()
 	{
 		this.numberPressed("-");
-	}
-  operatorPressed(anOper)
+	};
+
+StateWindow.prototype.operatorPressed = function(anOper)
 	{
     if( anOper == "-")
 		  this.numberPressed("-");
-	}
+	};
 
-  numberPressed(aNum)
+StateWindow.prototype.numberPressed = function(aNum)
   {
     var str = this.getWindowValue();
     if( str.length > this._col )
@@ -69,17 +74,19 @@ class StateWindow
     this._col ++;
     str += aNum;
     this.setWindowValue(str);
-  }
+  };
 
-  windowPressed()
+StateWindow.prototype.windowPressed = function()
   {
     this.repaint();
-  }
-  enterPressed()
+  };
+
+StateWindow.prototype.enterPressed = function()
 	{
 		this.arrowPressed(this.ROM.getKeypad().A_DOWN);
-	}
-	arrowPressed(anArrow)
+	};
+
+StateWindow.prototype.arrowPressed = function(anArrow)
 	{
 			if(anArrow == this.ROM.getKeypad().A_LEFT )
       {
@@ -112,9 +119,9 @@ class StateWindow
 
     		this._col = 0;
       }
-	}
+	};
 
-  repaint()
+StateWindow.prototype.repaint = function()
   {
     this.CANVAS.clearCanvas();
     this.CANVAS.drawFocusBox(this.X + this._col*this.CANVAS.DIGIT_W, this.Y+this._row*this.CANVAS.DIGIT_H);
@@ -129,13 +136,13 @@ class StateWindow
     this.CANVAS.print("Ymax="+this.GRAPH.Y_MAX,   x, y += this.CANVAS.DIGIT_H );
     this.CANVAS.print("Yscl=1",                   x, y += this.CANVAS.DIGIT_H, null, "gray" );
     this.CANVAS.print("Xres=1",                   x, y += this.CANVAS.DIGIT_H, null, "gray" );
-  }
-	secondPressed()
+  };
+
+StateWindow.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
 			this.CANVAS.draw2ndButton();
 		else
 			this.repaint();
-	}
-}
+	};

@@ -1,6 +1,5 @@
-class StateTraceCalc
-{
-  constructor(aCanvas, aYEquals, aGraph, aTrace, aRom)
+//class StateTraceCalc{  constructor(aCanvas, aYEquals, aGraph, aTrace, aRom)
+function StateTraceCalc(aCanvas, aYEquals, aGraph, aTrace, aRom)
   {
     this.CANVAS = aCanvas;
     this.YEQUALS = aYEquals;
@@ -22,7 +21,8 @@ class StateTraceCalc
     this._rightBound = null;
     this._guess = null;
   }
-  traceCalcPressed()
+
+StateTraceCalc.prototype.traceCalcPressed = function()
   {
     this._calculate = 0;
     this._equ1=null;
@@ -31,9 +31,9 @@ class StateTraceCalc
     this._rightBound = null;
     this._guess = null;
     this.repaint();
-  }
+  };
 
-  arrowPressed(anArrow)
+StateTraceCalc.prototype.arrowPressed = function(anArrow)
   {
 		if(this._calculate == 0 && anArrow == this.ROM.getKeypad().A_UP )
     {
@@ -48,12 +48,13 @@ class StateTraceCalc
     else
       this.TRACE.arrowPressed(anArrow);
   }
-  numberPressed(anum)
+StateTraceCalc.prototype.numberPressed = function(anum)
   {
     this._calculate = anum;
     this.TRACE.tracePressed();
-  }
-  enterPressed()
+  };
+
+StateTraceCalc.prototype.enterPressed = function()
   {
     if( this._calculate == 0)
       this._calculate = this._row;
@@ -78,23 +79,25 @@ class StateTraceCalc
           this._guess = this.TRACE.TRACE_X;
     }
     this.TRACE.tracePressed();
-  }
-	evaluate(anEqu, anX)
+  };
+
+StateTraceCalc.prototype.evaluate = function(anEqu, anX)
 	{
     anX = this.ROM.fixRoundingError(anX);
 		var equ = anEqu.replace(/X/g, "(" + anX + ")");
 		return this.ROM.doMath(equ);
-	}
-	secondPressed()
+	};
+
+StateTraceCalc.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
 			this.CANVAS.draw2ndButton();
 		else
 			this.repaint();
-	}
+	};
 
-  repaint()
+StateTraceCalc.prototype.repaint = function()
   {
       var x = this.CANVAS.X;
       var y = this.CANVAS.Y;
@@ -129,10 +132,10 @@ class StateTraceCalc
       this.CANVAS.print("5:intersect",x, y += this.CANVAS.DIGIT_H );
       this.CANVAS.print("6:dy/dx",    x, y += this.CANVAS.DIGIT_H, null, "gray" );
       this.CANVAS.print("7:Sf(x)dx",  x, y += this.CANVAS.DIGIT_H, null, "gray" );
-  }
+  };
 
   // Paint Mix/Max
-  paintMinMaxZero()
+StateTraceCalc.prototype.paintMinMaxZero = function()
   {
       var x = this.CANVAS.X;
       var y = this.CANVAS.Y;
@@ -185,8 +188,9 @@ class StateTraceCalc
         this.CANVAS.print( "Maximum", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
         this.traceCalcFinished();
       }
-  }
-  findMinimum()
+  };
+
+StateTraceCalc.prototype.findMinimum = function()
   {
 		var step = .001;
     var equ = this.YEQUALS.getEquations()[this.TRACE._curEquationIDX];
@@ -202,8 +206,9 @@ class StateTraceCalc
         }
     }
     return minX;
-  }
-  findMaximum()
+  };
+
+StateTraceCalc.prototype.findMaximum = function()
   {
 //		var step = (this._rightBound-this._leftBound)/(200);
 		var step = .001;
@@ -220,9 +225,10 @@ class StateTraceCalc
         }
     }
     return maxX;
-  }
+  };
+
   // All things intersection
-  paintIntersection()
+  StateTraceCalc.prototype.paintIntersection = function()
   {
       var x = this.CANVAS.X;
       var y = this.CANVAS.Y;
@@ -274,9 +280,9 @@ class StateTraceCalc
         }
         this.traceCalcFinished();
       }
+  };
 
-  }
-  findIntersection(equ1, equ2, aLeftX, aRightX, aCnt)
+StateTraceCalc.prototype.findIntersection = function(equ1, equ2, aLeftX, aRightX, aCnt)
   {
 
 //		var step = (aRightX-aLeftX)/(20*10*aCnt);
@@ -303,14 +309,13 @@ class StateTraceCalc
         }
     }
     return null;
-  }
+  };
 
-  traceCalcFinished()
+StateTraceCalc.prototype.traceCalcFinished = function()
   {
       this._calculate = 0;
       this._equ1=null;
       this._equ2=null;
       this._guess = null;
       this.ROM.setTraceState();
-  }
-}
+  };

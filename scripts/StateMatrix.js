@@ -1,7 +1,6 @@
-class StateMatrix
+//class StateMatrix{  constructor(aCanvas, aRom)
+function StateMatrix (aCanvas, aRom)
 {
-  constructor(aCanvas, aRom)
-  {
     this.CANVAS = aCanvas;
     this.ROM = aRom;
 
@@ -22,16 +21,19 @@ class StateMatrix
     {
       this._matrices.push(new Array(new Array()));
     }
-  }
-  getMatrix(aName)
+}
+
+StateMatrix.prototype.getMatrix = function(aName)
   {
     return this._matrices[ aName.charCodeAt(0) - 65 ];
-  }
-  operatorPressed(anOper)
+  };
+
+StateMatrix.prototype.operatorPressed = function(anOper)
   {
     this.numberPressed(anOper);
-  }
-  enterPressed()
+  };
+
+StateMatrix.prototype.enterPressed = function()
   {
     if( this._col == 0 )
     {
@@ -47,9 +49,9 @@ class StateMatrix
       this._action = 0;
     else
       this.arrowPressed(this.ROM.getKeypad().A_RIGHT);
-  }
+  };
 
-  numberPressed(aNum)
+StateMatrix.prototype.numberPressed = function(aNum)
   {
     var mRows = this._matrices[this._row].length;
     var mCols = this._matrices[this._row][0].length;
@@ -81,9 +83,9 @@ class StateMatrix
         this._matrices[this._row][this._editRow-1][this._editCol] = aNum;
       this._editing = true;
     }
-  }
+  };
 
-	arrowPressed(anArrow)
+StateMatrix.prototype.arrowPressed = function(anArrow)
 	{
     this._editing = false;
 			if(anArrow == this.ROM.getKeypad().A_LEFT )
@@ -197,12 +199,14 @@ class StateMatrix
           this._row ++;
 
       }
-    }
-  	secondPressed()
+    };
+
+StateMatrix.prototype.secondPressed = function()
   	{
   		// do nothing
-  	}
-    matrixPressed()
+  	};
+
+StateMatrix.prototype.matrixPressed = function()
     {
       this._action = null;
       this._col = 0;
@@ -214,9 +218,9 @@ class StateMatrix
       this._editing = false;
 
       this.repaint();
-    }
+    };
 
-    repaint()
+StateMatrix.prototype.repaint = function()
     {
       this.CANVAS.clearCanvas();
       if(this._action == 0)
@@ -257,8 +261,9 @@ class StateMatrix
         this.CANVAS.print("A:ref(",      x, y += this.CANVAS.DIGIT_H, null, "gray" );
         this.CANVAS.print("B:rref(",     x, y += this.CANVAS.DIGIT_H );
       }
-    }
-    paintEdit()
+    };
+
+StateMatrix.prototype.paintEdit = function()
     {
       var x = this.CANVAS.X;
       var y = this.CANVAS.Y;
@@ -304,5 +309,4 @@ class StateMatrix
           mx += 7*this.CANVAS.DIGIT_W;
         }
       }
-    }
-  }
+    };

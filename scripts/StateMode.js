@@ -1,11 +1,11 @@
-class StateMode
-{
-  constructor(aCanvas, aRom)
+//class StateMode{  constructor(aCanvas, aRom)
+function StateMode(aCanvas, aRom)
   {
     this.CANVAS = aCanvas;
     this.ROM = aRom;
   }
-  modePressed()
+
+StateMode.prototype.modePressed = function()
   {
     if( this.ROM.is2ndPressed())
     {
@@ -15,8 +15,9 @@ class StateMode
     else {
       this.repaint();
     }
-  }
-  repaint()
+  };
+
+StateMode.prototype.repaint = function()
   {
     this.CANVAS.clearCanvas();
     this.CANVAS.drawFocusBox(this.X + this._col*this.CANVAS.DIGIT_W, this.Y+this._row*this.CANVAS.DIGIT_H);
@@ -31,9 +32,8 @@ class StateMode
     this.CANVAS.print("SEQUENTIAL  SIMUL",          x, y += this.CANVAS.DIGIT_H, null, "gray" );
     this.CANVAS.print("REAL  a+bi  re^Oi",          x, y += this.CANVAS.DIGIT_H, null, "gray" );
     this.CANVAS.print("FULL  HORIZ  G-T",           x, y += this.CANVAS.DIGIT_H, null, "gray" );
-  }
-	secondPressed()
+  };
+StateMode.prototype.secondPressed = function()
 	{
 		// do nothing
-	}
-}
+	};

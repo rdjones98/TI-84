@@ -1,6 +1,5 @@
-class StateStatEdit
-{
-  constructor(aCanvas, aRom)
+//class StateStatEdit{  constructor(aCanvas, aRom)
+function StateStatEdit(aCanvas, aRom)
   {
     this.CANVAS = aCanvas;
     this.ROM = aRom;
@@ -18,25 +17,26 @@ class StateStatEdit
     this._editing = false;
   }
   // Utilitiy Functions
-  getYVals()
+StateStatEdit.prototype.getYVals = function()
   {
     return this._yVals;
-  }
-  getXVals()
+  };
+
+StateStatEdit.prototype.getXVals = function()
   {
     return this._xVals;
-  }
-  getArray()
+  };
+
+StateStatEdit.prototype.getArray = function()
   {
     if( this._sel == 1 )
       return this._xVals;
     else
       return this._yVals;
-
-  }
+  };
 
   // Key Pressed Functions
-  deletePressed()
+StateStatEdit.prototype.deletePressed = function()
   {
     var curArray = this.getArray();
     if(this.ROM.is2ndPressed())
@@ -50,8 +50,9 @@ class StateStatEdit
       if(this._row < curArray.length)
         curArray.splice(this._row, 1);
     }
-  }
-  numberPressed(aNum)
+  };
+
+StateStatEdit.prototype.numberPressed = function(aNum)
 	{
     var curArray = this.getArray();
 		if( curArray.length<=this._row)
@@ -63,13 +64,14 @@ class StateStatEdit
       curArray[this._row]+=aNum;
     }
     this._editing = true;
-	}
+	};
 
-  enterPressed()
+StateStatEdit.prototype.enterPressed = function()
   {
     this.arrowPressed(this.ROM.getKeypad().A_DOWN);
-  }
-  arrowPressed(anArrow)
+  };
+
+StateStatEdit.prototype.arrowPressed = function(anArrow)
 	{
     this._editing = false;
 
@@ -104,10 +106,10 @@ class StateStatEdit
 			this._row ++;
       this._col = 0;
 		}
-	}
+	};
 
   // Display Functions
-  repaint()
+StateStatEdit.prototype.repaint = function()
   {
     this.CANVAS.clearCanvas();
 
@@ -141,14 +143,13 @@ class StateStatEdit
     {
       this.CANVAS.print(this._yVals[i], this.C2, this.T_ROW1 + this.CANVAS.DIGIT_H*(i+1));
     }
-  }
-	secondPressed()
+  };
+
+StateStatEdit.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
 			this.CANVAS.draw2ndButton();
 		else
 			this.repaint();
-	}
-
-}
+	};

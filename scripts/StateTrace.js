@@ -1,6 +1,5 @@
-class	StateTrace
-{
-	constructor( aCanvas, aGraph, aRom )
+//class	StateTrace{	constructor( aCanvas, aGraph, aRom )
+function StateTrace( aCanvas, aGraph, aRom )
 	{
 		this.CANVAS = aCanvas;
 		this.GRAPH = aGraph;
@@ -22,11 +21,12 @@ class	StateTrace
 		this._numberPressed=null;
   }
 
-	setTraceX(aVal)
+StateTrace.prototype.setTraceX = function(aVal)
 	{
 		this.TRACE_X = this.ROM.fixRoundingError(aVal);
-	}
-	select2ndEquation(anIdx)
+	};
+
+StateTrace.prototype.select2ndEquation = function(anIdx)
 	{
 		for( var idx = anIdx+1; idx<7; idx++)
 		{
@@ -44,9 +44,9 @@ class	StateTrace
 				return;
 			}
 		}
-	}
+	};
 
-	numberPressed(aNum)
+StateTrace.prototype.numberPressed = function(aNum)
 	{
 			if( this._numberPressed == null)
 				this._numberPressed = aNum;
@@ -54,8 +54,9 @@ class	StateTrace
 				this._numberPressed += aNum;
 //		this.ROM.setStateCalculator();
 //		this.ROM.numberPressed(aNum);
-	}
-	enterPressed()
+	};
+
+StateTrace.prototype.enterPressed = function()
 	{
 		// If we pressed a number, then change to that X - Coordinate
 		if(this._numberPressed != null)
@@ -87,9 +88,9 @@ class	StateTrace
 		}
 		this.TRACE_STEP = (this.GRAPH.X_MAX - this.GRAPH.X_MIN)/100;
 		this.repaint();
-	}
+	};
 
-	arrowPressed(anArrow)
+StateTrace.prototype.arrowPressed = function(anArrow)
 	{
 			if(anArrow == this.ROM.getKeypad().A_UP )
 			{
@@ -112,14 +113,15 @@ class	StateTrace
 					this.setTraceX(this.TRACE_X + this.TRACE_STEP);
 			}
 			this.repaint();
-	}
+	};
 
-	clearPressed()
+StateTrace.prototype.clearPressed = function()
 	{
 		this.CANVAS.clearCanvas();
 		this.ROM.setStateCalculator();
-	}
-	tracePressed()
+	};
+
+StateTrace.prototype.tracePressed = function()
 	{
 		this._numberPressed = null;
 		if(this.ROM.getStateYEquals().getEquations()[this._curEquationIDX].length == 0 )
@@ -131,8 +133,9 @@ class	StateTrace
 				}
 
 		this.repaint();
-	}
-	repaint()
+	};
+
+StateTrace.prototype.repaint = function()
 	{
 		this.CANVAS.clearCanvas();
 		this.ROM.getStateGraph().repaint();
@@ -158,19 +161,18 @@ class	StateTrace
 
 		if( this.CANVAS.Y < y && y < this.CANVAS.HEIGHT)
 			this.CANVAS.print("+", x, y, "25px Courier", "#FF0000");
-	}
+	};
 
-	zoom(aZoom)
+StateTrace.prototype.zoom = function(aZoom)
 	{
 		this._zoom = aZoom;
-	}
-	secondPressed()
+	};
+
+StateTrace.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
 			this.CANVAS.draw2ndButton();
 		else
 			this.repaint();
-	}
-
-}
+	};

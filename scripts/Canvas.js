@@ -1,7 +1,6 @@
-class	Canvas
+//class	Canvas{constructor(aCanvas) {}}
+function Canvas(aCanvas)
 {
-    constructor(aCanvas)
-  	{
   		this.CONTEXT = aCanvas.getContext("2d");
   		this.X = 64;
   		this.Y = 60;
@@ -23,31 +22,33 @@ class	Canvas
       this.CONTEXT.stroke();
       this.CONTEXT.clip();
       this.CONTEXT.strokeStyle = "black";
-    }
+}
 
-  	clearCanvas()
+Canvas.prototype.clearCanvas = function()
   	{
       this.CONTEXT.font =  this.FONT;
   		this.CONTEXT.clearRect(this.X-10,this.Y-10,this.WIDTH,this.HEIGHT);
-  	}
+  	};
 
-    drawLeftBound(anX)
+Canvas.prototype.drawLeftBound = function(anX)
     {
       this.CONTEXT.beginPath();
       this.CONTEXT.moveTo(anX-5,this.Y+this.DIGIT_H);
       this.CONTEXT.lineTo(anX,this.Y+this.DIGIT_H+5)  ;
       this.CONTEXT.lineTo(anX-5,this.Y+this.DIGIT_H+10);
       this.CONTEXT.fill();
-    }
-    drawRightBound(anX)
+    };
+
+Canvas.prototype.drawRightBound = function(anX)
     {
       this.CONTEXT.beginPath();
       this.CONTEXT.moveTo(anX+5,this.Y+this.DIGIT_H);
       this.CONTEXT.lineTo(anX,this.Y+this.DIGIT_H+5)  ;
       this.CONTEXT.lineTo(anX+5,this.Y+this.DIGIT_H+10);
       this.CONTEXT.fill();
-    }
-  	drawFocusBox(anX, aY, aWidth)
+    };
+
+Canvas.prototype.drawFocusBox = function(anX, aY, aWidth)
   	{
       var x=this.X;
       var y=this.Y;
@@ -61,9 +62,9 @@ class	Canvas
   		this.CONTEXT.fillStyle = "gray";
   		this.CONTEXT.fillRect(x,y+2,w,this.DIGIT_H);
   		this.CONTEXT.fillStyle = "black";
-  	}
+  	};
 
-    draw2ndButton(x, y)
+Canvas.prototype.draw2ndButton = function(x, y)
     {
       if( typeof x == "undefined")
         x=this.WIDTH-this.DIGIT_W;;
@@ -81,9 +82,9 @@ class	Canvas
       this.CONTEXT.lineTo(x + this.DIGIT_W, y + 10);
       this.CONTEXT.stroke();
       this.CONTEXT.fillStyle = "black";
-    }
+    };
 
-    formatNumber(aNbr, aLen)
+Canvas.prototype.formatNumber = function(aNbr, aLen)
     {
   		if( typeof aLen == "undefined")
   			aLen = 9;
@@ -114,13 +115,7 @@ class	Canvas
       var roundTo = (aLen - idx)-1;
       if(idx > -1 && roundTo > 0)
         aNbr = Math.round(aNbr * Math.pow(10,roundTo))/Math.pow(10,roundTo);
-/*
-			if(idx > -1 && str.substring(idx).length > aLen)
-				if( aNbr < 0 )
-					aNbr -= .000000001;
-				else
-					aNbr += .000000001;
-*/
+
 			var trunc = aNbr.toString().split(".");
       if(trunc.length !=2 && trunc[0].length <= aLen)
         return aNbr;
@@ -138,8 +133,9 @@ class	Canvas
       if(res.charAt(res.length-1) == "." )
 			   res = (trunc[0] + "." + trunc[1].substring(0,lastZero)).substring(0,aLen+1);
       return res;
-    }
-    print(aStr, anX, aY, aFont, aColor, anAlignment)
+    };
+
+Canvas.prototype.print = function(aStr, anX, aY, aFont, aColor, anAlignment)
     {
 
   		if( typeof aFont != "undefined")
@@ -154,8 +150,8 @@ class	Canvas
       this.CONTEXT.font = this.FONT;
       this.CONTEXT.fillStyle = "black";
       this.CONTEXT.textAlign = "left";
-    }
-    drawLn(x1, y1, x2, y2, aColor)
+    };
+Canvas.prototype.drawLn = function(x1, y1, x2, y2, aColor)
     {
   		if( typeof aColor != "undefined")
   			this.CONTEXT.strokeStyle = aColor;
@@ -164,5 +160,4 @@ class	Canvas
 			this.CONTEXT.lineTo(x2,y2);
 			this.CONTEXT.stroke();
       this.CONTEXT.strokeStyle   = "black";
-    }
-}
+    };

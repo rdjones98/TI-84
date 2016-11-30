@@ -1,6 +1,5 @@
-class	StateYEquals
-{
-	constructor(aCanvas, aRom)
+//class	StateYEquals{	constructor(aCanvas, aRom)
+function StateYEquals(aCanvas, aRom)
 	{
 		this.CANVAS = aCanvas;
 		this.ROM = aRom;
@@ -11,7 +10,7 @@ class	StateYEquals
 		this.TOP = this.CANVAS.Y + this.CANVAS.DIGIT_H;
   }
 
-	insertOrAppend(aNum)
+StateYEquals.prototype.insertOrAppend = function(aNum)
 	{
 		var equ = this._equations[this._row];
 		if( this._col <= equ.length)
@@ -26,35 +25,41 @@ class	StateYEquals
 		}
 		this._equations[this._row] = equ;
 		return equ;
-	}
-	clearPressed()
+	};
+
+StateYEquals.prototype.clearPressed = function()
 	{
 		this._col = 0;
 		this._equations[this._row]="";
 		this.repaint();
-	}
-	numberPressed(aNum)
+	};
+
+StateYEquals.prototype.numberPressed = function(aNum)
 	{
 		this.insertOrAppend(aNum);
-	}
-	xPressed()
+	};
+
+StateYEquals.prototype.xPressed = function()
 	{
 		this.insertOrAppend("X");
-	}
-	negativePressed()
+	};
+
+StateYEquals.prototype.negativePressed = function()
 	{
 		this.insertOrAppend(this.CANVAS.NEGATIVE);
-	}
-	operatorPressed(anOper)
+	};
+
+StateYEquals.prototype.operatorPressed = function(anOper)
 	{
 		this.insertOrAppend(anOper);
-	}
-	yEqualsPressed()
+	};
+
+StateYEquals.prototype.yEqualsPressed = function()
 	{
 		this.repaint();
-	}
+	};
 
-	deletePressed()
+StateYEquals.prototype.deletePressed = function()
 	{
 		var mathStr = this._equations[this._row];
 		if( mathStr.length >= this._col)
@@ -62,8 +67,9 @@ class	StateYEquals
 			mathStr = mathStr.substring(0, this._col) + mathStr.substring(this._col+1);
 			this._equations[this._row] = mathStr;
 		}
-	}
-	trigPressed(aTrigFunc)
+	};
+
+StateYEquals.prototype.trigPressed = function(aTrigFunc)
 	{
 		if (this.ROM.is2ndPressed() )
 		{
@@ -73,8 +79,9 @@ class	StateYEquals
 		else {
 			this.operatorPressed(aTrigFunc);
 		}
-	}
-	logPressed()
+	};
+
+StateYEquals.prototype.logPressed = function()
 	{
 		if (this.ROM.is2ndPressed() )
 		{
@@ -86,8 +93,9 @@ class	StateYEquals
 		else {
 			this.operatorPressed("log(");
 		}
-	}
-	lnPressed()
+	};
+
+StateYEquals.prototype.lnPressed = function()
 	{
 		if (this.ROM.is2ndPressed() )
 		{
@@ -98,9 +106,9 @@ class	StateYEquals
 		else {
 			this.operatorPressed("ln(");
 		}
-	}
+	};
 
-	repaint()
+StateYEquals.prototype.repaint = function()
 	{
 		this.CANVAS.clearCanvas();
 
@@ -117,9 +125,9 @@ class	StateYEquals
 			var str = "\\Y" + (i+1) + "=" + this._equations[i];
 			this.CANVAS.print(str, x, y);
 		}
+	};
 
-	}
-	secondPressed()
+StateYEquals.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
@@ -130,13 +138,14 @@ class	StateYEquals
 		}
 		else
 			this.repaint();
-	}
+	};
 
-	enterPressed()
+StateYEquals.prototype.enterPressed = function()
 	{
 		this.arrowPressed(this.ROM.getKeypad().A_DOWN);
-	}
-	arrowPressed(anArrow)
+	};
+
+StateYEquals.prototype.arrowPressed = function(anArrow)
 	{
 			if(anArrow == this.ROM.getKeypad().A_LEFT )
 			{
@@ -164,10 +173,9 @@ class	StateYEquals
 				this._row ++;
 				this._col = 0;
 			}
-	}
+	};
 
-	getEquations()
+StateYEquals.prototype.getEquations = function()
 	{
 		return this._equations;
-	}
-}
+	};

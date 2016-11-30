@@ -1,6 +1,5 @@
-class StateZoom
-{
-  constructor(aCanvas, aGraph, aRom)
+//class StateZoom{  constructor(aCanvas, aGraph, aRom)
+function StateZoom(aCanvas, aGraph, aRom)
   {
     this.CANVAS = aCanvas;
     this.GRAPH = aGraph;
@@ -11,21 +10,25 @@ class StateZoom
     this._col = 1;
     this._row = 2;
   }
-  zoomPressed()
+
+StateZoom.prototype.zoomPressed = function()
   {
     this.repaint();
-  }
-  numberPressed(aNum)
+  };
+
+StateZoom.prototype.numberPressed = function(aNum)
   {
       var state = this.ROM.setTraceState(aNum);
       if( aNum == 6)
         state.enterPressed();
-  }
-  enterPressed()
+  };
+
+StateZoom.prototype.enterPressed = function()
   {
       this.numberPressed(this._row);
-  }
-  arrowPressed(anArrow)
+  };
+
+StateZoom.prototype.arrowPressed = function(anArrow)
   {
 
     if(anArrow == this.ROM.getKeypad().A_UP )
@@ -47,9 +50,9 @@ class StateZoom
       else if( this._row == 6)
         return;
     }
-  }
+  };
 
-  repaint()
+StateZoom.prototype.repaint = function()
   {
     var y = this.CANVAS.Y+this.CANVAS.DIGIT_H;
     this.CANVAS.clearCanvas();
@@ -64,14 +67,13 @@ class StateZoom
     this.CANVAS.print("5:ZSquare",  this.C1,  y+=this.CANVAS.DIGIT_H, null, "gray" );
     this.CANVAS.print("6:ZStandard", this.C1, y+=this.CANVAS.DIGIT_H );
     this.CANVAS.print("7:ZTrig",    this.C1,  y+=this.CANVAS.DIGIT_H, null, "gray"     );
-  }
-	secondPressed()
+  };
+
+StateZoom.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
 			this.CANVAS.draw2ndButton();
 		else
 			this.repaint();
-	}
-
-}
+	};

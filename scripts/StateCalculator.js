@@ -1,8 +1,7 @@
 "use strict";
-class	StateCalculator
+//class	StateCalculator{	constructor(aCanvas, aRom)
+function StateCalculator(aCanvas, aRom)
 {
-	constructor(aCanvas, aRom)
-	{
 		this.CANVAS = aCanvas;
 		this.ROM = aRom;
 
@@ -11,44 +10,49 @@ class	StateCalculator
 		this._col = 0;
 	}
 
-	incrRow(aNum)
+StateCalculator.prototype.incrRow = function(aNum)
 	{
 		if( typeof aNum == "undefined")
 			aNum = 1;
 		this._row += aNum;
-	}
-	incrCol(aNum)
+	};
+
+StateCalculator.prototype.incrCol = function(aNum)
 	{
 		if( typeof aNum == "undefined")
 			aNum = 1;
 		this._col += aNum;
-	}
-	setCol(aNum)
+	};
+
+StateCalculator.prototype.setCol = function(aNum)
 	{
 		this._col = aNum;
-	}
+	};
+
 	//button pressed events
-	clearPressed()
+StateCalculator.prototype.clearPressed = function()
 	{
 		this.CANVAS.clearCanvas();
 		this._history = new Array("","","","","","","");
 		this._row = 0;
 		this.setCol(0);
-	}
-	matrixPressed(aMatrix)
+	};
+
+StateCalculator.prototype.matrixPressed = function(aMatrix)
 	{
     this._history[this._row] += aMatrix;
  	  this.setCol(this._history[this._row].length);
 
 		this.ROM.secondPressed(false);
+	};
 
-	}
-	xPressed()
+StateCalculator.prototype.xPressed = function()
 	{
 		// xPressed
 
-	}
-	lnPressed()
+	};
+
+StateCalculator.prototype.lnPressed = function()
 	{
 		if (this.ROM.is2ndPressed() )
 		{
@@ -59,8 +63,9 @@ class	StateCalculator
 		else {
 			this.operatorPressed("ln(");
 		}
-	}
-	logPressed()
+	};
+
+StateCalculator.prototype.logPressed = function()
 	{
 		if (this.ROM.is2ndPressed() )
 		{
@@ -72,9 +77,9 @@ class	StateCalculator
 		else {
 			this.operatorPressed("log(");
 		}
-	}
+	};
 
-	trigPressed(aTrigFunc)
+StateCalculator.prototype.trigPressed = function(aTrigFunc)
 	{
 		if (this.ROM.is2ndPressed() )
 		{
@@ -84,9 +89,9 @@ class	StateCalculator
 		else {
 			this.operatorPressed(aTrigFunc);
 		}
-	}
+	};
 
-	operatorPressed(anOper)
+StateCalculator.prototype.operatorPressed = function(anOper)
   {
 		if(this.ROM.is2ndPressed() && anOper == "/")
 		{
@@ -100,15 +105,15 @@ class	StateCalculator
  	  this.setCol(this._history[this._row].length);
 
 		this.ROM.secondPressed(false);
-  }
+  };
 
-	numberPressed( aNum )
+StateCalculator.prototype.numberPressed = function( aNum )
   {
 	   this._history[this._row] += aNum;
 		 this.incrCol();
-  }
+  };
 
-	negativePressed()
+StateCalculator.prototype.negativePressed = function()
   {
 		if(this.ROM.is2ndPressed())
 		{
@@ -124,9 +129,9 @@ class	StateCalculator
 	   this._history[this._row] += this.CANVAS.NEGATIVE;
 		 this.incrCol();
 	 	}
-  }
+  };
 
-	deletePressed()
+StateCalculator.prototype.deletePressed = function()
 	{
 		var mathStr = this._history[this._row];
 		if( mathStr.length >= this._col)
@@ -134,8 +139,9 @@ class	StateCalculator
 			mathStr = mathStr.substring(0, this._col) + mathStr.substring(this._col+1);
 			this._history[this._row] = mathStr;
 		}
-	}
-	arrowPressed(anArrow)
+	};
+
+StateCalculator.prototype.arrowPressed = function(anArrow)
 	{
 			if(anArrow == this.ROM.getKeypad().A_LEFT )
 			{
@@ -147,9 +153,9 @@ class	StateCalculator
 				if( this._col < this._history[this._row].length)
 					this.incrCol();
 			}
-	}
+	};
 
-	enterPressed()
+StateCalculator.prototype.enterPressed = function()
 	{
 		var str = this._history[this._row];
 		if(str.length==0)
@@ -198,21 +204,21 @@ class	StateCalculator
 			this.setCol(0);
 		}
 		this.ROM.secondPressed(false);
-	}
+	};
 
 
 	// Utility Methods
-	count(aStr, aChar)
+StateCalculator.prototype.count = function(aStr, aChar)
 	{
 		var cnt = 0;
 		for( var i=0; i<aStr.length; i++)
 			if( aStr.charAt(i) == aChar)
 				cnt ++;
 		return cnt;
-	}
+	};
 
 
-	preProcessEandPI(anExpr, aSym, aVal)
+StateCalculator.prototype.preProcessEandPI = function(anExpr, aSym, aVal)
 	{
 		var idx = anExpr.indexOf(aSym);
 		while(idx >-1)
@@ -225,9 +231,10 @@ class	StateCalculator
 			idx = anExpr.indexOf(aSym);
 		}
 		return anExpr;
-	}
+	};
+
 	// pre process string so we can transform it to RPN
-	doMath(anExpr)
+StateCalculator.prototype.doMath = function(anExpr)
 	{
 		// if we have any "negative" signs:  \u02C9, replace with "-"
 		while(anExpr.indexOf(this.CANVAS.NEGATIVE)>-1)
@@ -320,9 +327,9 @@ class	StateCalculator
 		anExpr = this.preprocessLogAndTrig(anExpr, "cos(");
 		anExpr = this.preprocessLogAndTrig(anExpr, "tan(");
 		return calculate(anExpr);	// From RegressionEngine
-	}
+	};
 
-	preprocessLogAndTrig(anExpr, aVal)
+StateCalculator.prototype.preprocessLogAndTrig = function(anExpr, aVal)
 	{
 		// if we have any ln functions, evaluate the () then call math.log()
 		var idx = anExpr.indexOf(aVal);
@@ -358,9 +365,9 @@ class	StateCalculator
 			anExpr = anExpr.substring(0,idx) + res + anExpr.substring(eIdx+1);
 		}
 		return anExpr;
-	}
+	};
 
-	preProcessMatrices(anExpr)
+StateCalculator.prototype.preProcessMatrices = function(anExpr)
 	{
 		var mIdx = anExpr.indexOf("rref(");
 		if( mIdx > -1 )
@@ -418,9 +425,10 @@ class	StateCalculator
 			return this.ROM.getStateMatrix().getMatrix(anExpr.charAt(mIdx+1));
 
 		return null;
-	}
+	};
+
 	// Redraw screen based on contents of _history
-	repaint()
+StateCalculator.prototype.repaint = function()
 	{
 		this.CANVAS.clearCanvas();
 
@@ -458,9 +466,9 @@ class	StateCalculator
 			var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
 			this.CANVAS.draw2ndButton(x,y);
 		}
+	};
 
-	}
-	secondPressed()
+StateCalculator.prototype.secondPressed = function()
 	{
 			// draw 2nd Button Pressed Icon
 			if(this.ROM.is2ndPressed())
@@ -472,6 +480,4 @@ class	StateCalculator
 			else {
 					this.repaint();
 			}
-	}
-
-}
+	};

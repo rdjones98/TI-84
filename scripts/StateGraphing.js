@@ -1,6 +1,5 @@
-class	StateGraphing
-{
-	constructor( aCanvas, aYEquals, aRom )
+//class	StateGraphing{	constructor( aCanvas, aYEquals, aRom )
+function StateGraphing( aCanvas, aYEquals, aRom )
 	{
 
 		this.CANVAS = aCanvas;
@@ -23,31 +22,31 @@ class	StateGraphing
 
 	}
 
-	enterPressed()
+StateGraphing.prototype.enterPressed = function()
 	{
 		// Do Nothing
-	}
-	clearPressed()
+	};
+
+StateGraphing.prototype.clearPressed = function()
 	{
 			this.CANVAS.clearCanvas();
 			this.ROM.setStateCalculator();
-	}
+	};
 
-
-  numberPressed(aNum)
+StateGraphing.prototype.numberPressed = function(aNum)
   {
 		this.CANVAS.clearCanvas();
 		this.ROM.setStateCalculator().numberPressed(aNum);
-  }
+  };
 
-  xPressed()
+StateGraphing.prototype.xPressed = function()
   {
 		this.CANVAS.clearCanvas();
 		this.ROM.setStateCalculator().xPressed();
-  }
+  };
 
 	// Draw tick marks on graph
-	drawTickMarks()
+StateGraphing.prototype.drawTickMarks = function()
 	{
 		for( var i=this.CENTER_X; i<=this.CANVAS.WIDTH; i+=this.STEP_X)
 			this.CANVAS.drawLn(i, this.CENTER_Y-3,i, this.CENTER_Y);
@@ -57,12 +56,14 @@ class	StateGraphing
 			this.CANVAS.drawLn(this.CENTER_X, i, this.CENTER_X+3, i);
 		for( var i=this.CENTER_Y; i>=this.CANVAS.Y; i-=this.STEP_Y)
 			this.CANVAS.drawLn(this.CENTER_X, i,this.CENTER_X+3, i);
-	}
-  graphPressed()
+	};
+
+StateGraphing.prototype.graphPressed = function()
   {
 		this.repaint();
-	}
-	repaint()
+	};
+
+StateGraphing.prototype.repaint = function()
 	{
     this.CANVAS.clearCanvas();
 
@@ -98,19 +99,18 @@ class	StateGraphing
 				}
 			}
 		}
-	}
+	};
 
-
-	arrowPressed(anArrow)
+StateGraphing.prototype.arrowPressed = function(anArrow)
 	{
 		this.ROM.setTraceState().arrowPressed(anArrow);
-	}
-	secondPressed()
+	};
+
+StateGraphing.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
 			this.CANVAS.draw2ndButton();
 		else
 			this.repaint();
-	}
-}
+	};

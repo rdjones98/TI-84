@@ -1,9 +1,8 @@
 "use strict";
 
-class	Rom
+//class	Rom {	constructor()
+function Rom ()
 {
-	constructor()
-	{
 		var theCanvas = document.getElementById("theCanvas");
 
 		this.VERSION = .18;
@@ -29,17 +28,17 @@ class	Rom
 		this._secondButtonPressed = false;
 
 		this.CANVAS.drawFocusBox();
-	}
+}
 
 
 	// Button Pressed Events
-	matrixPressed()
+Rom.prototype.matrixPressed = function()
 	{
 		this._state = this.STATE_MATRIX;
 		this._state.matrixPressed();
 		this.secondPressed(false);
-	}
-	graphPressed()
+	};
+Rom.prototype.graphPressed = function()
   {
 		if( !this._secondButtonPressed)
 		{
@@ -51,8 +50,8 @@ class	Rom
 			this._secondButtonPressed = false;
 		}
 		this._state.graphPressed();
-  }
-	tracePressed()
+  };
+Rom.prototype.tracePressed = function()
 	{
 		if(this.is2ndPressed())
 		{
@@ -65,35 +64,35 @@ class	Rom
 			this._state = this.STATE_TRACE;
     	this._state.tracePressed();
 		}
-	}
-	statPressed()
+	};
+Rom.prototype.statPressed = function()
 	{
 		this._state = this.STATE_STAT;
     this._state.statPressed();
-	}
-	zoomPressed()
+	};
+Rom.prototype.zoomPressed = function()
 	{
 		this._state = this.STATE_ZOOM;
     this._state.zoomPressed();
-	}
-  yEqualsPressed()
+	};
+Rom.prototype.yEqualsPressed = function()
   {
     this._state = this.STATE_Y_EQUALS;
     this._state.yEqualsPressed();
-  }
-	windowPressed()
+  };
+Rom.prototype.windowPressed = function()
 	{
 		this._state = this.STATE_WINDOW;
 		this._state.windowPressed();
-	}
-	modePressed()
+	};
+Rom.prototype.modePressed = function()
 	{
 		this._state = this.STATE_MODE;
 		this._state.modePressed();
-	}
+	};
 
 	// Keyboard Pressed Events
-	secondPressed(aVal)
+Rom.prototype.secondPressed = function(aVal)
 	{
 		if( typeof aVal != "undefined")
 			this._secondButtonPressed = aVal
@@ -101,44 +100,44 @@ class	Rom
 			this._secondButtonPressed = !this._secondButtonPressed ;
 		this._state.secondPressed();
 		this._state.repaint();
-	}
-  xPressed()
+	};
+Rom.prototype.xPressed = function()
   {
     this._state.xPressed();
 		this._state.repaint();
-  }
-	lnPressed()
+  };
+Rom.prototype.lnPressed = function()
   {
     this._state.lnPressed();
 		this._state.repaint();
-  }
-	logPressed()
+  };
+Rom.prototype.logPressed = function()
   {
     this._state.logPressed();
 		this._state.repaint();
-  }
-	trigPressed(aTrigFunc)
+  };
+Rom.prototype.trigPressed = function(aTrigFunc)
 	{
 		this._state.trigPressed(aTrigFunc)
 		this._state.repaint();
-	}
-	arrowPressed(anArrow)
+	};
+Rom.prototype.arrowPressed = function(anArrow)
 	{
 		this._state.arrowPressed(anArrow);
 		this._state.repaint();
-}
-  numberPressed( aNum )
+};
+Rom.prototype.numberPressed = function( aNum )
   {
 		this._state.numberPressed(aNum);
 		this.secondPressed(false);
 		this._state.repaint();
-  }
-  operatorPressed(anOper)
+  };
+Rom.prototype.operatorPressed = function(anOper)
   {
 		this._state.operatorPressed(anOper);
 		this._state.repaint();
-	}
-	xSquaredPressed()
+	};
+Rom.prototype.xSquaredPressed = function()
   {
 		if ( this.is2ndPressed() )
 		{
@@ -149,8 +148,8 @@ class	Rom
 			this._state.operatorPressed("^2");
 
 		this._state.repaint();
-	}
-	powerOfPressed()
+	};
+Rom.prototype.powerOfPressed = function()
   {
 		if ( this.is2ndPressed() )
 		{
@@ -161,8 +160,8 @@ class	Rom
 			this._state.operatorPressed("^");
 
 		this._state.repaint();
-	}
-	dividePressed()
+	};
+Rom.prototype.dividePressed = function()
   {
 		if ( this.is2ndPressed() )
 		{
@@ -173,92 +172,92 @@ class	Rom
 			this._state.operatorPressed("/");
 
 		this._state.repaint();
-	}
-  negativePressed()
+	};
+Rom.prototype.negativePressed = function()
   {
 		this._state.negativePressed();
 		this._state.repaint();
-  }
-  clearPressed()
+  };
+Rom.prototype.clearPressed = function()
   {
 		this._state.clearPressed();
-  }
-  enterPressed()
+  };
+Rom.prototype.enterPressed = function()
   {
 		this._state.enterPressed();
 		this._state.repaint();
-	}
-	deletePressed()
+	};
+Rom.prototype.deletePressed = function()
 	{
 		this._state.deletePressed();
 		this._state.repaint();
-	}
+	};
 
 	// Getter/Setter Methods
-	getStateMatrix()
+Rom.prototype.getStateMatrix = function()
 	{
 		return this.STATE_MATRIX;
-	}
-	getStateGraph()
+	};
+Rom.prototype.getStateGraph = function()
 	{
 		return this.STATE_GRAPHING;
-	}
-	getStateYEquals()
+	};
+Rom.prototype.getStateYEquals = function()
 	{
 		return this.STATE_Y_EQUALS;
-	}
-	getKeypad()
+	};
+Rom.prototype.getKeypad = function()
 	{
 		return this.KEYPAD;
-	}
-	getStatEditState()
+	};
+Rom.prototype.getStatEditState = function()
 	{
 		return this.STATE_STATEDIT;
-	}
-	setKeypad(aKeyPad)
+	};
+Rom.prototype.setKeypad = function(aKeyPad)
 	{
 		this.KEYPAD = aKeyPad;
-	}
-	setStateCalculator()
+	};
+Rom.prototype.setStateCalculator = function()
 	{
 		this._state = this.STATE_CALCULATOR;
 		this._state.repaint();
 		return this._state;
-	}
-	setTraceState(aZoom)
+	};
+Rom.prototype.setTraceState = function(aZoom)
 	{
 		this._state = this.STATE_TRACE;
 		if( typeof aZoom != "undefined")
 			this._state.zoom(aZoom);
 		this._state.repaint();
 		return this._state;
-	}
-	setStatEditState()
+	};
+Rom.prototype.setStatEditState = function()
 	{
 		this._state = this.STATE_STATEDIT;
 		this._state.repaint();
 		return this._state;
-	}
-	is2ndPressed()
+	};
+Rom.prototype.is2ndPressed = function()
 	{
 		return this._secondButtonPressed;
-	}
+	};
 
-	evaluate(anEquationIdx, anX)
+Rom.prototype.evaluate = function(anEquationIdx, anX)
 	{
 		anX = this.fixRoundingError(anX);
 		var equ = this.STATE_Y_EQUALS._equations[anEquationIdx].replace(/X/g, "(" + anX + ")");
 		return this.doMath(equ);
-	}
+	};
 
-	doMath(anExpr)
+Rom.prototype.doMath = function(anExpr)
 	{
 		if( anExpr.toString().indexOf("e-") > 0)
 			console.log(anExpr);
 		return this.fixRoundingError(this.STATE_CALCULATOR.doMath(anExpr));
-	}
+	};
 
-	fixRoundingError(aVal)
+Rom.prototype.fixRoundingError = function(aVal)
 	{
     var str = aVal.toString();
     var idx = str.indexOf(".");
@@ -266,5 +265,4 @@ class	Rom
       return 0;
 
 		return aVal;
-	}
-}
+	};

@@ -12,7 +12,9 @@ var mouseListener = document.getElementById("theCanvas");
 mouseListener.addEventListener("click", whatClicked, false);
 
 // add key listeners
-document.addEventListener('keydown', (event) => {
+document.addEventListener('keydown', keyPressed, false);
+function keyPressed(event)
+{
   const keyName = event.key;
   const which = event.which;
 
@@ -76,6 +78,6 @@ document.addEventListener('keydown', (event) => {
     ROM.deletePressed();
   }
   else {
-    console.log(`${keyName}`);
+    console.log(keyName);
   }
-}, false);
+}

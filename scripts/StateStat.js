@@ -1,7 +1,6 @@
-class StateStat
+//class StateStat{  constructor(aCanvas, aRom)
+function StateStat(aCanvas, aRom)
 {
-  constructor(aCanvas, aRom)
-  {
     this.CANVAS = aCanvas;
     this.ROM = aRom;
 
@@ -14,9 +13,9 @@ class StateStat
     this.A = "";
     this.B = "";
     this.C = "";
-  }
+}
 
-  numberPressed(aNum)
+StateStat.prototype.numberPressed = function(aNum)
   {
     if(this._col == 1 && aNum == 1)
       this.enterPressed();
@@ -25,9 +24,9 @@ class StateStat
       this._C2row = Number(aNum)+1;
       this.enterPressed();
     }
-  }
+  };
 
-  enterPressed()
+StateStat.prototype.enterPressed = function()
   {
     if( this._col == 1)
       this.ROM.setStatEditState();
@@ -65,8 +64,9 @@ class StateStat
         }
       }
     }
-  }
-  arrowPressed(anArrow)
+  };
+
+StateStat.prototype.arrowPressed = function(anArrow)
 	{
 			if(anArrow == this.ROM.getKeypad().A_LEFT )
 			{
@@ -89,9 +89,9 @@ class StateStat
         else
           this._C2row = 5;
 			}
-	}
+	};
 
-  repaint()
+StateStat.prototype.repaint = function()
   {
     this.CANVAS.clearCanvas();
 
@@ -126,9 +126,9 @@ class StateStat
     }
     this.CANVAS.print("EDIT CALC TESTS",  this.C1, this.CANVAS.Y + this.CANVAS.DIGIT_H );
     // do nothing yet
-  }
+  };
 
-  paintLinearResult()
+StateStat.prototype.paintLinearResult = function()
   {
     this.CANVAS.clearCanvas();
     this.CANVAS.drawFocusBox(this.C2+10 , this.T_ROW1-this.CANVAS.DIGIT_H, 60);
@@ -139,8 +139,9 @@ class StateStat
     this.A="";
     this.B="";
     this.C="";
-  }
-  paintQuadraticResults()
+  };
+
+StateStat.prototype.paintQuadraticResults = function()
   {
     this.CANVAS.clearCanvas();
     this.CANVAS.drawFocusBox(this.C2, this.T_ROW1-this.CANVAS.DIGIT_H, 70);
@@ -152,18 +153,18 @@ class StateStat
     this.A="";
     this.B="";
     this.C="";
-}
-	secondPressed()
+};
+
+StateStat.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
 		if(this.ROM.is2ndPressed())
 			this.CANVAS.draw2ndButton();
 		else
 			this.repaint();
-	}
+	};
 
-  statPressed()
+StateStat.prototype.statPressed = function()
   {
     this.repaint();
-  }
-}
+  };
