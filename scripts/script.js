@@ -4,7 +4,8 @@
 
 var canvas = document.getElementById("theCanvas");
 canvas.addEventListener("click", whatClicked, false);
-  canvas.addEventListener("touchend", touchEnd, false);
+canvas.addEventListener("touchend", touchEnd, false);
+canvas.addEventListener("touchstart", touchStart, false);
 
 var ROM = new Rom(canvas.clientWidth, canvas.clientHeight);
 var KEYPAD = new Keypad(ROM, canvas.clientWidth, canvas.clientHeight);
@@ -15,6 +16,10 @@ function whatClicked(evt) {
 }
 function touchEnd(evt){
   evt.preventDefault();
+  var newEvt = {};
+  newEvt.clientX = evt.changedTouches[0].clientX;
+  newEvt.clientY = evt.changedTouches[0].clientY;
+  whatClicked(newEvt);
 }
 
 // add key listeners
