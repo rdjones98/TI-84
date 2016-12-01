@@ -4,7 +4,7 @@
 
 var canvas = document.getElementById("theCanvas");
 canvas.addEventListener("click", whatClicked, false);
-  canvas.addEventListener("dblclick", dblClicked, false);
+  canvas.addEventListener("touchend", touchEnd, false);
 
 var ROM = new Rom(canvas.clientWidth, canvas.clientHeight);
 var KEYPAD = new Keypad(ROM, canvas.clientWidth, canvas.clientHeight);
@@ -13,7 +13,7 @@ var KEYPAD = new Keypad(ROM, canvas.clientWidth, canvas.clientHeight);
 function whatClicked(evt) {
     KEYPAD.mouseClicked(evt);
 }
-function dblClicked(evt){
+function touchEnd(evt){
   evt.preventDefault();
 }
 
