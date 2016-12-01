@@ -1,13 +1,12 @@
 "use strict";
 
 //class	Rom {	constructor()
-function Rom ()
+function Rom (aWidth, aHeight)
 {
 		var theCanvas = document.getElementById("theCanvas");
 
-		this.VERSION = 1.0;
 		// Handle to all State Managers
-		this.CANVAS = new Canvas(theCanvas);
+		this.CANVAS = new Canvas(theCanvas, aWidth, aHeight);
 		this.STATE_Y_EQUALS   = new StateYEquals(this.CANVAS, this);
 		this.STATE_GRAPHING   = new StateGraphing(this.CANVAS, this.STATE_Y_EQUALS, this);
 		this.STATE_GRAPHTBL   = new StateGraphTable(this.CANVAS, this.STATE_Y_EQUALS, this);
@@ -194,6 +193,10 @@ Rom.prototype.deletePressed = function()
 	};
 
 	// Getter/Setter Methods
+Rom.prototype.getCanvas = function()
+{
+	return this.CANVAS;
+};
 Rom.prototype.getStateMatrix = function()
 	{
 		return this.STATE_MATRIX;
@@ -259,6 +262,8 @@ Rom.prototype.doMath = function(anExpr)
 
 Rom.prototype.fixRoundingError = function(aVal)
 	{
+		if(aVal == null)
+			return 0;
     var str = aVal.toString();
     var idx = str.indexOf(".");
     if( str.indexOf("e-") > idx )

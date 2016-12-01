@@ -1,15 +1,17 @@
 'use strict';
 
 // Set up!
-var ROM = new Rom();
-var KEYPAD = new Keypad(ROM);
+
+var canvas = document.getElementById("theCanvas");
+canvas.addEventListener("click", whatClicked, false);
+
+var ROM = new Rom(canvas.clientWidth, canvas.clientHeight);
+var KEYPAD = new Keypad(ROM, canvas.clientWidth, canvas.clientHeight);
 
 // Add mouse click listener
 function whatClicked(evt) {
     KEYPAD.mouseClicked(evt);
 }
-var mouseListener = document.getElementById("theCanvas");
-mouseListener.addEventListener("click", whatClicked, false);
 
 // add key listeners
 document.addEventListener('keydown', keyPressed, false);

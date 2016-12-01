@@ -6,7 +6,7 @@ function StateYEquals(aCanvas, aRom)
     this._equations = new Array("","","","","","","");
 		this._row = 0;
     this._col = 0;
-		this.OFFSET = 40;
+		this.OFFSET = 4*this.CANVAS.DIGIT_W;
 		this.TOP = this.CANVAS.Y + this.CANVAS.DIGIT_H;
   }
 

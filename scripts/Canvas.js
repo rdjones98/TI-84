@@ -1,28 +1,36 @@
 //class	Canvas{constructor(aCanvas) {}}
-function Canvas(aCanvas)
+function Canvas(aCanvas, aWidth, aHeight)
 {
-  		this.CONTEXT = aCanvas.getContext("2d");
-  		this.X = 64;
-  		this.Y = 60;
-  		this.HEIGHT = 200 ;
-  		this.WIDTH  = 270;
-  		this.DIGIT_W = 10;
-  		this.DIGIT_H = 16;
+  aWidth = Number(aWidth);
+  aHeight = Number(aHeight);
+	this.CONTEXT = aCanvas.getContext("2d");
+	this.X = Math.round(.19*aWidth);
+	this.Y = Math.round(.095*aHeight);
+	this.HEIGHT = Math.round(.302*aHeight) ;
+	this.WIDTH  = Math.round(.7692 * aWidth);
+	this.DIGIT_W = Math.round(.029 * aWidth);
+	this.DIGIT_H = Math.round(.0241 * aHeight);
 
-  		this.FONT = "17px Courier";
-  		this.SMALL_FONT = "14px Courier";
-      this.CONTEXT.font = this.FONT;
+	this.FONT = Math.round(.048 * aWidth) + "px Courier";
+	this.SMALL_FONT = Math.round(.04 * aWidth) + "px Courier";
+  this.CONTEXT.font = this.FONT;
 
-      this.NEGATIVE = String.fromCharCode(parseInt("02C9", 16));
-      this.SQRROOT  = String.fromCharCode(parseInt("221A", 16));
-      this.PI       = String.fromCharCode(parseInt("03C0", 16));
+  this.NEGATIVE = String.fromCharCode(parseInt("02C9", 16));
+  this.SQRROOT  = String.fromCharCode(parseInt("221A", 16));
+  this.PI       = String.fromCharCode(parseInt("03C0", 16));
 
-      this.CONTEXT.strokeStyle = "gray";
-      this.CONTEXT.rect(this.X,this.Y,this.WIDTH-this.X,this.HEIGHT-this.Y);
-      this.CONTEXT.stroke();
-      this.CONTEXT.clip();
-      this.CONTEXT.strokeStyle = "black";
+  this.clipDisplay();
 }
+
+Canvas.prototype.clipDisplay = function()
+{
+    this.CONTEXT.save();
+    this.CONTEXT.strokeStyle = "gray";
+    this.CONTEXT.rect(this.X,this.Y,this.WIDTH-this.X,this.HEIGHT-this.Y);
+    this.CONTEXT.stroke();
+    this.CONTEXT.clip();
+    this.CONTEXT.strokeStyle = "black";
+};
 
 Canvas.prototype.clearCanvas = function()
   	{

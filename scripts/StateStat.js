@@ -6,8 +6,8 @@ function StateStat(aCanvas, aRom)
 
     this.T_ROW1 = aCanvas.Y + this.CANVAS.DIGIT_H-5;
     this.C1 = this.CANVAS.X;
-    this.C2 = this.CANVAS.X + 50  ;
-    this.C3 = this.CANVAS.X + 60;
+    this.C2 = this.CANVAS.X + 5*this.CANVAS.DIGIT_W  ;
+    this.C3 = this.CANVAS.X + 10*this.CANVAS.DIGIT_W;
     this._col = 1;
     this._C2row = 5;
     this.A = "";
@@ -106,7 +106,7 @@ StateStat.prototype.repaint = function()
 
     if( this._col == 1)
     {
-      this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y, 40);
+      this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y, 4*this.CANVAS.DIGIT_W);
       this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y+this.CANVAS.DIGIT_H);
       this.CANVAS.print("1:Edit", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*2 );
       this.CANVAS.print("2:SortA(", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*3, this.CANVAS.FONT, "gray" );
@@ -116,7 +116,7 @@ StateStat.prototype.repaint = function()
     }
     else if( this._col == 2)
     {
-      this.CANVAS.drawFocusBox(this.C2, this.CANVAS.Y, 45);
+      this.CANVAS.drawFocusBox(this.C2, this.CANVAS.Y, 4*this.CANVAS.DIGIT_W);
       this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y+this.CANVAS.DIGIT_H*(this._C2row-1));
       this.CANVAS.print("1:1-Var Stats", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*2, this.CANVAS.FONT, "gray" );
       this.CANVAS.print("2:2-Var Stats", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*3, this.CANVAS.FONT, "gray" );
@@ -131,7 +131,7 @@ StateStat.prototype.repaint = function()
 StateStat.prototype.paintLinearResult = function()
   {
     this.CANVAS.clearCanvas();
-    this.CANVAS.drawFocusBox(this.C2+10 , this.T_ROW1-this.CANVAS.DIGIT_H, 60);
+    this.CANVAS.drawFocusBox(this.C2+10 , this.T_ROW1-this.CANVAS.DIGIT_H, 6*this.CANVAS.DIGIT_W);
     this.CANVAS.print("LinReg", this.C2+10,  this.T_ROW1  );
     this.CANVAS.print(" y=ax+b", this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H  );
     this.CANVAS.print(" a="+this.CANVAS.formatNumber(this.A,12), this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H * 2 );
@@ -144,7 +144,7 @@ StateStat.prototype.paintLinearResult = function()
 StateStat.prototype.paintQuadraticResults = function()
   {
     this.CANVAS.clearCanvas();
-    this.CANVAS.drawFocusBox(this.C2, this.T_ROW1-this.CANVAS.DIGIT_H, 70);
+    this.CANVAS.drawFocusBox(this.C2, this.T_ROW1-this.CANVAS.DIGIT_H, 7*this.CANVAS.DIGIT_W);
     this.CANVAS.print("QuadReg", this.C2,  this.T_ROW1  );
     this.CANVAS.print(" y=ax^2+bx+c", this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H , this.CANVAS.FONT  );
     this.CANVAS.print(" a="+this.A, this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H * 2 , this.CANVAS.FONT );

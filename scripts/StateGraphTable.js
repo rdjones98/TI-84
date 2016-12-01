@@ -6,10 +6,10 @@ function StateGraphTable(aCanvas, aYEquals, aRom)
 		this.ROM = aRom;
 
 		this.T_COL1 = this.CANVAS.X+5;
-		this.T_COL2 = 130;
-		this.T_COL3 = 200;
+		this.T_COL2 = this.CANVAS.X + Math.round(this.CANVAS.WIDTH/4);
+		this.T_COL3 = this.T_COL2 + Math.round(this.CANVAS.WIDTH/4);
 		this.T_ROW1 = aCanvas.Y + aCanvas.DIGIT_H + 5;
-		this.T_MAXROWS = 7;
+		this.T_MAXROWS = 6;
 
 		this.IDX1 = -1;
 		this.IDX2 = -1;
@@ -17,8 +17,7 @@ function StateGraphTable(aCanvas, aYEquals, aRom)
 		this.CURSORROW = 0;
 		this.CURSORIDX = 0;
 
-		this.FONT = "14px Courier";
-		this.DIGIT_H = 14;
+		this.DIGIT_H = aCanvas.DIGIT_H;
 
 	}
 
@@ -71,7 +70,7 @@ StateGraphTable.prototype.drawTable = function()
 		this.CANVAS.drawLn(this.T_COL2-7, this.CANVAS.Y,this.T_COL2-7, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H);
 		this.CANVAS.drawLn(this.T_COL3-7, this.CANVAS.Y,this.T_COL3-7, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H);
 
-		this.CANVAS.print("X",  this.T_COL2 - 40, this.CANVAS.Y + this.CANVAS.DIGIT_H, this.CANVAS.FONT );
+		this.CANVAS.print("X",  (this.T_COL2 + this.T_COL1)/2, this.CANVAS.Y + this.CANVAS.DIGIT_H, this.CANVAS.FONT );
 
 		// Find the first 2 Y= that are filled out
 		this.IDX1 = -1;
