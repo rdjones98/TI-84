@@ -58,7 +58,7 @@ function keyPressed(event)
   else if(keyName=="e" || keyName == "E")
   {
     ROM.secondPressed(true);
-    ROM.lnPressed();
+    ROM.dividePressed();
   }
   else if(keyName=="y" || keyName == "Y")
     ROM.yEqualsPressed();
@@ -74,10 +74,12 @@ function keyPressed(event)
     ROM.modePressed();
   else if(keyName=="s" || keyName == "S")
     ROM.statPressed();
-  else if(keyName=="v" || keyName == "V")
-    alert(ROM.VERSION);
   else if(keyName=="z" || keyName == "Z")
     ROM.zoomPressed();
+  else if(keyName=="l" || keyName == "L")
+    ROM.logPressed();
+  else if(keyName=="n" || keyName == "N")
+    ROM.lnPressed();
   else if(keyName=="Escape")
     ROM.setStateCalculator();
   else if(keyName=="Shift")

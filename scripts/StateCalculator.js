@@ -97,9 +97,10 @@ StateCalculator.prototype.operatorPressed = function(anOper)
 		{
 	  	anOper = "e";
 		}
-		else if( this._history[this._row].length == 0 && this._row != 0 && this._history[this._row-1].substring(0,3)=="<R>")
+		else if( anOper == "+" || anOper == "-" || anOper == "*" || anOper == "/")
 		{
-			this._history[this._row] = this._history[this._row-1].substring(3);
+			if( this._history[this._row].length == 0 && this._row != 0 && this._history[this._row-1].substring(0,3)=="<R>")
+				this._history[this._row] = this._history[this._row-1].substring(3);
 		}
     this._history[this._row] += anOper;
  	  this.setCol(this._history[this._row].length);
