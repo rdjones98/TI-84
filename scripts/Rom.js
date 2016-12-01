@@ -5,7 +5,7 @@ function Rom ()
 {
 		var theCanvas = document.getElementById("theCanvas");
 
-		this.VERSION = .18;
+		this.VERSION = 1.0;
 		// Handle to all State Managers
 		this.CANVAS = new Canvas(theCanvas);
 		this.STATE_Y_EQUALS   = new StateYEquals(this.CANVAS, this);
