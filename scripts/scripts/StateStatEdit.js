@@ -5,8 +5,8 @@ function StateStatEdit(aCanvas, aRom)
     this.ROM = aRom;
 
     this.C1 = this.CANVAS.X;
-    this.C2 = this.CANVAS.X + 70;
-    this.C3 = this.CANVAS.X + 140;
+    this.C2 = this.CANVAS.X + 7*aCanvas.DIGIT_W;
+    this.C3 = this.CANVAS.X + 14*aCanvas.DIGIT_W;
     this.T_ROW1 = aCanvas.Y + aCanvas.DIGIT_H + 5;
     this._sel = 1;
     this._col = 0;

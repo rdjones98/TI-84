@@ -19,12 +19,18 @@ function Canvas(aCanvas, aWidth, aHeight)
   this.SQRROOT  = String.fromCharCode(parseInt("221A", 16));
   this.PI       = String.fromCharCode(parseInt("03C0", 16));
 
-  this.CONTEXT.strokeStyle = "gray";
-  this.CONTEXT.rect(this.X,this.Y,this.WIDTH-this.X,this.HEIGHT-this.Y);
-  this.CONTEXT.stroke();
-  this.CONTEXT.clip();
-  this.CONTEXT.strokeStyle = "black";
+  this.clipDisplay();
 }
+
+Canvas.prototype.clipDisplay = function()
+{
+    this.CONTEXT.save();
+    this.CONTEXT.strokeStyle = "gray";
+    this.CONTEXT.rect(this.X,this.Y,this.WIDTH-this.X,this.HEIGHT-this.Y);
+    this.CONTEXT.stroke();
+    this.CONTEXT.clip();
+    this.CONTEXT.strokeStyle = "black";
+};
 
 Canvas.prototype.clearCanvas = function()
   	{

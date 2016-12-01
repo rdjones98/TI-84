@@ -193,6 +193,10 @@ Rom.prototype.deletePressed = function()
 	};
 
 	// Getter/Setter Methods
+Rom.prototype.getCanvas = function()
+{
+	return this.CANVAS;
+};
 Rom.prototype.getStateMatrix = function()
 	{
 		return this.STATE_MATRIX;
@@ -258,6 +262,8 @@ Rom.prototype.doMath = function(anExpr)
 
 Rom.prototype.fixRoundingError = function(aVal)
 	{
+		if(aVal == null)
+			return 0;
     var str = aVal.toString();
     var idx = str.indexOf(".");
     if( str.indexOf("e-") > idx )
