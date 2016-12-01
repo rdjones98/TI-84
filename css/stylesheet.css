@@ -1,8 +1,47 @@
-body {
-    background-image: url('../images/ti-84 mobile.jpg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: left top;
+@media only screen and (min-device-width: 481px) 
+{
+	/* Desktop */
 
-  overflow:hidden;
+	body {
+	    background-image: url('../images/ti-84.jpg');
+	    background-repeat: no-repeat;
+	    background-attachment: fixed;
+	    background-position: left top;
+
+	  overflow:hidden;
+	}
+
+	div.canvas
+	{
+		width:  351px;
+		height: 663px;
+	}
+
+
 }
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+  /* iPhone, Android rules here */
+	body {
+	    background-image: url('../images/ti-84 mobile.jpg');
+	    background-repeat: no-repeat;
+	    background-attachment: fixed;
+	    background-position: left top;
+
+	  overflow:hidden;
+	}
+        div.canvas {
+		width:  789px;
+		height: 1491px;
+	}
+
+}
+
+@media only screen and (max-width: 999px) {
+  /* rules that only apply for canvases narrower than 1000px */
+}
+
+@media only screen and (device-width: 768px) and (orientation: landscape) {
+  /* rules for iPad in landscape orientation */
+}
+

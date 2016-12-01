@@ -3,17 +3,28 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 <html>
     <head>
-        <title>EHS-84 1.09</title>
+        <title>EHS-84 1.10</title>
         <link rel='stylesheet' type='text/css' href='css/stylesheet.css'/>
     </head>
     <body>
-        <canvas id="theCanvas" width="789" height="1491">
-            This text is displayed if your does not support HTML5 Canvas.
+	<div id="canvas" class="canvas">
+        <canvas id="theCanvas" >
+            You're phone will not work.  sorry
         </canvas>
-        <div style="position:absolute; left:790px; top:200px;">
-          Shortcuts:<br>y:Y=<br>w: Window<br>z: Zoom<br>t: Trace<br>g: Graph<br>shift: 2nd<br>m: Mode<br>del: Delete<br>x: X,T,0,n<br>s: Stat<br>esc: Clear<br>a: Matrix<br>^: ^<br>l: Log<br>n: LN
+	</div>
 
-        </div>
+	<script>
+		// The canvas size needs to change based on if we are mobile or desktop
+		// but you can't set it in the CSS file.
+		var canvas = document.getElementById("theCanvas");
+
+		canvas.style.width ='100%';
+		canvas.style.height='100%';
+ 	 	// ...then set the internal size to match
+  		canvas.width  = canvas.offsetWidth;
+  		canvas.height = canvas.offsetHeight;
+	</script>
+
         <br>
         <script type='text/javascript' src='scripts/Rom.js'></script>
         <script type='text/javascript' src='scripts/Keypad.js'></script>

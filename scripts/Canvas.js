@@ -24,9 +24,9 @@ function Canvas(aCanvas, aWidth, aHeight)
 
 Canvas.prototype.clipDisplay = function()
 {
-    this.CONTEXT.save();
     this.CONTEXT.strokeStyle = "gray";
     this.CONTEXT.rect(this.X,this.Y,this.WIDTH-this.X,this.HEIGHT-this.Y);
+
     this.CONTEXT.stroke();
     this.CONTEXT.clip();
     this.CONTEXT.strokeStyle = "black";
