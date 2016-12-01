@@ -70,7 +70,7 @@ function Keypad( aRom, aWidth, aHeight )
 		this.ON_MIN=Math.round(.8462*aHeight);
 		this.ON_MAX=Math.round(.8793*aHeight);
 
-		this.ENTER_MIN=Math.round(.8370*aHeight);
+		this.ENTER_MIN=Math.round(.830*aHeight);
 		this.ENTER_MAX=Math.round(.8974*aHeight);
 
 		this.ARROWUP_MIN=Math.round(.4024*aHeight);
@@ -152,8 +152,6 @@ function Keypad( aRom, aWidth, aHeight )
       this.rom.trigPressed("tan(");
 		else if( this.COL4_MIN <= x &&  x <= this.COL4_MAX  && this.ROW1_MIN <= y && y <= this.ROW1_MAX)
       this.rom.tracePressed();
-    else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW9_MIN <= y && y <= this.ROW9_MAX)
-      this.rom.operatorPressed("+");
 		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW8_MIN <= y && y <= this.ROW8_MAX )
       this.rom.operatorPressed("-");
 		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW7_MIN  <= y && y <= this.ROW7_MAX )
@@ -164,6 +162,8 @@ function Keypad( aRom, aWidth, aHeight )
       this.rom.powerOfPressed();
     else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ENTER_MIN <= y && y <= this.ENTER_MAX)
       this.rom.enterPressed();
+    else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW9_MIN <= y && y <= this.ROW9_MAX)
+      this.rom.operatorPressed("+");
     else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW4_MIN <= y && y <= this.ROW4_MAX)
       this.rom.clearPressed();
     else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW1_MIN <= y && y <= this.ROW1_MAX)
@@ -183,6 +183,9 @@ function Keypad( aRom, aWidth, aHeight )
 			var ctx = theCanvas.CONTEXT;
 
 			ctx.strokeStyle = "red";
+
+			ctx.rect(this.COL5_MIN,this.ENTER_MIN,this.COL5_MAX-this.COL5_MIN, this.ENTER_MAX-this.ENTER_MIN);
+
 			ctx.rect(this.COL1_MIN,this.ROW1_MIN,this.COL5_MAX-this.COL1_MIN, this.ROW1_MAX-this.ROW1_MIN);
 			ctx.rect(this.COL1_MIN,this.ROW2_MIN,this.COL5_MAX-this.COL1_MIN, this.ROW2_MAX-this.ROW2_MIN);
 			ctx.rect(this.COL1_MIN,this.ROW3_MIN,this.COL5_MAX-this.COL1_MIN, this.ROW3_MAX-this.ROW3_MIN);
@@ -201,5 +204,5 @@ function Keypad( aRom, aWidth, aHeight )
 			ctx.rect(this.COL5_MIN,this.ROW1_MIN,this.COL5_MAX-this.COL5_MIN, this.ROW10_MAX-this.ROW1_MIN);
 
 			ctx.stroke();
-*/
+*/			
   };
