@@ -5,7 +5,6 @@
 var canvas = document.getElementById("theCanvas");
 canvas.addEventListener("click", whatClicked, false);
 canvas.addEventListener("touchend", touchEnd, false);
-canvas.addEventListener("touchstart", touchStart, false);
 
 var ROM = new Rom(canvas.clientWidth, canvas.clientHeight);
 var KEYPAD = new Keypad(ROM, canvas.clientWidth, canvas.clientHeight);
