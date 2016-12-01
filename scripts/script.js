@@ -15,7 +15,6 @@ function whatClicked(evt) {
 }
 function dblClicked(evt){
   evt.preventDefault();
-  alert(evt);
 }
 
 // add key listeners
