@@ -97,7 +97,7 @@ StateCalculator.prototype.operatorPressed = function(anOper)
 		{
 	  	anOper = "e";
 		}
-		else if( this._history[this._row].length == 0 && this._row != 0 && this._history[this._row-1].startsWith("<R>"))
+		else if( this._history[this._row].length == 0 && this._row != 0 && this._history[this._row-1].substring(0,3)=="<R>")
 		{
 			this._history[this._row] = this._history[this._row-1].substring(3);
 		}
@@ -118,7 +118,7 @@ StateCalculator.prototype.negativePressed = function()
 		if(this.ROM.is2ndPressed())
 		{
 			for( var idx=this._row-1; idx>=0; idx-- )
-				if(!this._history[idx].startsWith("<R>") )
+				if(!this._history[idx].substring(0,3)=="<R>" )
 				{
 					this._history[this._row] = this._history[idx]	;
 					break;
@@ -447,7 +447,7 @@ StateCalculator.prototype.repaint = function()
 
 			// If item starts with <R> then right justify
 			var str = this._history[i];
-			if( str.startsWith("<R>"))
+			if( str.substring(0,3) =="<R>")
 			{
 				str = str.substring(3);
 				// If it has "]" then its a matrix, print it accordingly
