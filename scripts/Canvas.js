@@ -1,3 +1,5 @@
+alert("load canvas");
+
 //class	Canvas{constructor(aCanvas) {}}
 function Canvas(aCanvas, aWidth, aHeight)
 {

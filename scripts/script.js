@@ -1,3 +1,4 @@
+alert("load script");
 // Set up!
 var canvas = document.getElementById("theCanvas");
 canvas.addEventListener("click", whatClicked, false);
