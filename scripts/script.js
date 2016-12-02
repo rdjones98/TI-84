@@ -1,5 +1,4 @@
 // Set up!
-alert("start script.js");
 var canvas = document.getElementById("theCanvas");
 canvas.addEventListener("click", whatClicked, false);
 canvas.addEventListener("touchend", touchEnd, false);
@@ -10,11 +9,9 @@ var KEYPAD = new Keypad(ROM, canvas.clientWidth, canvas.clientHeight);
 
 // Add mouse click listener
 function whatClicked(evt) {
-  alert("clicked " + evt);
     KEYPAD.mouseClicked(evt);
 }
 function touchEnd(evt){
-alert("touch end");
   evt.preventDefault();
   var newEvt = {};
   newEvt.clientX = evt.changedTouches[0].clientX;

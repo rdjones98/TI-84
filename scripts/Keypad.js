@@ -85,6 +85,7 @@ function Keypad( aRom, aWidth, aHeight )
     var x = evt.clientX;
     var y = evt.clientY;
 
+alert("Mouse Clicked " + x + "," + y);
 		if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW1_MIN <= y && y <= this.ROW1_MAX)
       this.rom.yEqualsPressed();
 		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW2_MIN <= y && y <= this.ROW2_MAX)
@@ -204,5 +205,5 @@ function Keypad( aRom, aWidth, aHeight )
 			ctx.rect(this.COL5_MIN,this.ROW1_MIN,this.COL5_MAX-this.COL5_MIN, this.ROW10_MAX-this.ROW1_MIN);
 
 			ctx.stroke();
-*/			
+*/
   };
