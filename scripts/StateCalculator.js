@@ -241,6 +241,14 @@ StateCalculator.prototype.doMath = function(anExpr)
 		while(anExpr.indexOf(this.CANVAS.NEGATIVE)>-1)
 			anExpr = anExpr.replace(this.CANVAS.NEGATIVE, "-");
 
+		// RPNEngine does not handle decimals without leading integers correctly,
+		// so insert leading zeros if nothing else is there
+		if(anExpr.charAt(0) == '.')
+			anExpr = "0" + anExpr;
+		for(var idx = 0; idx<anExpr.length; idx++)
+			if(anExpr.charAt(idx) == '.' && ( anExpr.charAt(idx-1) < '0' || anExpr.charAt(idx-1) > '9' ) )
+				anExpr = anExpr.substring(0,idx) + "0" + anExpr.substring(idx);
+
 		// Handle any matrices
 		var m = this.preProcessMatrices(anExpr);
 		if( m != null )

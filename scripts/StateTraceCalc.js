@@ -284,9 +284,10 @@ StateTraceCalc.prototype.findMaximum = function()
 
 StateTraceCalc.prototype.findIntersection = function(equ1, equ2, aLeftX, aRightX, aCnt)
   {
+    var step = .01;
+    if(aCnt>1)
+      step=.000001
 
-//		var step = (aRightX-aLeftX)/(20*10*aCnt);
-		var step = .1*Math.pow(.1,aCnt);
     var e1LTe2 = null;
 		for( var xCoord=aLeftX; xCoord<aRightX; xCoord=xCoord + step)
     {
@@ -302,7 +303,7 @@ StateTraceCalc.prototype.findIntersection = function(equ1, equ2, aLeftX, aRightX
         }
         else if( ( yCoord1 < yCoord2) != e1LTe2 )
         {
-          if(aCnt >= 5)
+          if(aCnt > 1)
             return xCoord;
           else
             return this.findIntersection(equ1, equ2, xCoord-step, xCoord, aCnt + 1);
