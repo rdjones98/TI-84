@@ -1,7 +1,5 @@
-'use strict';
-
 // Set up!
-
+alert("start script.js");
 var canvas = document.getElementById("theCanvas");
 canvas.addEventListener("click", whatClicked, false);
 canvas.addEventListener("touchend", touchEnd, false);
