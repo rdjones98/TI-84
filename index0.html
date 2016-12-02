@@ -14,16 +14,18 @@
 	</div>
 
 	<script>
-  alert("hey");
 		// The canvas size needs to change based on if we are mobile or desktop
 		// but you can't set it in the CSS file.
 		var canvas = document.getElementById("theCanvas");
-
+alert(canvas);
 		canvas.style.width ='100%';
 		canvas.style.height='100%';
+
+alert(canvas.style.width);
  	 	// ...then set the internal size to match
   		canvas.width  = canvas.offsetWidth;
   		canvas.height = canvas.offsetHeight;
+  alert(canvas.width);
 	</script>
 
     </body>
