@@ -1,5 +1,4 @@
 "use strict";
-alert("load rom");
 //class	Rom {	constructor()
 function Rom (aWidth, aHeight)
 {
