@@ -17,15 +17,22 @@
 		// The canvas size needs to change based on if we are mobile or desktop
 		// but you can't set it in the CSS file.
 		var canvas = document.getElementById("theCanvas");
-alert(canvas);
 		canvas.style.width ='100%';
 		canvas.style.height='100%';
-
-alert(canvas.style.width);
  	 	// ...then set the internal size to match
   		canvas.width  = canvas.offsetWidth;
   		canvas.height = canvas.offsetHeight;
-  alert(canvas.width);
+
+alert(canvas.height);
+	var ctx = canvas.getContext("2d");
+alert(ctx);
+    ctx.strokeStyle = "red";
+    ctx.rect(0,0, canvas.width, canvas.height);
+
+    ctx.stroke();
+    ctx.clip();
+alert("done");
+
 	</script>
 
     </body>
