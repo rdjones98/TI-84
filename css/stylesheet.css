@@ -1,4 +1,4 @@
-@media only screen and (min-device-width: 481px) 
+@media only screen and (min-device-width: 481px)
 {
 	/* Desktop */
 
@@ -43,5 +43,18 @@
 
 @media only screen and (device-width: 768px) and (orientation: landscape) {
   /* rules for iPad in landscape orientation */
-}
+	body {
+	    background-image: url('../images/ti-84.jpg');
+	    background-repeat: no-repeat;
+	    background-attachment: fixed;
+	    background-position: left top;
 
+	  overflow:hidden;
+	}
+
+	div.canvas
+	{
+		width:  351px;
+		height: 663px;
+	}
+}
