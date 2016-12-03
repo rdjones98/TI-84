@@ -90,17 +90,16 @@ StateGraphing.prototype.repaint = function()
 		{
 			if ( this.Y_EQUALS._equations[equ].length>0 )
 			{
-				var step = (this.X_MAX-this.X_MIN)/200;
-//				for( var xCoord=Number(this.X_MIN); xCoord<this.X_MAX; xCoord=Math.round((xCoord + step)*100)/100)
+				var step = (this.X_MAX-this.X_MIN)/50;
 				for( var xCoord=Number(this.X_MIN); xCoord<this.X_MAX; xCoord=this.ROM.fixRoundingError(xCoord + step))
 				{
 					var yCoord1 = this.ROM.evaluate(equ, xCoord) ;
 					yCoord1 = this.CENTER_Y + yCoord1 * -1 * this.STEP_Y;
-					var yCoord2 = this.ROM.evaluate(equ, xCoord+.1);
+					var yCoord2 = this.ROM.evaluate(equ, xCoord+step);
 					yCoord2 = this.CENTER_Y + yCoord2 * -1 * this.STEP_Y;
 
 					var x1 = this.CENTER_X + xCoord * this.STEP_X;
-					var x2 = this.CENTER_X + (xCoord+.1) * this.STEP_X;
+					var x2 = this.CENTER_X + (xCoord+step) * this.STEP_X;
 					this.CANVAS.drawLn(x1,yCoord1,x2,yCoord2, this.CANVAS.GRAPHCOLORS[equ]);
 				}
 			}

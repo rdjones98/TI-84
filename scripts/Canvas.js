@@ -162,6 +162,7 @@ Canvas.prototype.print = function(aStr, anX, aY, aFont, aColor, anAlignment)
       this.CONTEXT.fillStyle = "black";
       this.CONTEXT.textAlign = "left";
     };
+    
 Canvas.prototype.drawLn = function(x1, y1, x2, y2, aColor)
     {
   		if( typeof aColor != "undefined")
