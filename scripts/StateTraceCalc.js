@@ -85,7 +85,11 @@ StateTraceCalc.prototype.evaluate = function(anEqu, anX)
 	{
     anX = this.ROM.fixRoundingError(anX);
 		var equ = anEqu.replace(/X/g, "(" + anX + ")");
-		return this.ROM.doMath(equ);
+		var res =  this.ROM.doMath(equ);
+    if( res.toString().indexOf("e-") > -1 )
+      return 0
+    else
+      return res;
 	};
 
 StateTraceCalc.prototype.secondPressed = function()
@@ -158,7 +162,7 @@ StateTraceCalc.prototype.paintMinMaxZero = function()
       else if( this._calculate == this.ZERO )
       {
         var equ1 = this.YEQUALS.getEquations()[this.TRACE._curEquationIDX];
-        var xCoord = this.findIntersection( equ1, "0", this._leftBound, this._rightBound, 1);  // pass in y=0
+        var xCoord = this.findIntersection( equ1, "0", this._leftBound, this._rightBound, 1, 1);  // pass in y=0
 
         if ( xCoord == null )
         {
@@ -174,7 +178,7 @@ StateTraceCalc.prototype.paintMinMaxZero = function()
       }
       else if( this._calculate == this.MIN )
       {
-        var minX = this.findMinimum();
+        var minX = this.findMinimum(this._leftBound, this._rightBound, 1);
         this.TRACE.TRACE_X = minX;
         this.TRACE.repaint();
         this.CANVAS.print( "Minimum", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
@@ -182,7 +186,7 @@ StateTraceCalc.prototype.paintMinMaxZero = function()
       }
       else if( this._calculate == this.MAX )
       {
-        var maxX = this.findMaximum();
+        var maxX = this.findMaximum(this._leftBound, this._rightBound, 1);
         this.TRACE.setTraceX( maxX );
         this.TRACE.repaint();
         this.CANVAS.print( "Maximum", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
@@ -190,13 +194,15 @@ StateTraceCalc.prototype.paintMinMaxZero = function()
       }
   };
 
-StateTraceCalc.prototype.findMinimum = function()
+StateTraceCalc.prototype.findMinimum = function(aLeft, aRight, aCnt)
   {
-		var step = .001;
+		var step = .01;
+    if( aCnt > 1)
+      step = .000001
     var equ = this.YEQUALS.getEquations()[this.TRACE._curEquationIDX];
     var min = null;
     var minX = null;
-    for( var idx = this._leftBound; idx<=this._rightBound; idx += step)
+    for( var idx = aLeft; idx<=aRight; idx += step)
     {
 				var yCoord1 = this.evaluate(equ, idx) ;
         if( min == null || yCoord1 < min)
@@ -205,17 +211,22 @@ StateTraceCalc.prototype.findMinimum = function()
           minX = idx;
         }
     }
-    return minX;
+    if(aCnt >1 )
+      return minX;
+    else {
+      return this.findMinimum(minX - step, minX, aCnt+1 );
+    }
   };
 
-StateTraceCalc.prototype.findMaximum = function()
+StateTraceCalc.prototype.findMaximum = function(aLeft, aRight, aCnt)
   {
-//		var step = (this._rightBound-this._leftBound)/(200);
-		var step = .001;
+		var step = .01;
+    if( aCnt > 1)
+      step = .000001
     var equ = this.YEQUALS.getEquations()[this.TRACE._curEquationIDX];
     var max = null;
     var maxX = null;
-    for( var idx = this._leftBound; idx<=this._rightBound; idx += step)
+    for( var idx = aLeft; idx<=aRight; idx += step)
     {
 				var yCoord1 = this.evaluate(equ, idx) ;
         if( max == null || yCoord1 > max)
@@ -224,7 +235,11 @@ StateTraceCalc.prototype.findMaximum = function()
           maxX = idx;
         }
     }
-    return maxX;
+    if(aCnt >1 )
+      return maxX;
+    else {
+      return this.findMaximum(maxX - step, maxX, aCnt+1 );
+    }
   };
 
   // All things intersection
@@ -245,35 +260,27 @@ StateTraceCalc.prototype.findMaximum = function()
         this.CANVAS.print( "Guess?", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
       else
       {
-        var lastX    = Number(this.GRAPH.X_MIN);
-        var lastDist = null;
-        var closestX = null;
         var equ1 = this.YEQUALS.getEquations()[this._equ1];
         var equ2 = this.YEQUALS.getEquations()[this._equ2];
 
-        do {
-          var xCoord=this.findIntersection(equ1, equ2, lastX, Number(this.GRAPH.X_MAX), 1);
-          if( xCoord == null )
-            break;
-          else
-          {
-            var dist = Math.abs( this.TRACE.TRACE_X - xCoord );
-            if( lastDist == null || dist < lastDist )
-            {
-              closestX = xCoord;
-              lastDist = dist;
-            }
-          }
-          lastX = xCoord;
-        } while (xCoord != null);
+        var xCoordLeft =this.findIntersection(equ1, equ2, this.TRACE.TRACE_X, this.GRAPH.getXMin(), -1, 1);
+        var xCoordRight=this.findIntersection(equ1, equ2, this.TRACE.TRACE_X, this.GRAPH.getXMax(), 1, 1);
 
-        if ( lastDist == null )
+        if ( xCoordLeft == null && xCoordRight == null )
         {
           this.CANVAS.clearCanvas();
           this.CANVAS.print( "ERR:NO SIGN CHNG", this.CANVAS.X,this.CANVAS.Y+this.CANVAS.DIGIT_H);
         }
         else
         {
+          if(xCoordLeft == null )
+            xCoordLeft = this.GRAPH.getXMin();
+          if(xCoordRight == null)
+            xCoordRight = this.GRAPH.getXMax();
+          var distLeft  = Math.abs(this.TRACE.TRACE_X - xCoordLeft );
+          var distRight = Math.abs(this.TRACE.TRACE_X - xCoordRight );
+          var closestX = distLeft < distRight ? xCoordLeft : xCoordRight;
+
           this.TRACE.setTraceX( closestX );
           this.TRACE.repaint();
           this.CANVAS.print( "Intersection", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
@@ -282,15 +289,18 @@ StateTraceCalc.prototype.findMaximum = function()
       }
   };
 
-StateTraceCalc.prototype.findIntersection = function(equ1, equ2, aLeftX, aRightX, aCnt)
+StateTraceCalc.prototype.findIntersection = function(equ1, equ2, startX, destX, dir, aCnt)
   {
-    var step = .01;
+    var step = dir * .01;
     if(aCnt>1)
-      step=.000001
-
+      step= dir* .000001;
+    var xCoord = startX;
     var e1LTe2 = null;
-		for( var xCoord=aLeftX; xCoord<aRightX; xCoord=xCoord + step)
+
+    do
     {
+        if(xCoord.toString().indexOf("e-")>-1)
+          xCoord = 0;
 				var yCoord1 = this.evaluate(equ1, xCoord) ;
 				var yCoord2 = this.evaluate(equ2, xCoord) ;
         if( yCoord1 == yCoord2)
@@ -305,10 +315,12 @@ StateTraceCalc.prototype.findIntersection = function(equ1, equ2, aLeftX, aRightX
         {
           if(aCnt > 1)
             return xCoord;
-          else
-            return this.findIntersection(equ1, equ2, xCoord-step, xCoord, aCnt + 1);
+        else
+            return this.findIntersection(equ1, equ2, xCoord-step, destX, dir, aCnt + 1);
         }
+        xCoord += step;
     }
+    while(  dir > 0 ? xCoord <= destX : xCoord >= destX)
     return null;
   };
 

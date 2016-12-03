@@ -101,29 +101,10 @@ StateYEquals.prototype.lnPressed = function()
 		{
 			this.ROM.secondPressed(false);
 			this.numberPressed("e");
-			this.operatorPressed("^");
+			this.operatorPressed("^(");
 		}
 		else {
 			this.operatorPressed("ln(");
-		}
-	};
-
-StateYEquals.prototype.repaint = function()
-	{
-		this.CANVAS.clearCanvas();
-
-		//draw focus appropriately before anything else so text will be on top
-		this.CANVAS.drawFocusBox(this.CANVAS.X + this.OFFSET + this._col*this.CANVAS.DIGIT_W, this.TOP+this._row*this.CANVAS.DIGIT_H);
-
-		var x = this.CANVAS.X;
-		var y = this.CANVAS.Y;
-		y +=  this.CANVAS.DIGIT_H;
-		this.CANVAS.print("  Plot1 Plot2 Plot3", x, y,this.CANVAS.SMALL_FONT);
-		for( var i=0; i<7; i++)
-		{
-			y +=  this.CANVAS.DIGIT_H;
-			var str = "\\Y" + (i+1) + "=" + this._equations[i];
-			this.CANVAS.print(str, x, y);
 		}
 	};
 
@@ -179,3 +160,30 @@ StateYEquals.prototype.getEquations = function()
 	{
 		return this._equations;
 	};
+
+StateYEquals.prototype.repaint = function()
+		{
+			this.CANVAS.clearCanvas();
+
+			//draw focus appropriately before anything else so text will be on top
+			this.CANVAS.drawFocusBox(this.CANVAS.X + this.OFFSET + this._col*this.CANVAS.DIGIT_W, this.TOP+this._row*this.CANVAS.DIGIT_H);
+
+			var x = this.CANVAS.X;
+			var y = this.CANVAS.Y;
+			y +=  this.CANVAS.DIGIT_H;
+			this.CANVAS.print("  Plot1 Plot2 Plot3", x, y,this.CANVAS.SMALL_FONT);
+			for( var i=0; i<7; i++)
+			{
+				y +=  this.CANVAS.DIGIT_H;
+				this.CANVAS.print("\\", x, y, null, this.CANVAS.GRAPHCOLORS[i]);
+				this.CANVAS.print("Y" + (i+1) + "=" + this._equations[i], x+this.CANVAS.DIGIT_W, y);
+			}
+
+			if(this.ROM.is2ndPressed())
+			{
+				var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W + this.OFFSET;
+				var y = this.CANVAS.Y + (this._row+1) * this.CANVAS.DIGIT_H;
+				this.CANVAS.draw2ndButton(x,y);
+			}
+
+		};

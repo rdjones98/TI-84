@@ -10,8 +10,6 @@ function StateGraphing( aCanvas, aYEquals, aRom )
 		this.CENTER_X = (aCanvas.X+aCanvas.WIDTH)/2;
 		this.CENTER_Y = (aCanvas.Y+aCanvas.HEIGHT)/2;
 
-		this.FONT = "14px Courier";
-
 		this.X_MIN = -10;
 		this.X_MAX = 10;
 		this.Y_MIN = -10
@@ -21,6 +19,14 @@ function StateGraphing( aCanvas, aYEquals, aRom )
 		this.STEP_Y = ( aCanvas.HEIGHT - aCanvas.Y ) / ( this.Y_MAX - this.Y_MIN );
 
 	}
+StateGraphing.prototype.getXMin = function()
+{
+	return Number(this.X_MIN);
+}
+StateGraphing.prototype.getXMax = function()
+{
+	return Number(this.X_MAX);
+}
 
 StateGraphing.prototype.enterPressed = function()
 	{
@@ -95,10 +101,13 @@ StateGraphing.prototype.repaint = function()
 
 					var x1 = this.CENTER_X + xCoord * this.STEP_X;
 					var x2 = this.CENTER_X + (xCoord+.1) * this.STEP_X;
-					this.CANVAS.drawLn(x1,yCoord1,x2,yCoord2);
+					this.CANVAS.drawLn(x1,yCoord1,x2,yCoord2, this.CANVAS.GRAPHCOLORS[equ]);
 				}
 			}
 		}
+		if(this.ROM.is2ndPressed())
+			this.CANVAS.draw2ndButton();
+
 	};
 
 StateGraphing.prototype.arrowPressed = function(anArrow)
@@ -108,9 +117,4 @@ StateGraphing.prototype.arrowPressed = function(anArrow)
 
 StateGraphing.prototype.secondPressed = function()
 	{
-		// draw 2nd Button Pressed Icon
-		if(this.ROM.is2ndPressed())
-			this.CANVAS.draw2ndButton();
-		else
-			this.repaint();
 	};

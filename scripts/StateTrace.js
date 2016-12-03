@@ -6,7 +6,6 @@ function StateTrace( aCanvas, aGraph, aRom )
 		this.ROM = aRom;
 
 		this.TRACE_X = 0;
-		this.TRACE_Y = 0;
 		this.TRACE_STEP = (this.GRAPH.X_MAX - this.GRAPH.X_MIN)/100;
 
 		// track which equation we are tracking
@@ -67,10 +66,13 @@ StateTrace.prototype.enterPressed = function()
 		}
 		else if(this._zoom == this.ZOOM_IN)
 		{
-			this.GRAPH.X_MIN /= 4;
-			this.GRAPH.X_MAX /= 4;
-			this.GRAPH.Y_MIN /= 4;
-			this.GRAPH.Y_MAX /= 4;
+			var xOffset = (this.GRAPH.X_MAX - this.GRAPH.X_MIN)/8.0;
+			var yOffset = (this.GRAPH.Y_MAX - this.GRAPH.Y_MIN)/8.0;
+			var y = this.ROM.evaluate(this._curEquationIDX, this.TRACE_X);
+			this.GRAPH.X_MIN = this.TRACE_X - xOffset;
+			this.GRAPH.X_MAX = this.TRACE_X + xOffset;
+			this.GRAPH.Y_MIN = y - yOffset;
+			this.GRAPH.Y_MAX = y + yOffset;
 		}
 		else if(this._zoom == this.ZOOM_OUT)
 		{
@@ -147,8 +149,9 @@ StateTrace.prototype.repaint = function()
 		this.CANVAS.print("Y"  +(this._curEquationIDX+1) + "="+ equations[this._curEquationIDX], this.CANVAS.X, this.CANVAS.Y + this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT);
 		if( this._numberPressed == null )
 		{
+			var xForY = this.CANVAS.X + (this.CANVAS.WIDTH-this.CANVAS.X)/2 + this.CANVAS.DIGIT_W;
 			this.CANVAS.print("X="  + xVal, this.CANVAS.X, this.CANVAS.HEIGHT-2, this.CANVAS.SMALL_FONT);
-			this.CANVAS.print("Y="  + yVal, graphState.CENTER_X+5, this.CANVAS.HEIGHT-2, this.CANVAS.SMALL_FONT);
+			this.CANVAS.print("Y="  + yVal, xForY,         this.CANVAS.HEIGHT-2, this.CANVAS.SMALL_FONT);
 		}
 		else
 		{
@@ -161,6 +164,10 @@ StateTrace.prototype.repaint = function()
 
 		if( this.CANVAS.Y < y && y < this.CANVAS.HEIGHT)
 			this.CANVAS.print("+", x, y, "25px Courier", "#FF0000");
+
+		// draw 2nd Button Pressed Icon
+		if(this.ROM.is2ndPressed())
+			this.CANVAS.draw2ndButton();
 	};
 
 StateTrace.prototype.zoom = function(aZoom)
@@ -171,8 +178,4 @@ StateTrace.prototype.zoom = function(aZoom)
 StateTrace.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
-		if(this.ROM.is2ndPressed())
-			this.CANVAS.draw2ndButton();
-		else
-			this.repaint();
 	};

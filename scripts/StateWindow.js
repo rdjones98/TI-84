@@ -136,13 +136,13 @@ StateWindow.prototype.repaint = function()
     this.CANVAS.print("Ymax="+this.GRAPH.Y_MAX,   x, y += this.CANVAS.DIGIT_H );
     this.CANVAS.print("Yscl=1",                   x, y += this.CANVAS.DIGIT_H, null, "gray" );
     this.CANVAS.print("Xres=1",                   x, y += this.CANVAS.DIGIT_H, null, "gray" );
+
+		if(this.ROM.is2ndPressed())
+			this.CANVAS.draw2ndButton();
+
   };
 
 StateWindow.prototype.secondPressed = function()
 	{
 		// draw 2nd Button Pressed Icon
-		if(this.ROM.is2ndPressed())
-			this.CANVAS.draw2ndButton();
-		else
-			this.repaint();
 	};
