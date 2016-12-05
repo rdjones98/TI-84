@@ -140,13 +140,11 @@ Rom.prototype.xSquaredPressed = function()
 		if ( this.is2ndPressed() )
 		{
 			this.secondPressed(false);
-			this._state.operatorPressed(Canvas.SQRROOT+"(");
+			this._state.operatorPressed(this.CANVAS.SQRROOT+"(");
 		}
 		else
-		{
-			this._state.operatorPressed("^");
-			this._state.numberPressed("2");
-		}
+			this._state.operatorPressed("^2");
+
 		this._state.repaint();
 	};
 Rom.prototype.powerOfPressed = function()
@@ -154,7 +152,7 @@ Rom.prototype.powerOfPressed = function()
 		if ( this.is2ndPressed() )
 		{
 			this.secondPressed(false);
-			this._state.numberPressed(Canvas.PI);
+			this._state.numberPressed(this.CANVAS.PI);
 		}
 		else
 			this._state.operatorPressed("^");
@@ -250,7 +248,7 @@ Rom.prototype.is2ndPressed = function()
 Rom.prototype.evaluate = function(anEquationIdx, anX)
 	{
 		anX = this.fixRoundingError(anX);
-		var equ = this.STATE_Y_EQUALS._equations[anEquationIdx][0].getMathStr().replace(/X/g, "(" + anX + ")");
+		var equ = this.STATE_Y_EQUALS._equations[anEquationIdx].replace(/X/g, "(" + anX + ")");
 		return this.doMath(equ);
 	};
 

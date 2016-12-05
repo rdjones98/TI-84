@@ -50,41 +50,33 @@ function keyPressed(event)
     ROM.deletePressed();
   else if(ROM.is2ndPressed() && (keyName=="a" || keyName == "A") )
     ROM.matrixPressed();
+  else if(keyName=="g" || keyName == "G")
+    ROM.graphPressed();
   else if(keyName=="e" || keyName == "E")
   {
     ROM.secondPressed(true);
     ROM.dividePressed();
   }
-  else if(keyName=="g" || keyName == "G")
-    ROM.graphPressed();
-  else if(keyName=="i" || keyName == "I")
-    ROM.trigPressed("sin(");
-  else if(keyName=="c" || keyName == "C")
-    ROM.clearPressed();
-  else if(keyName=="l" || keyName == "L")
-    ROM.logPressed();
-  else if(keyName=="m" || keyName == "M")
-    ROM.modePressed();
-  else if(keyName=="n" || keyName == "N")
-    ROM.lnPressed();
-  else if(keyName=="o" || keyName == "O")
-    ROM.trigPressed("cos(");
-  else if(keyName=="p" || keyName == "P" )
-    ROM.powerOfPressed();
-  else if(keyName=="q" || keyName == "Q" )
-    ROM.modePressed();
-  else if(keyName=="s" || keyName == "S")
-    ROM.statPressed();
+  else if(keyName=="y" || keyName == "Y")
+    ROM.yEqualsPressed();
+  else if(keyName=="x" || keyName == "X")
+    ROM.xPressed();
   else if(keyName=="t" || keyName == "T")
     ROM.tracePressed();
   else if(keyName=="w" || keyName == "W")
     ROM.windowPressed();
-  else if(keyName=="x" || keyName == "X")
-    ROM.xPressed();
-  else if(keyName=="y" || keyName == "Y")
-    ROM.yEqualsPressed();
+  else if(keyName=="c" || keyName == "C")
+    ROM.clearPressed();
+  else if(keyName=="m" || keyName == "M")
+    ROM.modePressed();
+  else if(keyName=="s" || keyName == "S")
+    ROM.statPressed();
   else if(keyName=="z" || keyName == "Z")
     ROM.zoomPressed();
+  else if(keyName=="l" || keyName == "L")
+    ROM.logPressed();
+  else if(keyName=="n" || keyName == "N")
+    ROM.lnPressed();
   else if(keyName=="Escape")
     ROM.setStateCalculator();
   else if(keyName=="Shift")

@@ -11,9 +11,18 @@ function StateCalculator(aCanvas, aRom)
 		this._col = 0;
 	}
 
-StateCalculator.prototype.getDataArray = function(){	return this._history;  };
-StateCalculator.prototype.getRow = function(){	return this._row;  };
-StateCalculator.prototype.getCol = function(){	return this._col;};
+StateCalculator.prototype.getDataArray = function()
+{
+	return this._history;
+};
+StateCalculator.prototype.getRow = function()
+{
+	return this._row;
+};
+StateCalculator.prototype.getCol = function()
+{
+	return this._col;
+};
 StateCalculator.prototype.incrRow = function(aNum)
 	{
 		if( typeof aNum == "undefined")
@@ -42,10 +51,9 @@ StateCalculator.prototype.clearPressed = function()
 
 StateCalculator.prototype.matrixPressed = function(aMatrix)
 	{
-    this._history[this._row].push(new Digit(aMatrix, false, Digit.MATRIX));
+    this._history[this._row] += aMatrix;
  	  this.setCol(this._history[this._row].length);
 
-		this.EDITOR.linkDigits();
 		this.ROM.secondPressed(false);
 	};
 
@@ -66,7 +74,7 @@ StateCalculator.prototype.logPressed = function()
 
 StateCalculator.prototype.trigPressed = function(aTrigFunc)
 	{
-		this.EDITOR.trigPressed(aTrigFunc);
+		this.EDITOR.trigPressed();
 	};
 
 StateCalculator.prototype.operatorPressed = function(anOper)
@@ -91,14 +99,14 @@ StateCalculator.prototype.negativePressed = function()
 		if(this.ROM.is2ndPressed())
 		{
 			for( var idx=this._row-1; idx>=0; idx-- )
-				if(!this._history[idx][0].isResult() )
+				if(!this._history[idx][0].DIGIT=="R" )
 				{
 					this._history[this._row] = this._history[idx]	;
 					break;
 				}
 		}
 		else
-	   this.EDITOR.operatorPressed( Canvas.NEGATIVE);
+	   this.EDITOR.numberPressed( this.CANVAS.NEGATIVE);
   };
 
 StateCalculator.prototype.deletePressed = function()
@@ -117,9 +125,8 @@ StateCalculator.prototype.enterPressed = function()
 		if(str.length==0)
 			return;
 		var bump = 0;	// If we have to print out a matrix, bump our next line down appropriately
-		str = str[0].getMathStr();
 		var res = this.doMath(str);
-		if( typeof res == "object")
+/*		if( typeof res == "object")
 		{
 			var tmp = ""
 			for(var i=0; i<res.length;i++)
@@ -127,9 +134,9 @@ StateCalculator.prototype.enterPressed = function()
 			bump = res.length-1;
 			res = tmp;
 		}
-
+	*/
 		// if last row, delete first 2 and appedn new results so it doesn't scroll off screen
-		var cutoff = 5-bump;
+		var cutoff = 6-bump;
 
 		if(this._row >= cutoff)
 		{
@@ -143,7 +150,7 @@ StateCalculator.prototype.enterPressed = function()
 			else
 				this._history.push( new Array(new Digit(res, false, Digit.RESULT)));
 
-			this._history.push(new Array());
+			this._history.push("");
 			this.setCol(0);
 			this._row = 6;
 		}
@@ -153,7 +160,7 @@ StateCalculator.prototype.enterPressed = function()
 			{
 				var pieces = res.split("]");
 				for(var i = 0; i<pieces.length-1; i++)
-					this._history[++this._row] = new Array(new Digit( pieces[i] + "]", false, Digit.RESULT));
+					this._history[++this._row] = new Array(new Digit(+ pieces[i] + "]", false, Digit.RESULT));
 			}
 			else
 				this._history[++this._row] = new Array( new Digit(res, false, Digit.RESULT) );
@@ -161,7 +168,6 @@ StateCalculator.prototype.enterPressed = function()
 			this._row ++ ;
 			this.setCol(0);
 		}
-		this.EDITOR.setSuperScript(false);
 		this.ROM.secondPressed(false);
 	};
 
@@ -177,15 +183,35 @@ StateCalculator.prototype.count = function(aStr, aChar)
 	};
 
 
+StateCalculator.prototype.preProcessEandPI = function(anExpr, aSym, aVal)
+	{
+		var idx = anExpr.indexOf(aSym);
+		while(idx >-1)
+		{
+			if( idx < anExpr.length-1 && anExpr.charAt(idx+1) >=0 && anExpr.charAt(idx+1) <= 9)
+				anExpr = anExpr.substring(0,idx+1) + "*" + anExpr.substring(idx+1);
+			if( idx > 0 && anExpr.charAt(idx-1) >=0 && anExpr.charAt(idx-1) <= 9)
+				anExpr = anExpr.substring(0,idx) + "*" + anExpr.substring(idx);
+			anExpr = anExpr.replace(aSym, aVal);
+			idx = anExpr.indexOf(aSym);
+		}
+		return anExpr;
+	};
+
 	// pre process string so we can transform it to RPN
 StateCalculator.prototype.doMath = function(anExpr)
 	{
-		var math = anExpr;
+		var math = anExpr[0].getMathStr();
 
 		// Handle any matrices
 		var m = this.preProcessMatrices(math);
 		if( m != null )
 			return m;
+
+		// Preproess E and PI
+		math = this.preProcessEandPI(math, this.CANVAS.PI, Math.PI);
+		math = this.preProcessEandPI(math, "e", Math.E);
+
 
 		// If we have -- then we either have a plus ex:  2--3=>2+3
 		// or we have a minus a negative * ex: 2--3*4 leave it alone
@@ -207,6 +233,20 @@ StateCalculator.prototype.doMath = function(anExpr)
 			idx = math.indexOf("--", idx + 1);
 		}
 
+		// If we have a ^, put the exponent in parens
+		idx = math.indexOf("^");
+		while( idx > -1 )
+		{
+			if(math.charAt(idx+1) == '-')
+			{
+				math = math.substring(0,idx+1) + "(" + math.substring(idx+1);
+				for( var i=math.idx+2; i<math.length; i++)
+					if( math.charAt(i-1) >='0' && math.charAt(i-1) <='9' )
+						math = math.substring(0,i+1) + ")" + math.substring(i+1);
+			}
+			idx = math.indexOf("^", idx+1);
+		}
+
 		// If we have an open (, make sure we have a close.  If not, append as many as
 		// necessary.
 		var num_open = this.count(math, "(" );
@@ -215,20 +255,28 @@ StateCalculator.prototype.doMath = function(anExpr)
 			math = math + ")";
 
 		// Handle ANy Square Roots
-		var idx = math.indexOf(Canvas.SQRROOT);
+		var idx = math.indexOf(this.CANVAS.SQRROOT);
 		while( idx > -1 )
 		{
-			var numP = 0;
+			var numP = 1;
 			var eIdx = idx+1;
 			for( ; eIdx<math.length; eIdx++)
 			{
 				if( math.charAt(eIdx) == '(')
 					numP ++;
-				else if( math.charAt(eIdx) == ')' && --numP == 0)
+				else if( math == ')' && --numP == 0)
 					break;
 			}
 			math = math.substring(0, idx) + math.substring(idx+1, eIdx) + "^(1/2)" + math.substring(eIdx);
-			idx = math.indexOf(Canvas.SQRROOT, idx+1);
+			idx = math.indexOf(this.CANVAS.SQRROOT, idx+1);
+		}
+
+
+		// If we have 2(3+4) we need 2*(3+4)
+		for( var i=math.length; i>0; i--)
+		{
+			if( math.charAt(i)=='(' && math.charAt(i-1) >='0' && math.charAt(i-1) <='9' )
+				math = math.substring(0,i) + "*" + math.substring(i);
 		}
 
 		// if we have any special functions, evaluate the () then call math.log()
@@ -278,8 +326,6 @@ StateCalculator.prototype.preprocessLogAndTrig = function(anExpr, aVal)
 				res = Math.atan(res);
 			anExpr = anExpr.substring(0,idx) + res + anExpr.substring(eIdx+1);
 		}
-		if( anExpr.indexOf("e-") > -1)
-			anExpr = "0";
 		return anExpr;
 	};
 
@@ -349,7 +395,7 @@ StateCalculator.prototype.secondPressed = function()
 			// draw 2nd Button Pressed Icon
 			if(this.ROM.is2ndPressed())
 			{
-				var x = this.CANVAS.X + this.EDITOR.getDisplayPosition() * this.CANVAS.DIGIT_W;
+				var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W;
 				var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
 				this.CANVAS.draw2ndButton(x,y);
 			}
@@ -364,7 +410,7 @@ StateCalculator.prototype.repaint = function()
 		this.CANVAS.clearCanvas();
 
 		//draw focus appropriately first so text can overwrite it
-		var x = this.CANVAS.X + this.EDITOR.getDisplayPosition() * this.CANVAS.DIGIT_W;
+		var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W;
 		var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
 		if( this._history[this._row].length > this._col)
 			this.CANVAS.drawFocusBox(x, y, null, this._history[this._row][this._col].isSuper());
@@ -379,9 +425,17 @@ StateCalculator.prototype.repaint = function()
 		{
 			y +=  this.CANVAS.DIGIT_H;
 
+			// If item starts with <R> then right justify
+
 			var str = this._history[i];
 			if( str.length > 0 && str[0].isResult())
-				this.CANVAS.print(this.CANVAS.formatNumber(str[0].toString(),10), this.CANVAS.WIDTH, y,null,"black","right");
+			{
+				// If it has "]" then its a matrix, print it accordingly
+				if(str.indexOf("]") > -1)
+					this.CANVAS.print(str, this.CANVAS.WIDTH, y,null,"black","right");
+				else // Else it is a numerical answer. Format the output
+					this.CANVAS.print(this.CANVAS.formatNumber(str[0].getVal(),10), this.CANVAS.WIDTH, y,null,"black","right");
+			}
 			else
 				this.CANVAS.print(str, x, y);
 		}

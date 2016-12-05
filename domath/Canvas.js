@@ -18,13 +18,14 @@ function Canvas(aCanvas, aWidth, aHeight)
 	this.SMALL_FONT = Math.round(.04 * aWidth) + "px Courier";
   this.CONTEXT.font = this.FONT;
 
+  this.NEGATIVE = String.fromCharCode(parseInt("02C9", 16));
+  this.SQRROOT  = String.fromCharCode(parseInt("221A", 16));
+  this.PI       = String.fromCharCode(parseInt("03C0", 16));
+
   this.GRAPHCOLORS = new Array("blue", "red", "yellow", "green", "pink", "orange", "black");
 
   this.clipDisplay();
 }
-Canvas.NEGATIVE = String.fromCharCode(parseInt("02C9", 16));
-Canvas.PI       = String.fromCharCode(parseInt("03C0", 16));
-Canvas.SQRROOT  = String.fromCharCode(parseInt("221A", 16));
 
 Canvas.prototype.clipDisplay = function()
 {
@@ -161,7 +162,7 @@ Canvas.prototype.print = function(aStr, anX, aY, aFont, aColor, anAlignment)
   			this.CONTEXT.textAlign = anAlignment;
 
 
-      if( typeof aStr == "string" || typeof aStr == "number")
+      if( typeof aStr == "string" )
       {
         this.CONTEXT.font = aFont;
         this.CONTEXT.fillText(aStr, anX, aY);
@@ -172,8 +173,8 @@ Canvas.prototype.print = function(aStr, anX, aY, aFont, aColor, anAlignment)
         {
           var c = aStr[i];
           this.CONTEXT.font = c.isSuper() ? this.SUPER_FONT : aFont;
-          this.CONTEXT.fillText(c.toString(), anX , aY - (c.isSuper() ? this.SUPER_OFFSET : 0 ));
-          anX += c.toString().length*this.DIGIT_W;
+
+          this.CONTEXT.fillText(c.getVal(), anX + i*this.DIGIT_W, aY - (c.isSuper() ? this.SUPER_OFFSET : 0 ));
         }
       }
       this.CONTEXT.font = this.FONT;

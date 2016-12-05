@@ -84,7 +84,7 @@ StateTraceCalc.prototype.enterPressed = function()
 StateTraceCalc.prototype.evaluate = function(anEqu, anX)
 	{
     anX = this.ROM.fixRoundingError(anX);
-		var equ = anEqu[0].getMathStr().replace(/X/g, "(" + anX + ")");
+		var equ = anEqu.replace(/X/g, "(" + anX + ")");
 		var res =  this.ROM.doMath(equ);
     if( res.toString().indexOf("e-") > -1 )
       return 0

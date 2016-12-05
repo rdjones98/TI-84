@@ -14,7 +14,7 @@ function StateMatrix (aCanvas, aRom)
     this.COL3 = this.CANVAS.X + 15*this.CANVAS.DIGIT_W;
     this._editCol = 0;
     this._editRow =0;
-    this._viewportX = 0;    // Used for editing matrix that is bigger than screen
+    this._viewportX = 0;
     this._editing = false;
     this._matrices = new Array();
     for( var i =0; i<7; i++)
@@ -38,12 +38,12 @@ StateMatrix.prototype.enterPressed = function()
     if( this._col == 0 )
     {
       var calc = this.ROM.setStateCalculator();
-      calc.matrixPressed(String.fromCharCode(65+this._row));
+      calc.matrixPressed("["+ String.fromCharCode(65+this._row) +"]");
     }
     else if( this._col == 1 )
     {
       var calc = this.ROM.setStateCalculator();
-      calc.operatorPressed("rref(");
+      calc.matrixPressed("rref(");
     }
     else if( this._action == null)
       this._action = 0;
@@ -305,7 +305,7 @@ StateMatrix.prototype.paintEdit = function()
 
         var mx=this.CANVAS.X + this.CANVAS.DIGIT_W;
         for( var c = this._viewportX; c < viewPortCols; c++ ) {
-          this.CANVAS.print(this._matrices[this._row][r][c].toString(),  mx, y + r*this.CANVAS.DIGIT_H);
+          this.CANVAS.print(this._matrices[this._row][r][c],  mx, y + r*this.CANVAS.DIGIT_H);
           mx += 7*this.CANVAS.DIGIT_W;
         }
       }

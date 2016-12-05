@@ -9,6 +9,8 @@ function Keypad( aRom, aWidth, aHeight )
 		this.W = aWidth;
 		this.H = aHeight;
 
+		this.NEGATIVE = String.fromCharCode(parseInt("02C9", 16));
+
 		this.A_LEFT = "ArrowLeft";
 		this.A_RIGHT = "ArrowRight";
 		this.A_UP = "ArrowUp";
@@ -96,7 +98,7 @@ function Keypad( aRom, aWidth, aHeight )
 			if(this.rom.is2ndPressed())
 				this.rom.matrixPressed();
 			else
-      	this.rom.operatorPressed("^" + Canvas.NEGATIVE + "1");
+      	this.rom.operatorPressed("^" + this.NEGATIVE + "1");
 		}
 		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW6_MIN <= y && y <= this.ROW6_MAX)
       this.rom.xSquaredPressed();

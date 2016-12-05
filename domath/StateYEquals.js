@@ -58,7 +58,7 @@ StateYEquals.prototype.xPressed = function()
 
 StateYEquals.prototype.negativePressed = function()
 	{
-		this.EDITOR.numberPressed(Canvas.NEGATIVE);
+		this.EDITOR.numberPressed(this.CANVAS.NEGATIVE);
 	};
 
 StateYEquals.prototype.operatorPressed = function(anOper)
