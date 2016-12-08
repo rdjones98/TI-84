@@ -1,4 +1,4 @@
-"use strict";
+
 //class	Rom {	constructor()
 function Rom (aWidth, aHeight)
 {
@@ -14,6 +14,7 @@ function Rom (aWidth, aHeight)
 	this.STATE_TRACECALC  = new StateTraceCalc(this.CANVAS, this.STATE_Y_EQUALS, this.STATE_GRAPHING, this.STATE_TRACE, this);
 	this.STATE_MODE       = new StateMode(this.CANVAS, this);
 	this.STATE_WINDOW     = new StateWindow(this.CANVAS, this.STATE_GRAPHING, this);
+	this.STATE_TABLESET   = new StateTableSet(this.CANVAS, this);
 	this.STATE_STAT       = new StateStat(this.CANVAS, this);
 	this.STATE_MATRIX     = new StateMatrix(this.CANVAS, this);
 	this.STATE_ZOOM       = new StateZoom(this.CANVAS, this.STATE_GRAPHING, this);
@@ -27,7 +28,14 @@ function Rom (aWidth, aHeight)
 
 	this.CANVAS.drawFocusBox();
 }
-Rom.prototype.getStateCalculator = function() { return this.STATE_CALCULATOR; };
+Rom.prototype.getStateCalculator = function(){ return this.STATE_CALCULATOR; };
+Rom.prototype.getStateMatrix     = function(){ return this.STATE_MATRIX; };
+Rom.prototype.getStateGraph      = function(){ return this.STATE_GRAPHING; };
+Rom.prototype.getStateYEquals    = function(){ return this.STATE_Y_EQUALS; };
+Rom.prototype.getStateWindow     = function(){ return this.STATE_WINDOW; };
+Rom.prototype.getKeypad 	     = function(){ return this.KEYPAD; };
+Rom.prototype.getStatEditState   = function(){ return this.STATE_STATEDIT; };
+Rom.prototype.getCanvas 		 = function(){ return this.CANVAS; };
 
 // Button Pressed Events
 Rom.prototype.matrixPressed = function()
@@ -37,16 +45,8 @@ Rom.prototype.matrixPressed = function()
 };
 Rom.prototype.graphPressed = function()
 {
-	if( !this._secondButtonPressed)
-	{
-		this._state = this.STATE_GRAPHING;
-	}
-	else
-	{
-		this._state = this.STATE_GRAPHTBL;
-		this._secondButtonPressed = false;
-	}
-	this._state.graphPressed();
+	this._state = this._secondButtonPressed ? this.STATE_GRAPHTBL : this.STATE_GRAPHING;
+	this._state.repaint();
 };
 Rom.prototype.tracePressed = function()
 {
@@ -78,8 +78,8 @@ Rom.prototype.yEqualsPressed = function()
 };
 Rom.prototype.windowPressed = function()
 {
-	this._state = this.STATE_WINDOW;
-	this._state.windowPressed();
+	this._state = this.is2ndPressed() ? this.STATE_TABLESET : this.STATE_WINDOW;
+	this._state.repaint();
 };
 Rom.prototype.modePressed = function()
 {
@@ -103,17 +103,37 @@ Rom.prototype.xPressed = function()
 };
 Rom.prototype.lnPressed = function()
 {
-	this._state.lnPressed();
+	if (this.is2ndPressed() )
+	{
+		this._state.functionPressed("e");
+		this._state.operatorPressed("^");
+	}
+	else {
+		this._state.functionPressed("ln(");
+	}
 	this._state.repaint();
 };
 Rom.prototype.logPressed = function()
 {
-	this._state.logPressed();
+	if (this.is2ndPressed() )
+	{
+		this._state.functionPressed("10");
+		this._state.operatorPressed("^");
+	}
+	else {
+		this._state.functionPressed("log(");
+	}
 	this._state.repaint();
 };
 Rom.prototype.trigPressed = function(aTrigFunc)
 {
-	this._state.trigPressed(aTrigFunc);
+	if (this.ROM.is2ndPressed() )
+	{
+		this._state.functionPressed("a" + aTrigFunc);
+	}
+	else {
+		this._state.functionPressed(aTrigFunc);
+	}
 	this._state.repaint();
 };
 Rom.prototype.arrowPressed = function(anArrow)
@@ -187,34 +207,8 @@ Rom.prototype.deletePressed = function()
 };
 
 // Getter/Setter Methods
-Rom.prototype.getCanvas = function()
-{
-	return this.CANVAS;
-};
-Rom.prototype.getStateMatrix = function()
-{
-	return this.STATE_MATRIX;
-};
-Rom.prototype.getStateGraph = function()
-{
-	return this.STATE_GRAPHING;
-};
-Rom.prototype.getStateYEquals = function()
-{
-	return this.STATE_Y_EQUALS;
-};
-Rom.prototype.getKeypad = function()
-{
-	return this.KEYPAD;
-};
-Rom.prototype.getStatEditState = function()
-{
-	return this.STATE_STATEDIT;
-};
-Rom.prototype.setKeypad = function(aKeyPad)
-{
-	this.KEYPAD = aKeyPad;
-};
+
+Rom.prototype.setKeypad = function(aKeyPad){	this.KEYPAD = aKeyPad; };
 Rom.prototype.setStateCalculator = function()
 {
 	this._state = this.STATE_CALCULATOR;

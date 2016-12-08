@@ -48,33 +48,35 @@ StateGraphing.prototype.xPressed = function()
 // Draw tick marks on graph
 StateGraphing.prototype.drawTickMarks = function()
 {
-	for( var i=this.CENTER_X; i<=this.CANVAS.WIDTH; i+=this.STEP_X)
+	for( var i=this.CENTER_X; i<=Canvas.WIDTH; i+=this.STEP_X)
 		this.CANVAS.drawLn(i, this.CENTER_Y-3,i, this.CENTER_Y);
-	for( var i=this.CENTER_X; i>=this.CANVAS.X; i-=this.STEP_X)
+	for( var i=this.CENTER_X; i>=Canvas.X; i-=this.STEP_X)
 		this.CANVAS.drawLn(i, this.CENTER_Y-3,i, this.CENTER_Y);
-	for( var i=this.CENTER_Y; i<=this.CANVAS.HEIGHT; i+=this.STEP_Y)
+	for( var i=this.CENTER_Y; i<=Canvas.HEIGHT; i+=this.STEP_Y)
 		this.CANVAS.drawLn(this.CENTER_X, i, this.CENTER_X+3, i);
-	for( var i=this.CENTER_Y; i>=this.CANVAS.Y; i-=this.STEP_Y)
+	for( var i=this.CENTER_Y; i>=Canvas.Y; i-=this.STEP_Y)
 		this.CANVAS.drawLn(this.CENTER_X, i,this.CENTER_X+3, i);
 };
 
-StateGraphing.prototype.graphPressed = function()
-{
-	this.repaint();
-};
 
 StateGraphing.prototype.repaint = function()
 {
 	this.CANVAS.clearCanvas();
 
-	this.STEP_X = ( this.CANVAS.WIDTH - this.CANVAS.X ) / (  this.X_MAX - this.X_MIN );
-	this.STEP_Y = ( this.CANVAS.HEIGHT - this.CANVAS.Y ) / ( this.Y_MAX - this.Y_MIN );
-	this.CENTER_X = this.CANVAS.X + (0-this.X_MIN) * this.STEP_X ;
-	this.CENTER_Y = this.CANVAS.HEIGHT - (0-this.Y_MIN) * this.STEP_Y ;
+	this.X_MIN = this.ROM.getStateWindow()._data[0];
+	this.X_MAX = this.ROM.getStateWindow()._data[1];
+	this.Y_MIN = this.ROM.getStateWindow()._data[3];
+	this.Y_MAX = this.ROM.getStateWindow()._data[4];
+	
+
+	this.STEP_X = ( Canvas.WIDTH - Canvas.X ) / (  this.X_MAX - this.X_MIN );
+	this.STEP_Y = ( Canvas.HEIGHT - Canvas.Y ) / ( this.Y_MAX - this.Y_MIN );
+	this.CENTER_X = Canvas.X + (0-this.X_MIN) * this.STEP_X ;
+	this.CENTER_Y = Canvas.HEIGHT - (0-this.Y_MIN) * this.STEP_Y ;
 
 	// Draw axis
-	this.CANVAS.drawLn(this.CANVAS.X, this.CENTER_Y, this.CANVAS.WIDTH, this.CENTER_Y);
-	this.CANVAS.drawLn(this.CENTER_X, this.CANVAS.Y, this.CENTER_X, this.CANVAS.HEIGHT);
+	this.CANVAS.drawLn(Canvas.X, this.CENTER_Y, Canvas.WIDTH, this.CENTER_Y);
+	this.CANVAS.drawLn(this.CENTER_X, Canvas.Y, this.CENTER_X, Canvas.HEIGHT);
 
 	// Draw tick marks on axis
 	this.drawTickMarks();

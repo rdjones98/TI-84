@@ -4,10 +4,10 @@ function StateStat(aCanvas, aRom)
 	this.CANVAS = aCanvas;
 	this.ROM = aRom;
 
-	this.T_ROW1 = aCanvas.Y + this.CANVAS.DIGIT_H-5;
-	this.C1 = this.CANVAS.X;
-	this.C2 = this.CANVAS.X + 5*this.CANVAS.DIGIT_W  ;
-	this.C3 = this.CANVAS.X + 10*this.CANVAS.DIGIT_W;
+	this.T_ROW1 = Canvas.Y + Canvas.DIGIT_H-5;
+	this.C1 = Canvas.X;
+	this.C2 = Canvas.X + 5*Canvas.DIGIT_W  ;
+	this.C3 = Canvas.X + 10*Canvas.DIGIT_W;
 	this._col = 1;
 	this._C2row = 5;
 	this.A = "";
@@ -46,7 +46,7 @@ StateStat.prototype.enterPressed = function()
 			{
 				if( x[i].length > 0 )
 				{
-					var coord = new Array( Number(x[i]), Number(y[i]) );
+					var coord = new Array( Number(x[i][0].toString()), Number(y[i][0].toString()) );
 					data.push(coord);
 				}
 			}
@@ -106,25 +106,25 @@ StateStat.prototype.repaint = function()
 
 	if( this._col == 1)
 	{
-		this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y, 4*this.CANVAS.DIGIT_W);
-		this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y+this.CANVAS.DIGIT_H);
-		this.CANVAS.print("1:Edit", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*2 );
-		this.CANVAS.print("2:SortA(", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*3, this.CANVAS.FONT, "gray" );
-		this.CANVAS.print("3:SortD(", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*4, this.CANVAS.FONT, "gray" );
-		this.CANVAS.print("4:ClrList", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*5, this.CANVAS.FONT, "gray" );
-		this.CANVAS.print("5:SetUpEditor", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*6, this.CANVAS.FONT, "gray" );
+		this.CANVAS.drawFocusBox(this.C1, Canvas.Y, 4*Canvas.DIGIT_W);
+		this.CANVAS.drawFocusBox(this.C1, Canvas.Y+Canvas.DIGIT_H);
+		this.CANVAS.print("1:Edit", this.C1,  Canvas.Y + Canvas.DIGIT_H*2 );
+		this.CANVAS.print("2:SortA(", this.C1,  Canvas.Y + Canvas.DIGIT_H*3, Canvas.FONT, "gray" );
+		this.CANVAS.print("3:SortD(", this.C1,  Canvas.Y + Canvas.DIGIT_H*4, Canvas.FONT, "gray" );
+		this.CANVAS.print("4:ClrList", this.C1,  Canvas.Y + Canvas.DIGIT_H*5, Canvas.FONT, "gray" );
+		this.CANVAS.print("5:SetUpEditor", this.C1,  Canvas.Y + Canvas.DIGIT_H*6, Canvas.FONT, "gray" );
 	}
 	else if( this._col == 2)
 	{
-		this.CANVAS.drawFocusBox(this.C2, this.CANVAS.Y, 4*this.CANVAS.DIGIT_W);
-		this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y+this.CANVAS.DIGIT_H*(this._C2row-1));
-		this.CANVAS.print("1:1-Var Stats", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*2, this.CANVAS.FONT, "gray" );
-		this.CANVAS.print("2:2-Var Stats", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*3, this.CANVAS.FONT, "gray" );
-		this.CANVAS.print("3:Med-Med",     this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*4, this.CANVAS.FONT, "gray" );
-		this.CANVAS.print("4:LinReg(ax+b)", this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*5 );
-		this.CANVAS.print("5:QuadReg",     this.C1,  this.CANVAS.Y + this.CANVAS.DIGIT_H*6 );
+		this.CANVAS.drawFocusBox(this.C2, Canvas.Y, 4*Canvas.DIGIT_W);
+		this.CANVAS.drawFocusBox(this.C1, Canvas.Y+Canvas.DIGIT_H*(this._C2row-1));
+		this.CANVAS.print("1:1-Var Stats", this.C1,  Canvas.Y + Canvas.DIGIT_H*2, Canvas.FONT, "gray" );
+		this.CANVAS.print("2:2-Var Stats", this.C1,  Canvas.Y + Canvas.DIGIT_H*3, Canvas.FONT, "gray" );
+		this.CANVAS.print("3:Med-Med",     this.C1,  Canvas.Y + Canvas.DIGIT_H*4, Canvas.FONT, "gray" );
+		this.CANVAS.print("4:LinReg(ax+b)", this.C1,  Canvas.Y + Canvas.DIGIT_H*5 );
+		this.CANVAS.print("5:QuadReg",     this.C1,  Canvas.Y + Canvas.DIGIT_H*6 );
 	}
-	this.CANVAS.print("EDIT CALC TESTS",  this.C1, this.CANVAS.Y + this.CANVAS.DIGIT_H );
+	this.CANVAS.print("EDIT CALC TESTS",  this.C1, Canvas.Y + Canvas.DIGIT_H );
 
 	if(this.ROM.is2ndPressed())
 		this.CANVAS.draw2ndButton();
@@ -133,11 +133,11 @@ StateStat.prototype.repaint = function()
 StateStat.prototype.paintLinearResult = function()
 {
 	this.CANVAS.clearCanvas();
-	this.CANVAS.drawFocusBox(this.C2+10 , this.T_ROW1-this.CANVAS.DIGIT_H, 6*this.CANVAS.DIGIT_W);
+	this.CANVAS.drawFocusBox(this.C2+10 , this.T_ROW1-Canvas.DIGIT_H, 6*Canvas.DIGIT_W);
 	this.CANVAS.print("LinReg", this.C2+10,  this.T_ROW1  );
-	this.CANVAS.print(" y=ax+b", this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H  );
-	this.CANVAS.print(" a="+this.CANVAS.formatNumber(this.A,12), this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H * 2 );
-	this.CANVAS.print(" b="+this.CANVAS.formatNumber(this.B,12), this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H * 3 );
+	this.CANVAS.print(" y=ax+b", this.C1,  this.T_ROW1+Canvas.DIGIT_H  );
+	this.CANVAS.print(" a="+this.CANVAS.formatNumber(this.A,12), this.C1,  this.T_ROW1+Canvas.DIGIT_H * 2 );
+	this.CANVAS.print(" b="+this.CANVAS.formatNumber(this.B,12), this.C1,  this.T_ROW1+Canvas.DIGIT_H * 3 );
 	this.A="";
 	this.B="";
 	this.C="";
@@ -146,12 +146,12 @@ StateStat.prototype.paintLinearResult = function()
 StateStat.prototype.paintQuadraticResults = function()
 {
 	this.CANVAS.clearCanvas();
-	this.CANVAS.drawFocusBox(this.C2, this.T_ROW1-this.CANVAS.DIGIT_H, 7*this.CANVAS.DIGIT_W);
+	this.CANVAS.drawFocusBox(this.C2, this.T_ROW1-Canvas.DIGIT_H, 7*Canvas.DIGIT_W);
 	this.CANVAS.print("QuadReg", this.C2,  this.T_ROW1  );
-	this.CANVAS.print(" y=ax^2+bx+c", this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H , this.CANVAS.FONT  );
-	this.CANVAS.print(" a="+this.A, this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H * 2 , this.CANVAS.FONT );
-	this.CANVAS.print(" b="+this.B, this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H * 3 , this.CANVAS.FONT  );
-	this.CANVAS.print(" c="+this.C, this.C1,  this.T_ROW1+this.CANVAS.DIGIT_H * 4 , this.CANVAS.FONT  );
+	this.CANVAS.print(" y=ax^2+bx+c", this.C1,  this.T_ROW1+Canvas.DIGIT_H , Canvas.FONT  );
+	this.CANVAS.print(" a="+this.A, this.C1,  this.T_ROW1+Canvas.DIGIT_H * 2 , Canvas.FONT );
+	this.CANVAS.print(" b="+this.B, this.C1,  this.T_ROW1+Canvas.DIGIT_H * 3 , Canvas.FONT  );
+	this.CANVAS.print(" c="+this.C, this.C1,  this.T_ROW1+Canvas.DIGIT_H * 4 , Canvas.FONT  );
 	this.A="";
 	this.B="";
 	this.C="";

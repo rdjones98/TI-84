@@ -5,31 +5,31 @@ function Canvas(aCanvas, aWidth, aHeight)
 	aWidth = Number(aWidth);
 	aHeight = Number(aHeight);
 	this.CONTEXT = aCanvas.getContext("2d");
-	this.X = Math.round(.19*aWidth);
-	this.Y = Math.round(.095*aHeight);
-	this.HEIGHT = Math.round(.302*aHeight) ;
-	this.WIDTH  = Math.round(.7692 * aWidth);
-	this.DIGIT_W = Math.round(.029 * aWidth);
-	this.DIGIT_H = Math.round(.0241 * aHeight);
+	
+	// Constants
+	Canvas.X = Math.round(.19*aWidth);
+	Canvas.Y = Math.round(.095*aHeight);
+	Canvas.HEIGHT = Math.round(.302*aHeight) ;
+	Canvas.WIDTH  = Math.round(.7692 * aWidth);
+	Canvas.DIGIT_W = Math.round(.029 * aWidth);
+	Canvas.DIGIT_H = Math.round(.0241 * aHeight);
+	Canvas.SMALL_FONT = Math.round(.04 * aWidth) + "px Courier";
+	Canvas.NEGATIVE = String.fromCharCode(parseInt("02C9", 16));
+	Canvas.PI       = String.fromCharCode(parseInt("03C0", 16));
+	Canvas.SQRROOT  = String.fromCharCode(parseInt("221A", 16));
+	Canvas.GRAPHCOLORS = new Array("blue", "red", "yellow", "green", "pink", "orange", "black");
 
 	this.FONT = Math.round(.048 * aWidth) + "px Courier";
 	this.SUPER_FONT = Math.round((.048 * aWidth)*4.0/5.0) + "px Courier";
-	this.SUPER_OFFSET = Math.round(this.DIGIT_H/2.0);
-	this.SMALL_FONT = Math.round(.04 * aWidth) + "px Courier";
+	this.SUPER_OFFSET = Math.round(Canvas.DIGIT_H/2.0);
 	this.CONTEXT.font = this.FONT;
-
-
 	this.clipDisplay();
 }
-Canvas.NEGATIVE = String.fromCharCode(parseInt("02C9", 16));
-Canvas.PI       = String.fromCharCode(parseInt("03C0", 16));
-Canvas.SQRROOT  = String.fromCharCode(parseInt("221A", 16));
-Canvas.GRAPHCOLORS = new Array("blue", "red", "yellow", "green", "pink", "orange", "black");
 
 Canvas.prototype.clipDisplay = function()
 {
 	this.CONTEXT.strokeStyle = "gray";
-	this.CONTEXT.rect(this.X,this.Y,this.WIDTH-this.X,this.HEIGHT-this.Y);
+	this.CONTEXT.rect(Canvas.X,Canvas.Y,Canvas.WIDTH-Canvas.X,Canvas.HEIGHT-Canvas.Y);
 
 	this.CONTEXT.stroke();
 	this.CONTEXT.clip();
@@ -39,62 +39,62 @@ Canvas.prototype.clipDisplay = function()
 Canvas.prototype.clearCanvas = function()
 {
 	this.CONTEXT.font =  this.FONT;
-	this.CONTEXT.clearRect(this.X-10,this.Y-10,this.WIDTH,this.HEIGHT);
+	this.CONTEXT.clearRect(Canvas.X-10,Canvas.Y-10,Canvas.WIDTH,Canvas.HEIGHT);
 };
 
 Canvas.prototype.drawLeftBound = function(anX)
 {
 	this.CONTEXT.beginPath();
-	this.CONTEXT.moveTo(anX-5,this.Y+this.DIGIT_H);
-	this.CONTEXT.lineTo(anX,this.Y+this.DIGIT_H+5)  ;
-	this.CONTEXT.lineTo(anX-5,this.Y+this.DIGIT_H+10);
+	this.CONTEXT.moveTo(anX-5,Canvas.Y+Canvas.DIGIT_H);
+	this.CONTEXT.lineTo(anX,Canvas.Y+Canvas.DIGIT_H+5)  ;
+	this.CONTEXT.lineTo(anX-5,Canvas.Y+Canvas.DIGIT_H+10);
 	this.CONTEXT.fill();
 };
 
 Canvas.prototype.drawRightBound = function(anX)
 {
 	this.CONTEXT.beginPath();
-	this.CONTEXT.moveTo(anX+5,this.Y+this.DIGIT_H);
-	this.CONTEXT.lineTo(anX,this.Y+this.DIGIT_H+5)  ;
-	this.CONTEXT.lineTo(anX+5,this.Y+this.DIGIT_H+10);
+	this.CONTEXT.moveTo(anX+5,Canvas.Y+Canvas.DIGIT_H);
+	this.CONTEXT.lineTo(anX,Canvas.Y+Canvas.DIGIT_H+5)  ;
+	this.CONTEXT.lineTo(anX+5,Canvas.Y+Canvas.DIGIT_H+10);
 	this.CONTEXT.fill();
 };
 
 Canvas.prototype.drawFocusBox = function(anX, aY, aWidth, isSuper)
 {
 	if( typeof anX == "undefined")
-		anX= this.X;
+		anX= Canvas.X;
 	if( typeof aY == "undefined")
-		aY = this.Y;
+		aY = Canvas.Y;
 	if( typeof aWidth == "undefined" || aWidth == null )
-		aWidth = this.DIGIT_W;
+		aWidth = Canvas.DIGIT_W;
 	if( typeof isSuper == "undefined")
 		isSuper = false;
 
 	this.CONTEXT.fillStyle = "gray";
 	if( isSuper )
-		this.CONTEXT.fillRect(anX,aY,aWidth,this.DIGIT_H/2);
+		this.CONTEXT.fillRect(anX,aY,aWidth,Canvas.DIGIT_H/2);
 	else
-		this.CONTEXT.fillRect(anX,aY+2,aWidth,this.DIGIT_H);
+		this.CONTEXT.fillRect(anX,aY+2,aWidth,Canvas.DIGIT_H);
 	this.CONTEXT.fillStyle = "black";
 };
 
 Canvas.prototype.draw2ndButton = function(x, y)
 {
 	if( typeof x == "undefined")
-		x=this.WIDTH-this.DIGIT_W;;
+		x=Canvas.WIDTH-Canvas.DIGIT_W;;
 		if( typeof y == "undefined")
-			y=this.Y;
+			y=Canvas.Y;
 
 		this.CONTEXT.fillStyle = "gray";
-		this.CONTEXT.fillRect(x,y,this.DIGIT_W,this.DIGIT_H);
+		this.CONTEXT.fillRect(x,y,Canvas.DIGIT_W,Canvas.DIGIT_H);
 		this.CONTEXT.beginPath();
-		this.CONTEXT.moveTo(x + this.DIGIT_W/2, y + 4);
-		this.CONTEXT.lineTo(x + this.DIGIT_W/2, y + this.DIGIT_H);
+		this.CONTEXT.moveTo(x + Canvas.DIGIT_W/2, y + 4);
+		this.CONTEXT.lineTo(x + Canvas.DIGIT_W/2, y + Canvas.DIGIT_H);
 		this.CONTEXT.stroke();
 		this.CONTEXT.moveTo(x, y + 10);
-		this.CONTEXT.lineTo(x + this.DIGIT_W/2, y + 4);
-		this.CONTEXT.lineTo(x + this.DIGIT_W, y + 10);
+		this.CONTEXT.lineTo(x + Canvas.DIGIT_W/2, y + 4);
+		this.CONTEXT.lineTo(x + Canvas.DIGIT_W, y + 10);
 		this.CONTEXT.stroke();
 		this.CONTEXT.fillStyle = "black";
 };
@@ -171,7 +171,7 @@ Canvas.prototype.print = function(aStr, anX, aY, aFont, aColor, anAlignment)
 			var c = aStr[i];
 			this.CONTEXT.font = c.isSuper() ? this.SUPER_FONT : aFont;
 			this.CONTEXT.fillText(c.toString(), anX , aY - (c.isSuper() ? this.SUPER_OFFSET : 0 ));
-			anX += c.toString().length*this.DIGIT_W;
+			anX += c.toString().length*Canvas.DIGIT_W;
 		}
 	}
 	this.CONTEXT.font = this.FONT;

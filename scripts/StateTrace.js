@@ -29,8 +29,6 @@ StateTrace.prototype.getRow = function(){	return this._row;  };
 StateTrace.prototype.getCol = function(){	return this._col;};
 StateTrace.prototype.incrCol = function(aNum)
 {
-	if( typeof aNum == "undefined")
-		aNum = 1;
 	this._col += aNum;
 };
 
@@ -43,7 +41,7 @@ StateTrace.prototype.setTraceX = function(aVal)
 {
 	this.TRACE_X = this.ROM.fixRoundingError(aVal);
 };
-
+	
 StateTrace.prototype.select2ndEquation = function(anIdx)
 {
 	for( var idx = anIdx+1; idx<7; idx++)
@@ -163,26 +161,26 @@ StateTrace.prototype.repaint = function()
 	var xVal = this.CANVAS.formatNumber( this.TRACE_X );
 	var yVal = this.CANVAS.formatNumber( this.ROM.evaluate(this._curEquationIDX, this.TRACE_X) );
 
-	this.CANVAS.print("Y"  +(this._curEquationIDX+1) + "=", this.CANVAS.X, this.CANVAS.Y + this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT);
-	this.CANVAS.print(equations[this._curEquationIDX], this.CANVAS.X + 3*this.CANVAS.DIGIT_W, this.CANVAS.Y + this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT);
+	this.CANVAS.print("Y"  +(this._curEquationIDX+1) + "=", Canvas.X, Canvas.Y + Canvas.DIGIT_H, Canvas.SMALL_FONT);
+	this.CANVAS.print(equations[this._curEquationIDX], Canvas.X + 3*Canvas.DIGIT_W, Canvas.Y + Canvas.DIGIT_H, Canvas.SMALL_FONT);
 
 	if( this._trace[0].length == 0  )
 	{
-		var xForY = this.CANVAS.X + (this.CANVAS.WIDTH-this.CANVAS.X)/2 + this.CANVAS.DIGIT_W;
-		this.CANVAS.print("X="  + xVal, this.CANVAS.X, this.CANVAS.HEIGHT-2, this.CANVAS.SMALL_FONT);
-		this.CANVAS.print("Y="  + yVal, xForY,         this.CANVAS.HEIGHT-2, this.CANVAS.SMALL_FONT);
+		var xForY = Canvas.X + (Canvas.WIDTH-Canvas.X)/2 + Canvas.DIGIT_W;
+		this.CANVAS.print("X="  + xVal, Canvas.X, Canvas.HEIGHT-2, Canvas.SMALL_FONT);
+		this.CANVAS.print("Y="  + yVal, xForY,         Canvas.HEIGHT-2, Canvas.SMALL_FONT);
 	}
 	else
 	{
-		this.CANVAS.print("X=",            this.CANVAS.X, this.CANVAS.HEIGHT-2);
-		this.CANVAS.print( this._trace[0], this.CANVAS.X + 2*this.CANVAS.DIGIT_W, this.CANVAS.HEIGHT-2);
+		this.CANVAS.print("X=",            Canvas.X, Canvas.HEIGHT-2);
+		this.CANVAS.print( this._trace[0], Canvas.X + 2*Canvas.DIGIT_W, Canvas.HEIGHT-2);
 	}
 
 	// Draw the X for the trace
 	var x = graphState.CENTER_X - 7 + this.TRACE_X * graphState.STEP_X;
 	var y = graphState.CENTER_Y+5 + this.ROM.evaluate(this._curEquationIDX, this.TRACE_X) * -1 * graphState.STEP_Y;
 
-	if( this.CANVAS.Y < y && y < this.CANVAS.HEIGHT)
+	if( Canvas.Y < y && y < Canvas.HEIGHT)
 		this.CANVAS.print("+", x, y, "25px Courier", "#FF0000");
 
 	// draw 2nd Button Pressed Icon

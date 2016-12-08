@@ -5,10 +5,10 @@ function StateGraphTable(aCanvas, aYEquals, aRom)
 	this.Y_EQUALS = aYEquals;
 	this.ROM = aRom;
 
-	this.T_COL1 = this.CANVAS.X+5;
-	this.T_COL2 = this.CANVAS.X + Math.round(this.CANVAS.WIDTH/4);
-	this.T_COL3 = this.T_COL2 + Math.round(this.CANVAS.WIDTH/4);
-	this.T_ROW1 = aCanvas.Y + aCanvas.DIGIT_H + 5;
+	this.T_COL1 = Canvas.X+5;
+	this.T_COL2 = Canvas.X + Math.round(Canvas.WIDTH/4);
+	this.T_COL3 = this.T_COL2 + Math.round(Canvas.WIDTH/4);
+	this.T_ROW1 = Canvas.Y + Canvas.DIGIT_H + 5;
 	this.T_MAXROWS = 6;
 
 	this.IDX1 = -1;
@@ -17,14 +17,10 @@ function StateGraphTable(aCanvas, aYEquals, aRom)
 	this.CURSORROW = 0;
 	this.CURSORIDX = 0;
 
-	this.DIGIT_H = aCanvas.DIGIT_H;
+	this.DIGIT_H = Canvas.DIGIT_H;
 
 }
 
-StateGraphTable.prototype.graphPressed = function()
-{
-	this.repaint();
-};
 
 StateGraphTable.prototype.repaint = function()
 {
@@ -35,26 +31,26 @@ StateGraphTable.prototype.repaint = function()
 	for( var i=0; i<this.T_MAXROWS; i++ )
 	{
 		var y = this.DIGIT_H + this.T_ROW1 + i*this.DIGIT_H;
-		this.CANVAS.print(this.CURSORIDX + i, this.T_COL1, y, this.CANVAS.SMALL_FONT);
+		this.CANVAS.print(this.CURSORIDX + i, this.T_COL1, y, Canvas.SMALL_FONT);
 		if( this.IDX1 > -1 )
 		{
 			var str = this.ROM.evaluate(this.IDX1, this.CURSORIDX + i);
-			this.CANVAS.print(this.CANVAS.formatNumber(str, 6), this.T_COL2, y, this.CANVAS.SMALL_FONT);
+			this.CANVAS.print(this.CANVAS.formatNumber(str, 6), this.T_COL2, y, Canvas.SMALL_FONT);
 		}
 		if( this.IDX2 > -1 )
-			this.CANVAS.print(this.ROM.evaluate(this.IDX2, this.CURSORIDX + i), this.T_COL3, y, this.CANVAS.SMALL_FONT);
+			this.CANVAS.print(this.ROM.evaluate(this.IDX2, this.CURSORIDX + i), this.T_COL3, y, Canvas.SMALL_FONT);
 	}
 };
 
 // Draw tick marks on graph
 StateGraphTable.prototype.drawTable = function()
 {
-	this.CANVAS.drawLn(this.CANVAS.X, this.T_ROW1,this.CANVAS.WIDTH, this.T_ROW1);
-	this.CANVAS.drawLn(this.CANVAS.X, this.CANVAS.HEIGHT-this.DIGIT_H,this.CANVAS.WIDTH, this.CANVAS.HEIGHT-this.DIGIT_H);
-	this.CANVAS.drawLn(this.T_COL2-7, this.CANVAS.Y,this.T_COL2-7, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H);
-	this.CANVAS.drawLn(this.T_COL3-7, this.CANVAS.Y,this.T_COL3-7, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H);
+	this.CANVAS.drawLn(Canvas.X, this.T_ROW1,Canvas.WIDTH, this.T_ROW1);
+	this.CANVAS.drawLn(Canvas.X, Canvas.HEIGHT-this.DIGIT_H,Canvas.WIDTH, Canvas.HEIGHT-this.DIGIT_H);
+	this.CANVAS.drawLn(this.T_COL2-7, Canvas.Y,this.T_COL2-7, Canvas.HEIGHT-Canvas.DIGIT_H);
+	this.CANVAS.drawLn(this.T_COL3-7, Canvas.Y,this.T_COL3-7, Canvas.HEIGHT-Canvas.DIGIT_H);
 
-	this.CANVAS.print("X",  (this.T_COL2 + this.T_COL1)/2, this.CANVAS.Y + this.CANVAS.DIGIT_H, this.CANVAS.FONT );
+	this.CANVAS.print("X",  (this.T_COL2 + this.T_COL1)/2, Canvas.Y + Canvas.DIGIT_H, Canvas.FONT );
 
 	// Find the first 2 Y= that are filled out
 	this.IDX1 = -1;
@@ -73,9 +69,9 @@ StateGraphTable.prototype.drawTable = function()
 		}
 
 	if(this.IDX1 > -1)
-		this.CANVAS.print("Y" + (this.IDX1+1), this.T_COL2, this.CANVAS.Y + this.CANVAS.DIGIT_H );
+		this.CANVAS.print("Y" + (this.IDX1+1), this.T_COL2, Canvas.Y + Canvas.DIGIT_H );
 	if(this.IDX2 > -1)
-		this.CANVAS.print("Y" + (this.IDX2+1), this.T_COL3, this.CANVAS.Y + this.CANVAS.DIGIT_H );
+		this.CANVAS.print("Y" + (this.IDX2+1), this.T_COL3, Canvas.Y + Canvas.DIGIT_H );
 	
 	if(this.ROM.is2ndPressed())
 		this.CANVAS.draw2ndButton();

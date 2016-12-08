@@ -1,44 +1,28 @@
-"use strict";
+
 //class	StateCalculator{	constructor(aCanvas, aRom)
 function StateCalculator(aCanvas, aRom)
 {
 	this.CANVAS = aCanvas;
 	this.ROM = aRom;
-	this.EDITOR = new Editor(this);
 
 	this._history = new Array(new Array());
-	this._row = 0;
-	this._col = 0;
+	this.EDITOR = new Editor(this, this._history);
+	
 	this._displayRow = null;
 	this.DISPLAYROWS = 6;
 }
 
-StateCalculator.prototype.getDataArray = function(){ return this._history;  };
-StateCalculator.prototype.getRow = function(){	return this._row;  };
-StateCalculator.prototype.getCol = function(){	return this._col;};
 StateCalculator.prototype.setRow = function(aNum)
 {
-	if( typeof aNum == "undefined")
-		aNum = 1;
-	this._row = aNum;
-	while( this._history.length < this._row + 1 )
+	while( this._history.length < aNum + 1 )
 		this._history.push(new Array() );
 	
 	if( aNum > 6 )
 	{
 		this._history.splice(0, aNum - 6 );
-		this._row = 6;
+		aNum = 6;
 	}
-};
-StateCalculator.prototype.incrCol = function(aNum)
-{
-	if( typeof aNum == "undefined")
-		aNum = 1;
-	this._col += aNum;
-};
-StateCalculator.prototype.setCol = function(aNum)
-{
-	this._col = aNum;
+	this.EDITOR.setRow(aNum);
 };
 
 //button pressed events
@@ -46,42 +30,36 @@ StateCalculator.prototype.clearPressed = function()
 {
 	this.CANVAS.clearCanvas();
 	this._history = new Array(new Array(),new Array(),new Array(),new Array(),new Array(),new Array(),new Array());
-	this._row = 0;
-	this.setCol(0);
+	this.EDITOR.setRow(0);
+	this.EDITOR.setCol(0);
 };
 
 StateCalculator.prototype.matrixPressed = function(aMatrix)
 {
-	this._history[this._row].push(new Digit(aMatrix, false, Digit.MATRIX));
-	this.setCol(this._history[this._row].length);
+	var row = this.EDITOR.getRow();
+	this._history[row].push(new Digit(aMatrix, false, Digit.MATRIX));
+	this.EDITOR.setCol(this._history[row].length);
 
 	this.EDITOR.linkDigits();
 };
 
-StateCalculator.prototype.lnPressed = function()
+StateCalculator.prototype.functionPressed = function(aVal)
 {
-	this.EDITOR.lnPressed();
-};
-
-StateCalculator.prototype.logPressed = function()
-{
-	this.EDITOR.logPressed();
-};
-
-StateCalculator.prototype.trigPressed = function(aTrigFunc)
-{
-	this.EDITOR.trigPressed(aTrigFunc);
+	this.EDITOR.functionPressed(aVal);
 };
 
 StateCalculator.prototype.operatorPressed = function(anOper)
 {
+	var row = this.EDITOR.getRow();
+	var data = this._history;
+	
 	if( this._displayRow != null )
 		return;
 	
 	if( anOper == "+" || anOper == "-" || anOper == "*" || anOper == "/")
 	{
-		if( this._history[this._row].length == 0 && this._row != 0 && this._history[this._row-1][0].DIGIT=="R")
-			this._history[this._row] = this._history[this._row-1].substring(3);
+		if( data[row].length == 0 && row != 0 && data[row-1][0].DIGIT=="R")
+			data[row] = data[row-1].substring(3);
 	}
 
 	this.EDITOR.operatorPressed(anOper);
@@ -96,12 +74,13 @@ StateCalculator.prototype.numberPressed = function( aNum )
 
 StateCalculator.prototype.negativePressed = function()
 {
+	var row = this.EDITOR.getRow();
 	if(this.ROM.is2ndPressed())
 	{
-		for( var idx=this._row-1; idx>=0; idx-- )
+		for( var idx=row-1; idx>=0; idx-- )
 			if(!this._history[idx][0].isResult() )
 			{
-				this._history[this._row] = this._history[idx]	;
+				this._history[row] = this._history[idx]	;
 				break;
 			}
 	}
@@ -117,16 +96,17 @@ StateCalculator.prototype.deletePressed = function()
 
 StateCalculator.prototype.arrowPressed = function(anArrow)
 {
+	var row = this.EDITOR.getRow();
 	if( anArrow == Keypad.A_UP )
 	{
 		if( this._displayRow == null )
-			this._displayRow = this._row;
+			this._displayRow = row;
 		if( this._displayRow > 0)
 			this._displayRow --;
 	}
 	else if( anArrow == Keypad.A_DOWN )
 	{
-		if( this._displayRow != null && this._displayRow < this._row - 1 )
+		if( this._displayRow != null && this._displayRow < row - 1 )
 			this._displayRow ++;
 		else
 			this._displayRow = null;
@@ -138,7 +118,7 @@ StateCalculator.prototype.enterPressed = function()
 {
 	if( this._displayRow == null )
 	{
-		var str = this._history[this._row];
+		var str = this._history[this.EDITOR.getRow()];
 	
 		if(str.length==0)
 			return;
@@ -152,7 +132,7 @@ StateCalculator.prototype.enterPressed = function()
 			this._history.push(new Array( new Digit(res, false, Digit.RESULT )));
 
 		this.setRow(this._history.length) ;
-		this.setCol(0);
+		this.EDITOR.setCol(0);
 		this.EDITOR.setSuperScript(false);
 	}
 	else
@@ -162,7 +142,7 @@ StateCalculator.prototype.enterPressed = function()
 			str = new Array( new Digit(str[0]._val, false, Digit.DIGIT ) );
 		this._history[this._history.length-1] = str;
 		this._displayRow = null;
-		this.setCol(str[0].getDisplayLen());
+		this.EDITOR.setCol(str[0].getDisplayLen());
 	}
 };
 
@@ -329,47 +309,48 @@ StateCalculator.prototype.preProcessMatrices = function(anExpr)
 StateCalculator.prototype.repaint = function()
 {
 	this.CANVAS.clearCanvas();
-
+	var row = this.EDITOR.getRow();
+	var col = this.EDITOR.getCol();
 	//draw focus appropriately first so text can overwrite it
-	var x = this.CANVAS.X + this.EDITOR.getDisplayPosition() * this.CANVAS.DIGIT_W;
-	var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
+	var x = Canvas.X + this.EDITOR.getDisplayPosition() * Canvas.DIGIT_W;
+	var y = Canvas.Y + row * Canvas.DIGIT_H;
 	
 	// We have pressed the up arrow and are not typing anymore.
 	if( this._displayRow != null )
 	{
 		var data =this._history[this._displayRow]; 
-		var w = data[0].getDisplayLen() * this.CANVAS.DIGIT_W;
+		var w = data[0].getDisplayLen() * Canvas.DIGIT_W;
 		if( data[0].isResult() )
-			x = this.CANVAS.WIDTH - w ;
+			x = Canvas.WIDTH - w ;
 		else
-			x = this.CANVAS.X;
-		y = this.CANVAS.Y + this._displayRow * this.CANVAS.DIGIT_H;
+			x = Canvas.X;
+		y = Canvas.Y + this._displayRow * Canvas.DIGIT_H;
 		this.CANVAS.drawFocusBox(x, y, w);
 	}
-	else if( this._history[this._row].length > this._col)
-		this.CANVAS.drawFocusBox(x, y, null, this._history[this._row][this._col].isSuper());
+	else if( this._history[row].length > col)
+		this.CANVAS.drawFocusBox(x, y, null, this._history[row][col].isSuper());
 	else
 		this.CANVAS.drawFocusBox(x, y, null, this.EDITOR._superScript);
 
 	// Start and top and being to redraw
-	x = this.CANVAS.X;
-	y = this.CANVAS.Y;
+	x = Canvas.X;
+	y = Canvas.Y;
 
 	for( var i=0; i<this._history.length; i++)
 	{
-		y +=  this.CANVAS.DIGIT_H;
+		y += Canvas.DIGIT_H;
 
 		var str = this._history[i];
 		if( str.length > 0 && str[0].isResult())
-			this.CANVAS.print(this.CANVAS.formatNumber(str[0].toString(),10), this.CANVAS.WIDTH, y,null,"black","right");
+			this.CANVAS.print(this.CANVAS.formatNumber(str[0].toString(),10), Canvas.WIDTH, y,null,"black","right");
 		else
 			this.CANVAS.print(str, x, y);
 	}
 
 	if(this.ROM.is2ndPressed())
 	{
-		var x = this.CANVAS.X + this._col * this.CANVAS.DIGIT_W;
-		var y = this.CANVAS.Y + this._row * this.CANVAS.DIGIT_H;
+		var x = Canvas.X + col * Canvas.DIGIT_W;
+		var y = Canvas.Y + row * Canvas.DIGIT_H;
 		this.CANVAS.draw2ndButton(x,y);
 	}
 };

@@ -94,8 +94,8 @@ StateTraceCalc.prototype.evaluate = function(anEqu, anX)
 
 StateTraceCalc.prototype.repaint = function()
 {
-	var x = this.CANVAS.X;
-	var y = this.CANVAS.Y;
+	var x = Canvas.X;
+	var y = Canvas.Y;
 
 	// If the user has selected CALCULATE INTERSECT then prompt them 3 times.
 	// 1st for the 1st curve.
@@ -116,17 +116,17 @@ StateTraceCalc.prototype.repaint = function()
 
 	// This is selction screen for what to calculate
 	this.CANVAS.clearCanvas();
-	this.CANVAS.drawFocusBox(x, y, 9*this.CANVAS.DIGIT_W);
-	this.CANVAS.drawFocusBox(x, y+this._row*this.CANVAS.DIGIT_H);
+	this.CANVAS.drawFocusBox(x, y, 9*Canvas.DIGIT_W);
+	this.CANVAS.drawFocusBox(x, y+this._row*Canvas.DIGIT_H);
 
-	this.CANVAS.print("CALCULATE",  this.CANVAS.X,      y += this.CANVAS.DIGIT_H );
-	this.CANVAS.print("1:value",    x, y += this.CANVAS.DIGIT_H, null, "gray"  );
-	this.CANVAS.print("2:zero",     x, y += this.CANVAS.DIGIT_H  );
-	this.CANVAS.print("3:minimum",  x, y += this.CANVAS.DIGIT_H);
-	this.CANVAS.print("4:maximum",  x, y += this.CANVAS.DIGIT_H);
-	this.CANVAS.print("5:intersect",x, y += this.CANVAS.DIGIT_H );
-	this.CANVAS.print("6:dy/dx",    x, y += this.CANVAS.DIGIT_H, null, "gray" );
-	this.CANVAS.print("7:Sf(x)dx",  x, y += this.CANVAS.DIGIT_H, null, "gray" );
+	this.CANVAS.print("CALCULATE",  Canvas.X,      y += Canvas.DIGIT_H );
+	this.CANVAS.print("1:value",    x, y += Canvas.DIGIT_H, null, "gray"  );
+	this.CANVAS.print("2:zero",     x, y += Canvas.DIGIT_H  );
+	this.CANVAS.print("3:minimum",  x, y += Canvas.DIGIT_H);
+	this.CANVAS.print("4:maximum",  x, y += Canvas.DIGIT_H);
+	this.CANVAS.print("5:intersect",x, y += Canvas.DIGIT_H );
+	this.CANVAS.print("6:dy/dx",    x, y += Canvas.DIGIT_H, null, "gray" );
+	this.CANVAS.print("7:Sf(x)dx",  x, y += Canvas.DIGIT_H, null, "gray" );
 
 	if(this.ROM.is2ndPressed())
 		this.CANVAS.draw2ndButton();
@@ -135,22 +135,20 @@ StateTraceCalc.prototype.repaint = function()
 // Paint Mix/Max
 StateTraceCalc.prototype.paintMinMaxZero = function()
 {
-	var x = this.CANVAS.X;
+	var x = Canvas.X;
 
 	if( this._leftBound == null)
-		this.CANVAS.print( "LeftBound?", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+		this.CANVAS.print( "LeftBound?", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 	else if( this._rightBound == null )
 	{
 		this.CANVAS.drawLeftBound(this.ROM.getStateGraph().CENTER_X + this._leftBound*this.ROM.getStateGraph().STEP_X);
-//		this.TRACE.select2ndEquation(this._equ1);
-//		this.TRACE.repaint();
-		this.CANVAS.print( "RightBound?", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+		this.CANVAS.print( "RightBound?", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 	}
 	else if( this._guess == null)
 	{
 		this.CANVAS.drawLeftBound(this.ROM.getStateGraph().CENTER_X + this._leftBound*this.ROM.getStateGraph().STEP_X);
 		this.CANVAS.drawRightBound(this.ROM.getStateGraph().CENTER_X + this._rightBound*this.ROM.getStateGraph().STEP_X);
-		this.CANVAS.print( "Guess?", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+		this.CANVAS.print( "Guess?", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 	}
 	else if( this._calculate == this.ZERO )
 	{
@@ -160,12 +158,12 @@ StateTraceCalc.prototype.paintMinMaxZero = function()
 		if ( xCoord == null )
 		{
 			this.CANVAS.clearCanvas();
-			this.CANVAS.print( "ERR:NO SIGN CHNG", this.CANVAS.X,this.CANVAS.Y+this.CANVAS.DIGIT_H);
+			this.CANVAS.print( "ERR:NO SIGN CHNG", Canvas.X,Canvas.Y+Canvas.DIGIT_H);
 		}
 		else {
 			this.TRACE.setTraceX(xCoord);
 			this.TRACE.repaint();
-			this.CANVAS.print( "Zero", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+			this.CANVAS.print( "Zero", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 		}
 		this.traceCalcFinished();
 	}
@@ -174,7 +172,7 @@ StateTraceCalc.prototype.paintMinMaxZero = function()
 		var minX = this.findMinimum(this._leftBound, this._rightBound, 1);
 		this.TRACE.TRACE_X = minX;
 		this.TRACE.repaint();
-		this.CANVAS.print( "Minimum", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+		this.CANVAS.print( "Minimum", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 		this.traceCalcFinished();
 	}
 	else if( this._calculate == this.MAX )
@@ -182,7 +180,7 @@ StateTraceCalc.prototype.paintMinMaxZero = function()
 		var maxX = this.findMaximum(this._leftBound, this._rightBound, 1);
 		this.TRACE.setTraceX( maxX );
 		this.TRACE.repaint();
-		this.CANVAS.print( "Maximum", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+		this.CANVAS.print( "Maximum", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 		this.traceCalcFinished();
 	}
 };
@@ -238,18 +236,18 @@ StateTraceCalc.prototype.findMaximum = function(aLeft, aRight, aCnt)
 // All things intersection
 StateTraceCalc.prototype.paintIntersection = function()
 {
-	var x = this.CANVAS.X;
+	var x = Canvas.X;
 
 	if( this._equ1 == null)
-		this.CANVAS.print( "First Curve?", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+		this.CANVAS.print( "First Curve?", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 	else if( this._equ2 == null || this._equ1 == this._equ2)
 	{
 		this.TRACE.select2ndEquation(this._equ1);
 		this.TRACE.repaint();
-		this.CANVAS.print( "Second Curve?", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+		this.CANVAS.print( "Second Curve?", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 	}
 	else if( this._guess == null)
-		this.CANVAS.print( "Guess?", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+		this.CANVAS.print( "Guess?", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 	else
 	{
 		var equ1 = this.YEQUALS.getEquations()[this._equ1];
@@ -261,7 +259,7 @@ StateTraceCalc.prototype.paintIntersection = function()
 		if ( xCoordLeft == null && xCoordRight == null )
 		{
 			this.CANVAS.clearCanvas();
-			this.CANVAS.print( "ERR:NO SIGN CHNG", this.CANVAS.X,this.CANVAS.Y+this.CANVAS.DIGIT_H);
+			this.CANVAS.print( "ERR:NO SIGN CHNG", Canvas.X,Canvas.Y+Canvas.DIGIT_H);
 		}
 		else
 		{
@@ -275,7 +273,7 @@ StateTraceCalc.prototype.paintIntersection = function()
 
 			this.TRACE.setTraceX( closestX );
 			this.TRACE.repaint();
-			this.CANVAS.print( "Intersection", x, this.CANVAS.HEIGHT-this.CANVAS.DIGIT_H, this.CANVAS.SMALL_FONT );
+			this.CANVAS.print( "Intersection", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
 		}
 		this.traceCalcFinished();
 	}

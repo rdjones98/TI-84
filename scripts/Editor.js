@@ -1,51 +1,91 @@
-function Editor(aState)
+function Editor(aState, anArray)
 {
 	this.STATE = aState;
 	this.ROM =this.STATE.ROM;
+	this._array = anArray;
 	this._superScript = false;
+	this._row = 0;
+	this._col = 0;
 }
+
+Editor.prototype.getRow = function(){ return this._row; };
+Editor.prototype.getCol = function(){ return this._col; };
+Editor.prototype.setCol = function(aNum){ this._col = aNum; };
+Editor.prototype.setRow = function(aNum){ this._row = aNum; };
 Editor.prototype.setSuperScript = function( aVal ) { this._superScript = aVal; };
+
+Editor.prototype.incrCol = function(aNum)
+{
+	if( typeof aNum == "undefined" )
+		aNum = 1;
+	this._col += aNum;
+};
+Editor.prototype.incrRow = function(aNum)
+{
+	if( typeof aNum == "undefined" )
+		aNum = 1;
+	this._row += aNum;
+};
+Editor.prototype.operatorPressed = function(anOper)
+{
+	var data = this._array[this._row];
+
+	if(this.ROM.is2ndPressed() && anOper == "/")
+	{
+		anOper = "e";
+	}
+	else if( anOper == "^" )
+	{
+		this._superScript = true;
+		return;
+	}
+
+	if(this._col >= data.length)
+		data.push(new Digit(anOper, this._superScript, Digit.OPERATOR));
+	else
+		data[this._col]=new Digit(anOper, this._superScript, Digit.OPERATOR);
+
+	this.linkDigits();
+	this.setCol(data.length);
+};
 
 Editor.prototype.numberPressed = function( aNum )
 {
-	var row = this.STATE.getRow();
-	var col = this.STATE.getCol();
-	var data = this.STATE.getDataArray()[row];
-	if(col >= data.length)
+	if (this._row >= this._array.length )
+		this._array.push(new Array());
+	var data = this._array[this._row];
+	if(this._col >= data.length)
 		data.push(new Digit(aNum, this._superScript));
 	else
-		data[col]=new Digit(aNum, this._superScript);
+		data[this._col]=new Digit(aNum, this._superScript);
 
 	this.linkDigits();
-	this.STATE.incrCol();
+	this.incrCol(1);
 };
 
 Editor.prototype.deletePressed = function()
 {
-	var row = this.STATE.getRow();
-	var col = this.STATE.getCol();
-	var data = this.STATE.getDataArray()[row];
+	var data = this._array[this._row];
 
-	if( data.length >= col)
-		data.splice(col, 1);
+	if( data.length >= this._col)
+		data.splice(this._col, 1);
 
 	this.linkDigits();
 };
+
 Editor.prototype.arrowPressed = function(anArrow)
 {
-	var row = this.STATE.getRow();
-	var col = this.STATE.getCol();
-	var data = this.STATE.getDataArray()[row];
+	var data = this._array[this._row];
 
 	if(anArrow == Keypad.A_LEFT )
 	{
-		if( col > 0 )
-			this.STATE.incrCol( -1 );
+		if( this._col > 0 )
+			this.incrCol( -1 );
 	}
 	else if( anArrow == Keypad.A_RIGHT)
 	{
-		if( col < data.length)
-			this.STATE.incrCol();
+		if( this._col < data.length)
+			this.incrCol(1);
 		else
 			this._superScript = false;
 	}
@@ -57,8 +97,7 @@ Editor.prototype.arrowPressed = function(anArrow)
 
 Editor.prototype.functionPressed = function(afunc)
 {
-	var row = this.STATE.getRow();
-	var data = this.STATE.getDataArray()[row];
+	var data = this._array[this._row];
 
 	if(this.ROM.is2ndPressed() && afunc == "/")
 	{
@@ -73,69 +112,12 @@ Editor.prototype.functionPressed = function(afunc)
 	data.push(new Digit(afunc, this._superScript, Digit.FUNCTION));
 
 	this.linkDigits();
-	this.STATE.setCol(data.length);
-};
-
-Editor.prototype.operatorPressed = function(anOper)
-{
-	var row = this.STATE.getRow();
-	var data = this.STATE.getDataArray()[row];
-
-	if(this.ROM.is2ndPressed() && anOper == "/")
-	{
-		anOper = "e";
-	}
-	else if( anOper == "^" )
-	{
-		this._superScript = true;
-		return;
-	}
-
-	data.push(new Digit(anOper, this._superScript, Digit.OPERATOR));
-
-	this.linkDigits();
-	this.STATE.setCol(data.length);
-};
-
-Editor.prototype.lnPressed = function()
-{
-	if (this.ROM.is2ndPressed() )
-	{
-		this.functionPressed("e");
-		this.operatorPressed("^");
-	}
-	else {
-		this.functionPressed("ln(");
-	}
-};
-
-Editor.prototype.logPressed = function()
-{
-	if (this.ROM.is2ndPressed() )
-	{
-		this.functionPressed("10");
-		this.operatorPressed("^");
-	}
-	else {
-		this.functionPressed("log(");
-	}
-};
-
-Editor.prototype.trigPressed = function(aTrigFunc)
-{
-	if (this.ROM.is2ndPressed() )
-	{
-		this.functionPressed("a" + aTrigFunc);
-	}
-	else {
-		this.functionPressed(aTrigFunc);
-	}
+	this.setCol(data.length);
 };
 
 Editor.prototype.linkDigits = function()
 {
-	var row = this.STATE.getRow();
-	var data = this.STATE.getDataArray()[row];
+	var data = this._array[this._row];
 	if(data.length == 0)
 		return;
 
@@ -150,11 +132,19 @@ Editor.prototype.linkDigits = function()
 
 Editor.prototype.getDisplayPosition = function()
 {
-	var row = this.STATE.getRow();
-	var col = this.STATE.getCol();
-	var data = this.STATE.getDataArray()[row];
+	var data = this._array[this._row];
 	var len = 0;
-	for( var idx = 0; idx<col; idx++)
+	for( var idx = 0; idx<this._col; idx++)
 		len += data[idx].toString().length;
 	return len;
 };
+Editor.prototype.evalEntry= function(numDigits)
+{
+	var val = this._array[this._row][0].getMathStr();
+	var res = this.ROM.getStateCalculator().doMath(val);
+	if( typeof numDigits != "undefined" )
+		res = this.ROM.getCanvas().formatNumber(res, numDigits);
+	this._array[this._row] = new Array( new Digit(res, false, Digit.DIGIT));
+
+};
+

@@ -1,3 +1,5 @@
+"use strict";
+
 //Set up App!
 var canvas = document.getElementById("theCanvas");
 canvas.addEventListener("click", mouseClicked, false);
@@ -16,7 +18,7 @@ function touchEnd(evt){
 	var newEvt = {};
 	newEvt.clientX = evt.changedTouches[0].clientX;
 	newEvt.clientY = evt.changedTouches[0].clientY;
-	whatClicked(newEvt);
+	mouseClicked(newEvt);
 }
 
 //add key listener so user can type

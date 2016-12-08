@@ -101,7 +101,7 @@ Digit.prototype.getMathStr  = function(pCount)
 	if( this._nextDigit == null && this.isSuper() )
 		retStr += ")" ;
 	else if ( (this._prevDigit != null && this._prevDigit.isSuper() && ! this.isSuper()) ||
-			(this._nextDigit == null && this.isSuper()))
+			  (this._nextDigit == null && this.isSuper()))
 		retStr = ")" + retStr;
 
 	if( this._nextDigit != null )

@@ -5,8 +5,8 @@ function StateZoom(aCanvas, aGraph, aRom)
 	this.GRAPH = aGraph;
 	this.ROM = aRom;
 
-	this.T_ROW1 = aCanvas.Y + this.CANVAS.DIGIT_H-5;
-	this.C1 = this.CANVAS.X;
+	this.T_ROW1 = aCanvas.Y + Canvas.DIGIT_H-5;
+	this.C1 = Canvas.X;
 	this._col = 1;
 	this._row = 2;
 }
@@ -54,19 +54,19 @@ StateZoom.prototype.arrowPressed = function(anArrow)
 
 StateZoom.prototype.repaint = function()
 {
-	var y = this.CANVAS.Y+this.CANVAS.DIGIT_H;
+	var y = Canvas.Y+Canvas.DIGIT_H;
 	this.CANVAS.clearCanvas();
-	this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y, 40);
-	this.CANVAS.drawFocusBox(this.C1, this.CANVAS.Y+this._row*this.CANVAS.DIGIT_H);
+	this.CANVAS.drawFocusBox(this.C1, Canvas.Y, 40);
+	this.CANVAS.drawFocusBox(this.C1, Canvas.Y+this._row*Canvas.DIGIT_H);
 	this.CANVAS.print("ZOOM",       this.C1,  y);
-	this.CANVAS.print("MEMORY",     this.C1 + 5*this.CANVAS.DIGIT_W, y, null, "gray" );
-	this.CANVAS.print("1:ZBox",     this.C1,  y+=this.CANVAS.DIGIT_H, null, "gray" );
-	this.CANVAS.print("2:Zoom In",  this.C1,  y+=this.CANVAS.DIGIT_H );
-	this.CANVAS.print("3:Zoom Out", this.C1,  y+=this.CANVAS.DIGIT_H );
-	this.CANVAS.print("4:ZDecimal", this.C1,  y+=this.CANVAS.DIGIT_H, null, "gray" );
-	this.CANVAS.print("5:ZSquare",  this.C1,  y+=this.CANVAS.DIGIT_H, null, "gray" );
-	this.CANVAS.print("6:ZStandard", this.C1, y+=this.CANVAS.DIGIT_H );
-	this.CANVAS.print("7:ZTrig",    this.C1,  y+=this.CANVAS.DIGIT_H, null, "gray"     );
+	this.CANVAS.print("MEMORY",     this.C1 + 5*Canvas.DIGIT_W, y, null, "gray" );
+	this.CANVAS.print("1:ZBox",     this.C1,  y+=Canvas.DIGIT_H, null, "gray" );
+	this.CANVAS.print("2:Zoom In",  this.C1,  y+=Canvas.DIGIT_H );
+	this.CANVAS.print("3:Zoom Out", this.C1,  y+=Canvas.DIGIT_H );
+	this.CANVAS.print("4:ZDecimal", this.C1,  y+=Canvas.DIGIT_H, null, "gray" );
+	this.CANVAS.print("5:ZSquare",  this.C1,  y+=Canvas.DIGIT_H, null, "gray" );
+	this.CANVAS.print("6:ZStandard", this.C1, y+=Canvas.DIGIT_H );
+	this.CANVAS.print("7:ZTrig",    this.C1,  y+=Canvas.DIGIT_H, null, "gray"     );
 
 	if(this.ROM.is2ndPressed())
 		this.CANVAS.draw2ndButton();

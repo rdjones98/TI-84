@@ -9,13 +9,14 @@ function StateMatrix (aCanvas, aRom)
 	this._action = null;
 
 	// Define everything for Editing a matrix
-	this.COL1 = this.CANVAS.X + this.CANVAS.DIGIT_W;
-	this.COL2 = this.CANVAS.X + 8*this.CANVAS.DIGIT_W;
-	this.COL3 = this.CANVAS.X + 15*this.CANVAS.DIGIT_W;
+	this.COL1 = Canvas.X + Canvas.DIGIT_W;
+	this.COL2 = Canvas.X + 8*Canvas.DIGIT_W;
+	this.COL3 = Canvas.X + 15*Canvas.DIGIT_W;
 	this._editCol = 0;
 	this._editRow =0;
 	this._viewportX = 0;    // Used for editing matrix that is bigger than screen
 	this._editing = false;
+	this._editors = new Array();
 	this._matrices = new Array();
 	for( var i =0; i<7; i++)
 	{
@@ -67,6 +68,7 @@ StateMatrix.prototype.numberPressed = function(aNum)
 		this._matrices[this._row] = new Array();
 		for( var r=0; r<mRows; r++)
 		{
+			// Create Matrix based on User Entry into form
 			this._matrices[this._row].push(new Array());
 			for( var c = 0; c<mCols; c++)
 			{
@@ -224,18 +226,18 @@ StateMatrix.prototype.repaint = function()
 		return;
 	}
 
-	var x = this.CANVAS.X;
-	var y = this.CANVAS.Y;
+	var x = Canvas.X;
+	var y = Canvas.Y;
 	if( this._col == 0)
-		this.CANVAS.drawFocusBox(x, y,5*this.CANVAS.DIGIT_W);
+		this.CANVAS.drawFocusBox(x, y,5*Canvas.DIGIT_W);
 	else if( this._col == 1)
-		this.CANVAS.drawFocusBox(x+6*this.CANVAS.DIGIT_W, y, 4*this.CANVAS.DIGIT_W);
+		this.CANVAS.drawFocusBox(x+6*Canvas.DIGIT_W, y, 4*Canvas.DIGIT_W);
 	else if( this._col == 2)
-		this.CANVAS.drawFocusBox(x+11*this.CANVAS.DIGIT_W, y, 4*this.CANVAS.DIGIT_W);
+		this.CANVAS.drawFocusBox(x+11*Canvas.DIGIT_W, y, 4*Canvas.DIGIT_W);
 
-	this.CANVAS.print("NAMES MATH EDIT", x, y += this.CANVAS.DIGIT_H );
+	this.CANVAS.print("NAMES MATH EDIT", x, y += Canvas.DIGIT_H );
 
-	this.CANVAS.drawFocusBox(x, y+this.CANVAS.DIGIT_H*this._row, 2*this.CANVAS.DIGIT_W);
+	this.CANVAS.drawFocusBox(x, y+Canvas.DIGIT_H*this._row, 2*Canvas.DIGIT_W);
 	if( this._col == 0 || this._col == 2)
 	{
 		for( var r = 0; r < 7; r++)
@@ -243,65 +245,65 @@ StateMatrix.prototype.repaint = function()
 			var str = (r+1) + ":[" + String.fromCharCode(65+r) + "]";
 			if(this._matrices[r][0].length > 0)
 				str += this._matrices[r].length + "x" + this._matrices[r][0].length;
-			this.CANVAS.print( str, x, y += this.CANVAS.DIGIT_H );
+			this.CANVAS.print( str, x, y += Canvas.DIGIT_H );
 		}
 	}
 	else if( this._col == 1 )
 	{
-		this.CANVAS.print("6:randM(",    x, y += this.CANVAS.DIGIT_H, null, "gray" );
-		this.CANVAS.print("7:augment(",  x, y += this.CANVAS.DIGIT_H, null, "gray" );
-		this.CANVAS.print("8:Matr>list(",x, y += this.CANVAS.DIGIT_H, null, "gray" );
-		this.CANVAS.print("9:List>matr(",x, y += this.CANVAS.DIGIT_H, null, "gray" );
-		this.CANVAS.print("0:cumSum(",   x, y += this.CANVAS.DIGIT_H, null, "gray" );
-		this.CANVAS.print("A:ref(",      x, y += this.CANVAS.DIGIT_H, null, "gray" );
-		this.CANVAS.print("B:rref(",     x, y += this.CANVAS.DIGIT_H );
+		this.CANVAS.print("6:randM(",    x, y += Canvas.DIGIT_H, null, "gray" );
+		this.CANVAS.print("7:augment(",  x, y += Canvas.DIGIT_H, null, "gray" );
+		this.CANVAS.print("8:Matr>list(",x, y += Canvas.DIGIT_H, null, "gray" );
+		this.CANVAS.print("9:List>matr(",x, y += Canvas.DIGIT_H, null, "gray" );
+		this.CANVAS.print("0:cumSum(",   x, y += Canvas.DIGIT_H, null, "gray" );
+		this.CANVAS.print("A:ref(",      x, y += Canvas.DIGIT_H, null, "gray" );
+		this.CANVAS.print("B:rref(",     x, y += Canvas.DIGIT_H );
 	}
 };
 
 StateMatrix.prototype.paintEdit = function()
 {
-	var x = this.CANVAS.X;
-	var y = this.CANVAS.Y;
+	var x = Canvas.X;
+	var y = Canvas.Y;
 	var mRows = this._matrices[this._row].length;
 	var mCols = this._matrices[this._row][0].length;
 	// We are about to define the size of this matrix
 	if( this._editRow == 0 )
 	{
 		if( this._editCol == 0 )
-			this.CANVAS.drawFocusBox(x+10*this.CANVAS.DIGIT_W, y+1+this.CANVAS.DIGIT_H*this._editRow, this.CANVAS.DIGIT_W);
+			this.CANVAS.drawFocusBox(x+10*Canvas.DIGIT_W, y+1+Canvas.DIGIT_H*this._editRow, Canvas.DIGIT_W);
 		else
-			this.CANVAS.drawFocusBox(x+13*this.CANVAS.DIGIT_W, y+1+this.CANVAS.DIGIT_H*this._editRow, this.CANVAS.DIGIT_W);
+			this.CANVAS.drawFocusBox(x+13*Canvas.DIGIT_W, y+1+Canvas.DIGIT_H*this._editRow, Canvas.DIGIT_W);
 	}
 	else
 	{
 		if( this._editCol - this._viewportX == 0)
-			this.CANVAS.drawFocusBox(this.COL1, y+this.CANVAS.DIGIT_H*this._editRow, this.CANVAS.DIGIT_W);
+			this.CANVAS.drawFocusBox(this.COL1, y+Canvas.DIGIT_H*this._editRow, Canvas.DIGIT_W);
 		else if( this._editCol - this._viewportX == 1)
-			this.CANVAS.drawFocusBox(this.COL2, y+this.CANVAS.DIGIT_H*this._editRow, this.CANVAS.DIGIT_W);
+			this.CANVAS.drawFocusBox(this.COL2, y+Canvas.DIGIT_H*this._editRow, Canvas.DIGIT_W);
 		else
-			this.CANVAS.drawFocusBox(this.COL3, y+this.CANVAS.DIGIT_H*this._editRow, this.CANVAS.DIGIT_W);
+			this.CANVAS.drawFocusBox(this.COL3, y+Canvas.DIGIT_H*this._editRow, Canvas.DIGIT_W);
 	}
-	this.CANVAS.print("MATRIX[" + String.fromCharCode(65+this._row) + "] "+ mRows +" x" + mCols, x, y += this.CANVAS.DIGIT_H );
-	y += this.CANVAS.DIGIT_H;
+	this.CANVAS.print("MATRIX[" + String.fromCharCode(65+this._row) + "] "+ mRows +" x" + mCols, x, y += Canvas.DIGIT_H );
+	y += Canvas.DIGIT_H;
 	for( var r = 0; r < mRows; r ++ )
 	{
 		if( this._viewportX > 0 )
-			this.CANVAS.print("_",  x, y + r*this.CANVAS.DIGIT_H);
+			this.CANVAS.print("_",  x, y + r*Canvas.DIGIT_H);
 		else
-			this.CANVAS.print("[",  x, y + r*this.CANVAS.DIGIT_H);
+			this.CANVAS.print("[",  x, y + r*Canvas.DIGIT_H);
 		if( mCols > 3 && this._viewportX < mCols - 3)
-			this.CANVAS.print("_",  x+18*this.CANVAS.DIGIT_W, y + r*this.CANVAS.DIGIT_H);
+			this.CANVAS.print("_",  x+18*Canvas.DIGIT_W, y + r*Canvas.DIGIT_H);
 		else
-			this.CANVAS.print("]",  x+18*this.CANVAS.DIGIT_W, y + r*this.CANVAS.DIGIT_H);
+			this.CANVAS.print("]",  x+18*Canvas.DIGIT_W, y + r*Canvas.DIGIT_H);
 
 		var viewPortCols = this._viewportX + 3;
 		if(viewPortCols > mCols)
 			viewPortCols = mCols;
 
-		var mx=this.CANVAS.X + this.CANVAS.DIGIT_W;
+		var mx=Canvas.X + Canvas.DIGIT_W;
 		for( var c = this._viewportX; c < viewPortCols; c++ ) {
-			this.CANVAS.print(this._matrices[this._row][r][c].toString(),  mx, y + r*this.CANVAS.DIGIT_H);
-			mx += 7*this.CANVAS.DIGIT_W;
+			this.CANVAS.print(this._matrices[this._row][r][c].toString(),  mx, y + r*Canvas.DIGIT_H);
+			mx += 7*Canvas.DIGIT_W;
 		}
 	}
 };
