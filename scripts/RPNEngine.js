@@ -249,13 +249,13 @@ function calculate(expression) {
 
 	var tokens = tokenizeInput(expression);
 	if (tokens === null)
-		return 'Incorrect expression';
+		return 'NaN';
 
 	var out = shuntingYard(tokens);
 
 	var result = calculateRpn(out);
 	if (result === null)
-		return 'Incorrect expression';
+		return 'NaN';
 
 	return result;
 }

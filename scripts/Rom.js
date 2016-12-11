@@ -8,17 +8,19 @@ function Rom (aWidth, aHeight)
 	this.CANVAS = new Canvas(theCanvas, aWidth, aHeight);
 	this.STATE_Y_EQUALS   = new StateYEquals(this.CANVAS, this);
 	this.STATE_GRAPHING   = new StateGraphing(this.CANVAS, this.STATE_Y_EQUALS, this);
-	this.STATE_GRAPHTBL   = new StateGraphTable(this.CANVAS, this.STATE_Y_EQUALS, this);
+	this.STATE_GRAPHTBL   = new StateGraphTable(this.CANVAS, this);
 	this.STATE_CALCULATOR = new StateCalculator(this.CANVAS, this);
 	this.STATE_TRACE      = new StateTrace(this.CANVAS, this.STATE_GRAPHING, this);
 	this.STATE_TRACECALC  = new StateTraceCalc(this.CANVAS, this.STATE_Y_EQUALS, this.STATE_GRAPHING, this.STATE_TRACE, this);
 	this.STATE_MODE       = new StateMode(this.CANVAS, this);
-	this.STATE_WINDOW     = new StateWindow(this.CANVAS, this.STATE_GRAPHING, this);
+	this.STATE_WINDOW     = new StateWindow(this.CANVAS, this);
 	this.STATE_TABLESET   = new StateTableSet(this.CANVAS, this);
 	this.STATE_STAT       = new StateStat(this.CANVAS, this);
 	this.STATE_MATRIX     = new StateMatrix(this.CANVAS, this);
-	this.STATE_ZOOM       = new StateZoom(this.CANVAS, this.STATE_GRAPHING, this);
+	this.STATE_ZOOM       = new StateZoom(this.CANVAS, this);
 	this.STATE_STATEDIT   = new StateStatEdit(this.CANVAS, this);
+	
+	new MathEngine(this);
 	this.KEYPAD = null;
 	// default State
 	this._state = this.STATE_CALCULATOR;
@@ -28,7 +30,9 @@ function Rom (aWidth, aHeight)
 
 	this.CANVAS.drawFocusBox();
 }
+Rom.prototype.getStateTableSet   = function(){ return this.STATE_TABLESET; };
 Rom.prototype.getStateCalculator = function(){ return this.STATE_CALCULATOR; };
+Rom.prototype.getStateGraphTable = function(){ return this.STATE_GRAPHTBL; };
 Rom.prototype.getStateMatrix     = function(){ return this.STATE_MATRIX; };
 Rom.prototype.getStateGraph      = function(){ return this.STATE_GRAPHING; };
 Rom.prototype.getStateYEquals    = function(){ return this.STATE_Y_EQUALS; };
@@ -40,8 +44,17 @@ Rom.prototype.getCanvas 		 = function(){ return this.CANVAS; };
 // Button Pressed Events
 Rom.prototype.matrixPressed = function()
 {
-	this._state = this.STATE_MATRIX;
-	this._state.matrixPressed();
+	if(this.is2ndPressed())
+	{
+		this._state = this.STATE_MATRIX;
+		this._state.matrixPressed();
+	}
+	else
+	{
+		this.operatorPressed("^");
+		this.numberPressed("-1");
+	}
+
 };
 Rom.prototype.graphPressed = function()
 {
@@ -127,7 +140,7 @@ Rom.prototype.logPressed = function()
 };
 Rom.prototype.trigPressed = function(aTrigFunc)
 {
-	if (this.ROM.is2ndPressed() )
+	if (this.is2ndPressed() )
 	{
 		this._state.functionPressed("a" + aTrigFunc);
 	}
@@ -245,7 +258,7 @@ Rom.prototype.doMath = function(anExpr)
 {
 	if( anExpr.toString().indexOf("e-") > 0)
 		console.log(anExpr);
-	return this.fixRoundingError(this.STATE_CALCULATOR.doMath(anExpr));
+	return this.fixRoundingError(MathEngine.doMath(anExpr));
 };
 
 Rom.prototype.fixRoundingError = function(aVal)

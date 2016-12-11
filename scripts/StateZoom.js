@@ -1,11 +1,9 @@
-//class StateZoom{  constructor(aCanvas, aGraph, aRom)
-function StateZoom(aCanvas, aGraph, aRom)
+//class StateZoom{  constructor(aCanvas, aRom)
+function StateZoom(aCanvas, aRom)
 {
 	this.CANVAS = aCanvas;
-	this.GRAPH = aGraph;
 	this.ROM = aRom;
 
-	this.T_ROW1 = aCanvas.Y + Canvas.DIGIT_H-5;
 	this.C1 = Canvas.X;
 	this._col = 1;
 	this._row = 2;
@@ -65,7 +63,7 @@ StateZoom.prototype.repaint = function()
 	this.CANVAS.print("3:Zoom Out", this.C1,  y+=Canvas.DIGIT_H );
 	this.CANVAS.print("4:ZDecimal", this.C1,  y+=Canvas.DIGIT_H, null, "gray" );
 	this.CANVAS.print("5:ZSquare",  this.C1,  y+=Canvas.DIGIT_H, null, "gray" );
-	this.CANVAS.print("6:ZStandard", this.C1, y+=Canvas.DIGIT_H );
+	this.CANVAS.print("6:ZStandard",this.C1,  y+=Canvas.DIGIT_H );
 	this.CANVAS.print("7:ZTrig",    this.C1,  y+=Canvas.DIGIT_H, null, "gray"     );
 
 	if(this.ROM.is2ndPressed())

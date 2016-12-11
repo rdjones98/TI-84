@@ -100,15 +100,7 @@ Keypad.prototype.mouseClicked = function( evt )
 		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW7_MIN <= y && y <= this.ROW7_MAX)
 			this.rom.logPressed();
 		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW5_MIN <= y && y <= this.ROW5_MAX)
-		{
-			if(this.rom.is2ndPressed())
-				this.rom.matrixPressed();
-			else
-			{
-				this.rom.operatorPressed("^");
-				this.rom.numberPressed("-1");
-			}
-		}
+			this.rom.matrixPressed();
 		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW6_MIN <= y && y <= this.ROW6_MAX)
 			this.rom.xSquaredPressed();
 		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ON_MIN <= y && y <= this.ON_MAX)

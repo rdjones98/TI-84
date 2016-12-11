@@ -1,8 +1,7 @@
-//class	StateGraphTable{	constructor( aCanvas, aYEquals, aRom )	{
-function StateGraphTable(aCanvas, aYEquals, aRom)
+//class	StateGraphTable{	constructor( aCanvas, aRom )	{
+function StateGraphTable(aCanvas, aRom)
 {
 	this.CANVAS = aCanvas;
-	this.Y_EQUALS = aYEquals;
 	this.ROM = aRom;
 
 	this.T_COL1 = Canvas.X+5;
@@ -15,7 +14,6 @@ function StateGraphTable(aCanvas, aYEquals, aRom)
 	this.IDX2 = -1;
 
 	this.CURSORROW = 0;
-	this.CURSORIDX = 0;
 
 	this.DIGIT_H = Canvas.DIGIT_H;
 
@@ -24,6 +22,7 @@ function StateGraphTable(aCanvas, aYEquals, aRom)
 
 StateGraphTable.prototype.repaint = function()
 {
+	var TableSet = ROM.getStateTableSet();
 	this.CANVAS.clearCanvas();
 	this.drawTable();
 	this.drawFocusBox();
@@ -31,20 +30,22 @@ StateGraphTable.prototype.repaint = function()
 	for( var i=0; i<this.T_MAXROWS; i++ )
 	{
 		var y = this.DIGIT_H + this.T_ROW1 + i*this.DIGIT_H;
-		this.CANVAS.print(this.CURSORIDX + i, this.T_COL1, y, Canvas.SMALL_FONT);
+		this.CANVAS.print(TableSet.getTableStart() + i, this.T_COL1, y, Canvas.SMALL_FONT);
 		if( this.IDX1 > -1 )
 		{
-			var str = this.ROM.evaluate(this.IDX1, this.CURSORIDX + i);
+			var str = this.ROM.evaluate(this.IDX1, TableSet.getTableStart() + i);
 			this.CANVAS.print(this.CANVAS.formatNumber(str, 6), this.T_COL2, y, Canvas.SMALL_FONT);
 		}
 		if( this.IDX2 > -1 )
-			this.CANVAS.print(this.ROM.evaluate(this.IDX2, this.CURSORIDX + i), this.T_COL3, y, Canvas.SMALL_FONT);
+			this.CANVAS.print(this.ROM.evaluate(this.IDX2, TableSet.getTableStart() + i), this.T_COL3, y, Canvas.SMALL_FONT);
 	}
 };
 
 // Draw tick marks on graph
 StateGraphTable.prototype.drawTable = function()
 {
+	var equations = this.ROM.getStateYEquals()._equations;
+
 	this.CANVAS.drawLn(Canvas.X, this.T_ROW1,Canvas.WIDTH, this.T_ROW1);
 	this.CANVAS.drawLn(Canvas.X, Canvas.HEIGHT-this.DIGIT_H,Canvas.WIDTH, Canvas.HEIGHT-this.DIGIT_H);
 	this.CANVAS.drawLn(this.T_COL2-7, Canvas.Y,this.T_COL2-7, Canvas.HEIGHT-Canvas.DIGIT_H);
@@ -56,11 +57,11 @@ StateGraphTable.prototype.drawTable = function()
 	this.IDX1 = -1;
 	this.IDX2 = -1;
 	for( var i=0; i<7; i++)
-		if( this.Y_EQUALS._equations[i].length > 0 )
+		if( equations[i].length > 0 )
 		{
 			this.IDX1 = i;
 			for( var j=i+1; j<7; j++)
-				if( this.Y_EQUALS._equations[j].length > 0 )
+				if( equations[j].length > 0 )
 				{
 					this.IDX2 = j;
 					break;
@@ -81,8 +82,9 @@ StateGraphTable.prototype.drawTable = function()
 
 StateGraphTable.prototype.evaluate = function(anEquationIdx, anX)
 {
-	var equ = this.Y_EQUALS._equations[anEquationIdx].replace(/X/g, "(" + anX + ")");
-	var res = this.ROM.doMath(equ);
+	var equations = this.ROM.getStateYEquals()._equations;
+	var equ = equations[anEquationIdx].replace(/X/g, "(" + anX + ")");
+	var res = MathEngine.doMath(equ);
 	var str = "" + res;
 	if( str.length > 7)
 		str = str.substring(0,7);
@@ -100,6 +102,7 @@ StateGraphTable.prototype.drawFocusBox = function()
 
 StateGraphTable.prototype.arrowPressed = function(anArrow)
 {
+	var TableSet = ROM.getStateTableSet();
 	if(anArrow == Keypad.A_LEFT )
 		this.cursorLeft();
 	else if( anArrow == Keypad.A_LEFT)
@@ -109,13 +112,13 @@ StateGraphTable.prototype.arrowPressed = function(anArrow)
 		if( this.CURSORROW > 0)
 			this.CURSORROW--;
 		else
-			this.CURSORIDX--;
+			TableSet.setTableStart(TableSet.getTableStart()-1);
 	}
 	else if( anArrow == Keypad.A_DOWN)
 	{
 		if( this.CURSORROW < this.T_MAXROWS-1)
 			this.CURSORROW++;
 		else
-			this.CURSORIDX++;
+			TableSet.setTableStart(TableSet.getTableStart()+1);
 	}
 };

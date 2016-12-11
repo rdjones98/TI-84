@@ -9,20 +9,21 @@ function Canvas(aCanvas, aWidth, aHeight)
 	// Constants
 	Canvas.X = Math.round(.19*aWidth);
 	Canvas.Y = Math.round(.095*aHeight);
-	Canvas.HEIGHT = Math.round(.302*aHeight) ;
-	Canvas.WIDTH  = Math.round(.7692 * aWidth);
-	Canvas.DIGIT_W = Math.round(.029 * aWidth);
-	Canvas.DIGIT_H = Math.round(.0241 * aHeight);
-	Canvas.SMALL_FONT = Math.round(.04 * aWidth) + "px Courier";
-	Canvas.NEGATIVE = String.fromCharCode(parseInt("02C9", 16));
-	Canvas.PI       = String.fromCharCode(parseInt("03C0", 16));
-	Canvas.SQRROOT  = String.fromCharCode(parseInt("221A", 16));
-	Canvas.GRAPHCOLORS = new Array("blue", "red", "yellow", "green", "pink", "orange", "black");
+	Canvas.HEIGHT 		= Math.round(.302*aHeight) ;
+	Canvas.WIDTH  		= Math.round(.7692 * aWidth);
+	Canvas.DIGIT_W 		= Math.round(.029 * aWidth);
+	Canvas.DIGIT_H 		= Math.round(.0241 * aHeight);
+	Canvas.SMALL_FONT 	= Math.round(.04 * aWidth) + "px Courier";
+	Canvas.NEGATIVE 	= String.fromCharCode(parseInt("02C9", 16));
+	Canvas.PI       	= String.fromCharCode(parseInt("03C0", 16));
+	Canvas.SQRROOT  	= String.fromCharCode(parseInt("221A", 16));
+	Canvas.DELTA    	= String.fromCharCode(parseInt("0394", 16));
+	Canvas.GRAPHCOLORS 	= new Array("blue", "red", "yellow", "green", "pink", "orange", "black");
 
-	this.FONT = Math.round(.048 * aWidth) + "px Courier";
-	this.SUPER_FONT = Math.round((.048 * aWidth)*4.0/5.0) + "px Courier";
-	this.SUPER_OFFSET = Math.round(Canvas.DIGIT_H/2.0);
-	this.CONTEXT.font = this.FONT;
+	this.FONT 			= Math.round(.048 * aWidth) + "px Courier";
+	this.SUPER_FONT 	= Math.round((.048 * aWidth)*4.0/5.0) + "px Courier";
+	this.SUPER_OFFSET 	= Math.round(Canvas.DIGIT_H/2.0);
+	this.CONTEXT.font 	= this.FONT;
 	this.clipDisplay();
 }
 

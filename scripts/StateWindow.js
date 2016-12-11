@@ -1,9 +1,8 @@
 //class StateWindow{  constructor(aCanvas, aGraph, aRom)
-function StateWindow(aCanvas, aGraph, aRom)
+function StateWindow(aCanvas, aRom)
 {
 	this.CANVAS = aCanvas;
 	this.ROM = aRom;
-	this.GRAPH = aGraph;
 
 	this.OFFSET  = 10;
 	this.X = Canvas.X + Canvas.DIGIT_W*6;
@@ -18,7 +17,22 @@ function StateWindow(aCanvas, aGraph, aRom)
 							new Array(new Digit(1,  false,Digit.DiGIT)));
 	this.EDITOR = new Editor(this, this._data);
 }
-
+StateWindow.prototype.setXMin =  function (aVal)
+{
+	this._data[0][0] = new Digit(aVal);
+};
+StateWindow.prototype.setXMax =  function (aVal)
+{
+	this._data[1][0] = new Digit(aVal);
+};
+StateWindow.prototype.setYMin =  function (aVal)
+{
+	this._data[3][0] = new Digit(aVal);
+};
+StateWindow.prototype.setYMax =  function (aVal)
+{
+	this._data[4][0] = new Digit(aVal);
+};
 StateWindow.prototype.deletePressed = function()
 {
 	this.EDITOR.deletePressed();

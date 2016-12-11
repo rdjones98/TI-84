@@ -57,7 +57,7 @@ function keyPressed(event)
 			ROM.arrowPressed("ArrowDown");
 		else if(keyName=="Delete")
 			ROM.deletePressed();
-		else if(ROM.is2ndPressed() && (keyName=="a" || keyName == "A") )
+		else if(keyName=="a" || keyName == "A" )
 			ROM.matrixPressed();
 		else if(keyName=="e" || keyName == "E")
 		{

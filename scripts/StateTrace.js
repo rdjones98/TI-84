@@ -17,8 +17,8 @@ function StateTrace( aCanvas, aGraph, aRom )
 	this.ZOOM_STANDARD = 6;
 
 	//if we press numbers, track them
-	this.EDITOR = new Editor(this);
 	this._trace = new Array(new Array());
+	this.EDITOR = new Editor(this, this._trace);
 	this._row = 0;
 	this._col = 0;
 
@@ -70,11 +70,12 @@ StateTrace.prototype.operatorPressed = function(anOper)
 
 StateTrace.prototype.enterPressed = function()
 {
+	var window = this.ROM.getStateWindow();
+	
 	// If we pressed a number, then change to that X - Coordinate
 	if(this._trace[0].length != 0)
 	{
-		var str = this._trace[0][0].getMathStr();
-		var x = this.ROM.getStateCalculator().doMath(str);
+		var x = this._trace[0][0].toNumber();
 		this.setTraceX(Number(x));
 		this.repaint();
 		this._trace[0] = new Array();
@@ -84,26 +85,27 @@ StateTrace.prototype.enterPressed = function()
 		var xOffset = (this.GRAPH.X_MAX - this.GRAPH.X_MIN)/8.0;
 		var yOffset = (this.GRAPH.Y_MAX - this.GRAPH.Y_MIN)/8.0;
 		var y = this.ROM.evaluate(this._curEquationIDX, this.TRACE_X);
-		this.GRAPH.X_MIN = this.TRACE_X - xOffset;
-		this.GRAPH.X_MAX = this.TRACE_X + xOffset;
-		this.GRAPH.Y_MIN = y - yOffset;
-		this.GRAPH.Y_MAX = y + yOffset;
+		window.setXMin(this.TRACE_X - xOffset);
+		window.setXMax(this.TRACE_X + xOffset);
+		window.setYMin( y - yOffset );
+		window.setYMax( y + yOffset );
 	}
 	else if(this._zoom == this.ZOOM_OUT)
 	{
-		this.GRAPH.X_MIN *= 4;
-		this.GRAPH.X_MAX *= 4;
-		this.GRAPH.Y_MIN *= 4;
-		this.GRAPH.Y_MAX *= 4;
+		window.setXMin( this.GRAPH.X_MIN * 4 );
+		window.setXMax( this.GRAPH.X_MAX * 4 );
+		window.setYMin( this.GRAPH.Y_MIN * 4 );
+		window.setYMax( this.GRAPH.Y_MAX * 4 );
 	}
 	else if(this._zoom == this.ZOOM_STANDARD)
 	{
-		this.GRAPH.X_MIN = -10;
-		this.GRAPH.X_MAX = 10;
-		this.GRAPH.Y_MIN = -10;
-		this.GRAPH.Y_MAX = 10;
+		window.setXMin( -10 );
+		window.setXMax( 10 );
+		window.setYMin( -10 );
+		window.setYMax( 10 );
 	}
-	this.TRACE_STEP = (this.GRAPH.X_MAX - this.GRAPH.X_MIN)/100;
+	var div = ( this.GRAPH.X_MAX - this.GRAPH.X_MIN > 50000 ) ? 25 : 100; 
+	this.TRACE_STEP = (this.GRAPH.X_MAX - this.GRAPH.X_MIN)/div;
 	this.repaint();
 };
 

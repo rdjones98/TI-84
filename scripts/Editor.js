@@ -1,18 +1,41 @@
-function Editor(aState, anArray)
+function Editor(aState, anArray, numRows)
 {
 	this.STATE = aState;
 	this.ROM =this.STATE.ROM;
 	this._array = anArray;
+	if( this._array == null )
+		this._array = new Array();
 	this._superScript = false;
 	this._row = 0;
 	this._col = 0;
+	
+	if(typeof numRows != "undefined")
+		this.setNumRows(numRows);
 }
 
+Editor.prototype.getData= function(){ return this._array; };
 Editor.prototype.getRow = function(){ return this._row; };
 Editor.prototype.getCol = function(){ return this._col; };
 Editor.prototype.setCol = function(aNum){ this._col = aNum; };
-Editor.prototype.setRow = function(aNum){ this._row = aNum; };
 Editor.prototype.setSuperScript = function( aVal ) { this._superScript = aVal; };
+
+Editor.prototype.setRow = function(aNum){ 
+	this._row = aNum; 
+	this._col = 0;
+};
+
+Editor.prototype.getNumRows = function()
+{ 
+	if (this._array.length == 0)
+		this._array.push(new Array( new Digit(0)));
+	return this._array.length;
+};
+
+Editor.prototype.setNumRows = function(aNum){
+	this._array.length=0;
+	for( var idx=0; idx<aNum; idx++)
+		this._array.push(new Array( new Digit(0))); 
+};
 
 Editor.prototype.incrCol = function(aNum)
 {
@@ -138,13 +161,14 @@ Editor.prototype.getDisplayPosition = function()
 		len += data[idx].toString().length;
 	return len;
 };
+
 Editor.prototype.evalEntry= function(numDigits)
 {
 	var val = this._array[this._row][0].getMathStr();
-	var res = this.ROM.getStateCalculator().doMath(val);
+	var res = MathEngine.doMath(val);
 	if( typeof numDigits != "undefined" )
 		res = this.ROM.getCanvas().formatNumber(res, numDigits);
 	this._array[this._row] = new Array( new Digit(res, false, Digit.DIGIT));
-
+	this._col = 0;
 };
 

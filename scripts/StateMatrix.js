@@ -10,28 +10,60 @@ function StateMatrix (aCanvas, aRom)
 
 	// Define everything for Editing a matrix
 	this.COL1 = Canvas.X + Canvas.DIGIT_W;
-	this.COL2 = Canvas.X + 8*Canvas.DIGIT_W;
-	this.COL3 = Canvas.X + 15*Canvas.DIGIT_W;
+	this.COL2 = Canvas.X + Canvas.DIGIT_W * 8;
+	this.COL3 = Canvas.X + Canvas.DIGIT_W * 15;
 	this._editCol = 0;
 	this._editRow =0;
 	this._viewportX = 0;    // Used for editing matrix that is bigger than screen
-	this._editing = false;
-	this._editors = new Array();
+
+	// this is an Array of the matrices labeled [A] to [G]
+	// Each row is a list of Editors (based on number of cols)
+	// Each Editor contains the rows of the individual matrix
 	this._matrices = new Array();
 	for( var i =0; i<7; i++)
 	{
-		this._matrices.push(new Array(new Array()));
+		this._matrices.push(new Array());
 	}
 }
 
 StateMatrix.prototype.getMatrix = function(aName)
 {
-	return this._matrices[ aName.charCodeAt(0) - 65 ];
+	var res = this._matrices[ aName.charCodeAt(0) - 65 ];
+	var m = new Array();
+	if( res.length == 0)
+		return m;
+	for( var row=0; row<res[0].getNumRows(); row++)
+	{
+		m.push(new Array());
+		for( var col=0; col<res.length; col++)
+			m[row].push(res[col].getData()[row]);
+	}	
+	return m;
 };
+
+StateMatrix.prototype.getEditor = function() 
+{
+	return this._matrices[this._row][this._editCol];
+};
+StateMatrix.prototype.setEditRow = function(aRow) 
+{
+	if( aRow < 0 )
+		return;
+	this._editRow = aRow;
+	for( var idx=0; idx< this._matrices[this._row].length; idx++)
+		this._matrices[this._row][idx].setRow(aRow>0?aRow-1:0);
+};
+StateMatrix.prototype.setEditCol = function(aCol) 
+{
+	this._editCol = aCol;
+	for( var idx=0; idx< this._matrices[this._row].length; idx++)
+		this._matrices[this._row][idx].setCol(0);
+};
+
 
 StateMatrix.prototype.operatorPressed = function(anOper)
 {
-	this.numberPressed(anOper);
+	this.getEditor().operatorPressed(anOper);
 };
 
 StateMatrix.prototype.enterPressed = function()
@@ -39,7 +71,8 @@ StateMatrix.prototype.enterPressed = function()
 	if( this._col == 0 )
 	{
 		var calc = this.ROM.setStateCalculator();
-		calc.matrixPressed(String.fromCharCode(65+this._row));
+		var name = String.fromCharCode(65+this._row);
+		calc.matrixPressed(name, this.getMatrix(name));
 	}
 	else if( this._col == 1 )
 	{
@@ -54,52 +87,52 @@ StateMatrix.prototype.enterPressed = function()
 
 StateMatrix.prototype.numberPressed = function(aNum)
 {
-	var mRows = this._matrices[this._row].length;
-	var mCols = this._matrices[this._row][0].length;
+	var mCols = this._matrices[this._row].length;
+	// If no Columns yet, then create an editor
+	if(mCols==0)
+		this._matrices[this._row].push(new Editor(this,null));
+	var mRows = this._matrices[this._row][0].getNumRows();
 
 	// Set Size of Matrix
 	if( this._editRow == 0 )
 	{
-		if( this._editCol == 0)
-			mRows = aNum;
-		else
-			mCols = aNum;
-
-		this._matrices[this._row] = new Array();
-		for( var r=0; r<mRows; r++)
+		if( this._editCol == 1)
 		{
-			// Create Matrix based on User Entry into form
-			this._matrices[this._row].push(new Array());
-			for( var c = 0; c<mCols; c++)
-			{
-				this._matrices[this._row][r].push(new Array());
-				this._matrices[this._row][r][c].push("0");
-			}
+			// We have just set the # of columns, create each editor
+			this._matrices[this._row] = new Array();
+			for(var idx=0; idx<aNum; idx++)
+				this._matrices[this._row].push(new Editor(this,null,mRows));
+		}
+		
+		
+		if( this._editCol == 0)
+		{
+			// We have just set the # of rows, tell each editor
+			for(var idx=0; idx<this._matrices[this._row].length; idx++)
+				this._matrices[this._row][idx].setNumRows(aNum);
 		}
 	}
 	else
 	{
-		if( this._editing )
-			this._matrices[this._row][this._editRow-1][this._editCol] += aNum;
-		else
-			this._matrices[this._row][this._editRow-1][this._editCol] = aNum;
-		this._editing = true;
+		this.getEditor().numberPressed(aNum);
 	}
 };
 
 StateMatrix.prototype.arrowPressed = function(anArrow)
 {
-	this._editing = false;
+	if( this._editRow > 0)
+		this.getEditor().evalEntry(6);
+
 	if(anArrow == Keypad.A_LEFT )
 	{
 		if( this._action == 0 )
 		{
 			if(this._editCol > 0)
-				this._editCol --;
+				this.setEditCol(this._editCol -1);
 			else if( this._editRow >1)
 			{
-				this._editRow --;
-				this._editCol = this._matrices[this._row][this._editRow].length-1;
+				this.setEditRow(this._editRow - 1);
+				this.setEditCol( this._matrices[this._row].length-1 );
 				if( this._editCol > 2)
 					this._viewportX = this._editCol - 2;
 			}
@@ -110,7 +143,7 @@ StateMatrix.prototype.arrowPressed = function(anArrow)
 			return;
 		}
 		if( this._col > 0 )
-			this._col --;
+			this.setEditCol( this._col - 1);
 		else
 			this._col = 2;
 		if( this._col == 1)
@@ -126,19 +159,19 @@ StateMatrix.prototype.arrowPressed = function(anArrow)
 			if(this._editRow == 0)
 			{
 				if( this._editCol == 0)
-					this._editCol = 1;
+					this.setEditCol( 1 );
 				else {
-					this._editRow ++;
-					this._editCol = 0;
+					this.setEditRow(this._editRow + 1);
+					this.setEditCol(0);
 					this._viewportX = 0;
 				}
 			}
-			else if( this._editCol < this._matrices[this._row][0].length - 1)
-				this._editCol ++;
-			else if( this._editRow < this._matrices[this._row].length){
+			else if( this._editCol < this._matrices[this._row].length - 1)
+				this.setEditCol( this._editCol + 1);
+			else if( this._editRow < this._matrices[this._row][0].getNumRows()){
 				this._viewportX = 0;
-				this._editRow ++;
-				this._editCol = 0;
+				this.setEditRow(this._editRow + 1);
+				this.setEditCol( 0 );
 			}
 
 			if (this._viewportX < this._editCol - 2)
@@ -164,11 +197,11 @@ StateMatrix.prototype.arrowPressed = function(anArrow)
 		{
 			if(this._editRow == 1)
 			{
-				this._editRow = 0;
-				this._editCol = 0;
+				this.setEditRow( 0 );
+				this.setEditCol(0);
 			}
 			else {
-				this._editRow --;
+				this.setEditRow(this._editRow - 1);
 			}
 			return;
 		}
@@ -186,11 +219,13 @@ StateMatrix.prototype.arrowPressed = function(anArrow)
 		{
 			if( this._editRow == 0)
 			{
-				this._editRow = 1;
-				this._editCol = 0;
+				this.setEditRow(1);
+				this.setEditCol(0);
 			}
-			else if(this._editRow <= this._matrices[this._row][0].length)   // Need "=" because of definition row
-				this._editRow ++;
+			else if(this._editRow < this._matrices[this._row][0].getNumRows())   // Need "=" because of definition row
+			{
+				this.setEditRow(this._editRow + 1);
+			}
 			return;
 		}
 		// we are navigating he list of matrices
@@ -210,9 +245,8 @@ StateMatrix.prototype.matrixPressed = function()
 	this._row = 0;
 
 	this._editCol = 0;
-	this._editRow =0;
+	this.setEditRow(0);
 	this._viewportX = 0;
-	this._editing = false;
 
 	this.repaint();
 };
@@ -243,8 +277,8 @@ StateMatrix.prototype.repaint = function()
 		for( var r = 0; r < 7; r++)
 		{
 			var str = (r+1) + ":[" + String.fromCharCode(65+r) + "]";
-			if(this._matrices[r][0].length > 0)
-				str += this._matrices[r].length + "x" + this._matrices[r][0].length;
+			if(this._matrices[r].length > 0)
+				str += this._matrices[r][0].getNumRows() + "x" + this._matrices[r].length;
 			this.CANVAS.print( str, x, y += Canvas.DIGIT_H );
 		}
 	}
@@ -264,8 +298,10 @@ StateMatrix.prototype.paintEdit = function()
 {
 	var x = Canvas.X;
 	var y = Canvas.Y;
-	var mRows = this._matrices[this._row].length;
-	var mCols = this._matrices[this._row][0].length;
+	var mRows = 0;
+	var mCols = this._matrices[this._row].length;
+	if(mCols>0)
+		mRows = this._matrices[this._row][0].getNumRows();
 	// We are about to define the size of this matrix
 	if( this._editRow == 0 )
 	{
@@ -302,7 +338,7 @@ StateMatrix.prototype.paintEdit = function()
 
 		var mx=Canvas.X + Canvas.DIGIT_W;
 		for( var c = this._viewportX; c < viewPortCols; c++ ) {
-			this.CANVAS.print(this._matrices[this._row][r][c].toString(),  mx, y + r*Canvas.DIGIT_H);
+			this.CANVAS.print(this._matrices[this._row][c].getData()[r],  mx, y + r*Canvas.DIGIT_H);
 			mx += 7*Canvas.DIGIT_W;
 		}
 	}

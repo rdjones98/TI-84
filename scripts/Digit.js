@@ -1,12 +1,14 @@
 function Digit(aVal, isSuper, aType, aMatrix)
 {
 	this._val = aVal;
-	this._super = isSuper;
+	this._super = false;
 	this._type = "d";
 	this._nextDigit = null;
 	this._prevDigit = null;
 	this._matrix = null;
 
+	if(typeof isSuper != "undefined" && isSuper != null )
+		this._super = isSuper;
 	if(typeof aMatrix != "undefined" && aMatrix != null )
 		this._matrix = aMatrix;
 	if(typeof aType != "undefined" && aType != null )
@@ -20,9 +22,20 @@ Digit.FUNCTION 	= "f";
 Digit.RESULT 	= "r";
 
 Digit.prototype.isResult = function() { return this._type == Digit.RESULT; };
+Digit.prototype.isOperator= function() { return this._type == Digit.OPERATOR; };
 Digit.prototype.isDigit  = function() { return this._type == Digit.DIGIT; };
 Digit.prototype.isMatrix = function() { return this._type == Digit.MATRIX || this._matrix != undefined; };
 Digit.prototype.getVal   = function() { return this._val; };
+Digit.prototype.getMatrix= function() { return this._matrix; };
+Digit.prototype.containsMatrix = function()
+{
+	if( this.isMatrix() )
+		return true;
+	else if (this._nextDigit != null)
+		return this._nextDigit.containsMatrix();
+	else 
+		return false;
+};
 Digit.prototype.isSuper  = function() 
 {
 	if( this._prevDigit == null )
@@ -36,6 +49,18 @@ Digit.prototype.toString = function()
 	else
 		return "[" + this._val + "]";
 };
+
+Digit.prototype.toNumber = function()
+{
+	if( this.containsMatrix() )
+		return MatrixEngine.eval(this);
+	else
+	{
+		var mathStr = this.getMathStr();
+		return MathEngine.doMath(mathStr);
+	}
+};
+
 Digit.prototype.getDisplayLen = function() 
 {
 	var res = this.toString().length;
@@ -43,6 +68,7 @@ Digit.prototype.getDisplayLen = function()
 		res += this._nextDigit.getDisplayLen();
 	return res;
 };
+
 Digit.prototype.getMathStr  = function(pCount)
 {
 	if( typeof pCount == "undefined")
@@ -50,7 +76,6 @@ Digit.prototype.getMathStr  = function(pCount)
 	
 	var retStr = "";
 	
-
 	// if we have any "negative" signs:  \u02C9, replace with "-"
 	if( this._val == Canvas.NEGATIVE)
 		retStr = "-";
@@ -60,8 +85,11 @@ Digit.prototype.getMathStr  = function(pCount)
 	if( this._type == Digit.FUNCTION && this._prevDigit != null && this._prevDigit.isDigit())
 		retStr = "*" + retStr;
 	
-	// x
-	if( this._val == "X" && this._prevDigit != null && this._prevDigit.isDigit())
+	// x If this is an X and there is a number in front with same isSuper
+	// then prepend an *
+	if( this._val == "X" && this._prevDigit != null && 
+		this._prevDigit.isDigit() && 
+		this._prevDigit.isSuper() == this.isSuper())
 		retStr = "*" + retStr;
 
 	// PI and e
@@ -79,7 +107,7 @@ Digit.prototype.getMathStr  = function(pCount)
 	}
 
 	// We need to end with closers for each opener
-	if( this._val == "(" )
+	if( this._val.toString().indexOf("(" ) > -1 )
 		pCount++;
 	
 	// If we have 2(3+4) we need 2*(3+4)

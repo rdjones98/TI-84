@@ -63,10 +63,10 @@ StateGraphing.prototype.repaint = function()
 {
 	this.CANVAS.clearCanvas();
 
-	this.X_MIN = this.ROM.getStateWindow()._data[0];
-	this.X_MAX = this.ROM.getStateWindow()._data[1];
-	this.Y_MIN = this.ROM.getStateWindow()._data[3];
-	this.Y_MAX = this.ROM.getStateWindow()._data[4];
+	this.X_MIN = this.ROM.getStateWindow()._data[0][0].toNumber();
+	this.X_MAX = this.ROM.getStateWindow()._data[1][0].toNumber();
+	this.Y_MIN = this.ROM.getStateWindow()._data[3][0].toNumber();
+	this.Y_MAX = this.ROM.getStateWindow()._data[4][0].toNumber();
 	
 
 	this.STEP_X = ( Canvas.WIDTH - Canvas.X ) / (  this.X_MAX - this.X_MIN );
@@ -86,7 +86,7 @@ StateGraphing.prototype.repaint = function()
 	{
 		if ( this.Y_EQUALS._equations[equ].length>0 )
 		{
-			var step = (this.X_MAX-this.X_MIN)/50;
+			var step = (this.X_MAX-this.X_MIN)/100;
 			for( var xCoord=Number(this.X_MIN); xCoord<this.X_MAX; xCoord=this.ROM.fixRoundingError(xCoord + step))
 			{
 				var yCoord1 = this.ROM.evaluate(equ, xCoord) ;

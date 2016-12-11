@@ -83,9 +83,13 @@ StateTraceCalc.prototype.enterPressed = function()
 
 StateTraceCalc.prototype.evaluate = function(anEqu, anX)
 {
+	var theEqu = anEqu[0].getMathStr();
+	
+	if( theEqu.indexOf("X") < 0 )
+		return Number(theEqu);
 	anX = this.ROM.fixRoundingError(anX);
-	var equ = anEqu[0].getMathStr().replace(/X/g, "(" + anX + ")");
-	var res =  this.ROM.doMath(equ);
+	var equ = theEqu.replace(/X/g, "(" + anX + ")");
+	var res =  MathEngine.doMath(equ);
 	if( res.toString().indexOf("e-") > -1 )
 		return 0;
 	else
@@ -153,7 +157,7 @@ StateTraceCalc.prototype.paintMinMaxZero = function()
 	else if( this._calculate == this.ZERO )
 	{
 		var equ1 = this.YEQUALS.getEquations()[this.TRACE._curEquationIDX];
-		var xCoord = this.findIntersection( equ1, "0", this._leftBound, this._rightBound, 1, 1);  // pass in y=0
+		var xCoord = this.findIntersection( equ1, new Array(new Digit(0)), this._leftBound, this._rightBound, 1, 1);  // pass in y=0
 
 		if ( xCoord == null )
 		{
