@@ -71,7 +71,7 @@ MathEngine.preprocessLogAndTrig = function(anExpr, aVal)
 		}
 		var inP = anExpr.substring(idx+aVal.length,eIdx);
 		var res = this.doMath(inP);
-		if( res != null && res.toString().indexOf("Infinity") > -1)
+		if( res == null || res.toString().indexOf("Infinity") > -1)
 			return "NaN";
 		if(aVal == "ln(")
 			res = Math.log(res);
