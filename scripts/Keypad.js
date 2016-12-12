@@ -50,12 +50,12 @@ function Keypad( aRom, aWidth, aHeight )
 	this.ROW6_MAX=Math.round(.67*aHeight);
 
 	this.ROW7_MIN=Math.round(.67*aHeight);
-	this.ROW7_MAX=Math.round(.73*aHeight);
+	this.ROW7_MAX=Math.round(.725*aHeight);
 
-	this.ROW8_MIN=Math.round(.7301*aHeight);
-	this.ROW8_MAX=Math.round(.8*aHeight);
+	this.ROW8_MIN=Math.round(.725*aHeight);
+	this.ROW8_MAX=Math.round(.795*aHeight);
 
-	this.ROW9_MIN=Math.round(.8*aHeight);
+	this.ROW9_MIN=Math.round(.795*aHeight);
 	this.ROW9_MAX=Math.round(.8718*aHeight);
 
 	this.ROW10_MIN=Math.round(.8719*aHeight);
@@ -163,10 +163,10 @@ Keypad.prototype.mouseClicked = function( evt )
 			this.rom.operatorPressed("*");
 		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW8_MIN-this.ROWOFFSET <= y && y <= this.ROW8_MAX-this.ROWOFFSET )
 			this.rom.operatorPressed("-");
-		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW9_MIN-this.ROWOFFSET <= y && y <= this.ROW9_MAX-this.ROWOFFSET)
-			this.rom.operatorPressed("+");
 		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ENTER_MIN <= y && y <= this.ENTER_MAX)
 			this.rom.enterPressed();
+		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW9_MIN-this.ROWOFFSET <= y && y <= this.ROW9_MAX-this.ROWOFFSET)
+			this.rom.operatorPressed("+");
 		else if ( this.COL4_MIN <= x && x <= this.COL4_MAX && this.ROW2_MIN <= y && y <= this.ROW2_MAX)
 			this.rom.arrowPressed(Keypad.A_LEFT);
 		else if ( this.ARROWR_MIN <= x && x <= this.ARROWR_MAX && this.ROW2_MIN <= y && y <= this.ROW2_MAX)
@@ -229,7 +229,6 @@ Keypad.prototype.mouseClicked = function( evt )
 			ctx.rect(this.COL5_MIN,this.ROW7_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW7_MAX-this.ROW7_MIN);
 			ctx.rect(this.COL5_MIN,this.ROW8_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW8_MAX-this.ROW8_MIN);
 			ctx.rect(this.COL5_MIN,this.ROW9_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW9_MAX-this.ROW9_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW10_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW10_MAX-this.ROW10_MIN);
 			ctx.stroke();
 	 
 };
