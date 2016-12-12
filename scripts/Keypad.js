@@ -185,8 +185,7 @@ Keypad.prototype.mouseClicked = function( evt )
 	
 	if(!secondPressed && this.rom.is2ndPressed() )
 		this.rom.secondPressed(false);
-	
-	/*
+
 			// Must comment out clipDisplay is Canvas to use this
 			var theCanvas = this.rom.getCanvas();
 			var ctx = theCanvas.CONTEXT;
@@ -213,5 +212,5 @@ Keypad.prototype.mouseClicked = function( evt )
 			ctx.rect(this.COL5_MIN,this.ROW1_MIN,this.COL5_MAX-this.COL5_MIN, this.ROW10_MAX-this.ROW1_MIN);
 
 			ctx.stroke();
-	 */
+	 
 };
