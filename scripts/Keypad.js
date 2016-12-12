@@ -41,12 +41,12 @@ function Keypad( aRom, aWidth, aHeight )
 	this.ROW3_MAX=Math.round(.5219*aHeight);
 
 	this.ROW4_MIN=Math.round(.5220*aHeight);
-	this.ROW4_MAX=Math.round(.5714*aHeight);
+	this.ROW4_MAX=Math.round(.58*aHeight);
 
-	this.ROW5_MIN=Math.round(.5715*aHeight);
-	this.ROW5_MAX=Math.round(.6214*aHeight);
+	this.ROW5_MIN=Math.round(.58*aHeight);
+	this.ROW5_MAX=Math.round(.625*aHeight);
 
-	this.ROW6_MIN=Math.round(.6215*aHeight);
+	this.ROW6_MIN=Math.round(.625*aHeight);
 	this.ROW6_MAX=Math.round(.67*aHeight);
 
 	this.ROW7_MIN=Math.round(.67*aHeight);
@@ -184,13 +184,12 @@ Keypad.prototype.mouseClicked = function( evt )
 	if(!secondPressed && this.rom.is2ndPressed() )
 		this.rom.secondPressed(false);
 
+			// Display all click areas for each button
 			// Must comment out clipDisplay is Canvas to use this
 			var theCanvas = this.rom.getCanvas();
 			var ctx = theCanvas.CONTEXT;
 
 			ctx.strokeStyle = "red";
-
-//			this.COL5_MIN this.COL5_MAX  this.ENTER_MIN this.ENTER_MAX)
 
 			ctx.rect(this.COL5_MIN,this.ENTER_MIN,this.COL5_MAX-this.COL5_MIN, this.ENTER_MAX-this.ENTER_MIN);
 
