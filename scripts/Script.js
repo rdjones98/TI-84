@@ -114,6 +114,4 @@ function keyPressed(event)
 	{
 		alert(err.stack);
 	}
-	if(!secondPressed && ROM.is2ndPressed() )
-		ROM.secondPressed(false);
 };

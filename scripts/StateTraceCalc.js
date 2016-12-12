@@ -48,15 +48,21 @@ StateTraceCalc.prototype.arrowPressed = function(anArrow)
 	else
 		this.TRACE.arrowPressed(anArrow);
 };
-StateTraceCalc.prototype.numberPressed = function(anum)
+StateTraceCalc.prototype.numberPressed = function(aNum)
 {
-	this._calculate = anum;
-	this.TRACE.tracePressed();
+	this.enterPressed(aNum);
 };
 
-StateTraceCalc.prototype.enterPressed = function()
+StateTraceCalc.prototype.enterPressed = function(aNum)
 {
-	if( this._calculate == 0)
+	var equations  = this.ROM.getStateYEquals().getEquations();
+	var idx = this.ROM.getStateTrace()._curEquationIDX;
+	if(equations[idx].length == 0)
+		return;
+
+	if( typeof aNum != "undefined")
+		this._calculate = aNum;
+	else if( this._calculate == 0)
 		this._calculate = this._row;
 	else if( this._calculate == this.ZERO || this._calculate == this.MIN || this._calculate == this.MAX)
 	{

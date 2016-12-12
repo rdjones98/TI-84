@@ -159,6 +159,8 @@ StateTrace.prototype.repaint = function()
 	this.CANVAS.clearCanvas();
 	this.ROM.getStateGraph().repaint();
 	var equations  = this.ROM.getStateYEquals().getEquations();
+	if(equations[this._curEquationIDX].length == 0)
+		return;
 	var graphState = this.ROM.getStateGraph();
 	var xVal = this.CANVAS.formatNumber( this.TRACE_X );
 	var yVal = this.CANVAS.formatNumber( this.ROM.evaluate(this._curEquationIDX, this.TRACE_X) );

@@ -181,10 +181,8 @@ Keypad.prototype.mouseClicked = function( evt )
 		alert(err.stack);
 	}
 	
-	if(!secondPressed && this.rom.is2ndPressed() )
-		this.rom.secondPressed(false);
 
-			// Display all click areas for each button
+/*			// Display all click areas for each button
 			// Must comment out clipDisplay is Canvas to use this
 			var theCanvas = this.rom.getCanvas();
 			var ctx = theCanvas.CONTEXT;
@@ -229,5 +227,5 @@ Keypad.prototype.mouseClicked = function( evt )
 			ctx.rect(this.COL5_MIN,this.ROW8_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW8_MAX-this.ROW8_MIN);
 			ctx.rect(this.COL5_MIN,this.ROW9_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW9_MAX-this.ROW9_MIN);
 			ctx.stroke();
-	 
+*/	 
 };

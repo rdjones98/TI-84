@@ -24,7 +24,7 @@ StateTableSet.prototype.operatorPressed = function(aNum)
 };
 StateTableSet.prototype.enterPressed = function(aNum)
 {
-	this.EDITOR.enterPressed(aNum);
+	// DO NOTHING
 };
 
 StateTableSet.prototype.modePressed = function()
