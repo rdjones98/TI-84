@@ -30,7 +30,7 @@ function Keypad( aRom, aWidth, aHeight )
 	this.ARROWU_MIN=Math.round(.6717*aWidth);
 	this.ARROWU_MAX=Math.round(.7579*aWidth);
 
-	this.ROWOFFSET = Math.round(.02 * aHeight);
+	this.ROWOFFSET = Math.round(.01 * aHeight);
 	this.ROW1_MIN=Math.round(.32*aHeight);
 	this.ROW1_MAX=Math.round(.3831*aHeight);
 
@@ -182,7 +182,7 @@ Keypad.prototype.mouseClicked = function( evt )
 	}
 	
 
-/*			// Display all click areas for each button
+			// Display all click areas for each button
 			// Must comment out clipDisplay is Canvas to use this
 			var theCanvas = this.rom.getCanvas();
 			var ctx = theCanvas.CONTEXT;
@@ -227,5 +227,5 @@ Keypad.prototype.mouseClicked = function( evt )
 			ctx.rect(this.COL5_MIN,this.ROW8_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW8_MAX-this.ROW8_MIN);
 			ctx.rect(this.COL5_MIN,this.ROW9_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW9_MAX-this.ROW9_MIN);
 			ctx.stroke();
-*/	 
+	 
 };
