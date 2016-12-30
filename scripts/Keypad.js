@@ -111,6 +111,8 @@ Keypad.prototype.mouseClicked = function( evt )
 	var secondPressed = false;
 	try
 	{
+		var vibrate = true;
+		
 		if( this.YEQ.contains(x,y) )
 			this.rom.yEqualsPressed();
 		else if(this.SEC.contains(x,y) )
@@ -200,6 +202,11 @@ Keypad.prototype.mouseClicked = function( evt )
 			this.rom.arrowPressed(Keypad.A_UP);
 		else if(this.DN.contains(x,y) )
 			this.rom.arrowPressed(Keypad.A_DOWN);
+		else
+			vibrate = false;
+		
+		if(vibrate)
+			window.navigator.vibrate(200);
 	}
 	catch(err)
 	{
