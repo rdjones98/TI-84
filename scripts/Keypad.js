@@ -60,7 +60,7 @@ function Keypad( aRom, aWidth, aHeight )
 	this.ARROWH = Math.round(.04*aHeight);
 	this.ARROWW = Math.round(.055*aHeight);
 	this.ARROWU_X = Math.round(.645*aWidth);
-	this.ARROWU_Y = Math.round(.39*aHeight);
+	this.ARROWU_Y = Math.round(.395*aHeight);
 	this.ARROWD_X = this.ARROWU_X;
 	this.ARROWD_Y = Math.round(.47*aHeight);
 	this.ARROWL_X = Math.round(.54*aWidth);
