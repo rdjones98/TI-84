@@ -24,13 +24,6 @@ function Keypad( aRom, aWidth, aHeight )
 	this.COL5_MIN=Math.round(.6810*aWidth);
 	this.COL5_MAX=Math.round(.8148*aWidth);
 
-	this.ARROWR_MIN=Math.round(.7579*aWidth);
-	this.ARROWR_MAX=Math.round(.8416*aWidth);
-
-	this.ARROWU_MIN=Math.round(.6717*aWidth);
-	this.ARROWU_MAX=Math.round(.7579*aWidth);
-
-	this.ROWOFFSET = Math.round(.01 * aHeight);
 	this.ROW1_MIN=Math.round(.32*aHeight);
 	this.ROW1_MAX=Math.round(.3831*aHeight);
 
@@ -41,34 +34,40 @@ function Keypad( aRom, aWidth, aHeight )
 	this.ROW3_MAX=Math.round(.5219*aHeight);
 
 	this.ROW4_MIN=Math.round(.5220*aHeight);
-	this.ROW4_MAX=Math.round(.58*aHeight);
+	this.ROW4_MAX=Math.round(.57*aHeight);
 
-	this.ROW5_MIN=Math.round(.58*aHeight);
-	this.ROW5_MAX=Math.round(.625*aHeight);
+	this.ROW5_MIN=Math.round(.57*aHeight);
+	this.ROW5_MAX=Math.round(.62*aHeight);
 
-	this.ROW6_MIN=Math.round(.625*aHeight);
+	this.ROW6_MIN=Math.round(.62*aHeight);
 	this.ROW6_MAX=Math.round(.67*aHeight);
 
 	this.ROW7_MIN=Math.round(.67*aHeight);
-	this.ROW7_MAX=Math.round(.725*aHeight);
+	this.ROW7_MAX=Math.round(.735*aHeight);
 
-	this.ROW8_MIN=Math.round(.725*aHeight);
-	this.ROW8_MAX=Math.round(.795*aHeight);
+	this.ROW8_MIN=Math.round(.735*aHeight);
+	this.ROW8_MAX=Math.round(.805*aHeight);
 
-	this.ROW9_MIN=Math.round(.795*aHeight);
+	this.ROW9_MIN=Math.round(.805*aHeight);
 	this.ROW9_MAX=Math.round(.8718*aHeight);
 
 	this.ROW10_MIN=Math.round(.8719*aHeight);
 	this.ROW10_MAX=Math.round(.9382*aHeight);
 
-	this.ENTER_MIN=Math.round(.830*aHeight);
+	this.ENTER_MIN=Math.round(.825*aHeight);
 	this.ENTER_MAX=Math.round(.8974*aHeight);
 
-	this.ARROWUP_MIN=Math.round(.4024*aHeight);
-	this.ARROWUP_MAX=Math.round(.4507*aHeight);
+	this.ARROWH = Math.round(.04*aHeight);
+	this.ARROWW = Math.round(.055*aHeight);
+	this.ARROWU_X = Math.round(.64*aWidth);
+	this.ARROWU_Y = Math.round(.39*aHeight);
+	this.ARROWD_X = this.ARROWU_X;
+	this.ARROWD_Y = Math.round(.47*aHeight);
+	this.ARROWL_X = Math.round(.54*aWidth);
+	this.ARROWL_Y = Math.round(.43*aHeight);
+	this.ARROWR_X = Math.round(.74*aWidth);
+	this.ARROWR_Y = this.ARROWL_Y;
 
-	this.ARROWDN_MIN=Math.round(.4735*aHeight);
-	this.ARROWDN_MAX=Math.round(.5191*aHeight);
 }
 
 Keypad.A_LEFT  = "ArrowLeft";
@@ -88,20 +87,20 @@ Keypad.prototype.mouseClicked = function( evt )
 	{
 		if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW1_MIN <= y && y <= this.ROW1_MAX)
 			this.rom.yEqualsPressed();
-		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW2_MIN-this.ROWOFFSET  <= y && y <= this.ROW2_MAX-this.ROWOFFSET )
+		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW2_MIN  <= y && y <= this.ROW2_MAX )
 		{	
 			this.rom.secondPressed();
 			secondPressed = true;
 		}
-		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW5_MIN-this.ROWOFFSET <= y && y <= this.ROW5_MAX-this.ROWOFFSET)
+		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW5_MIN*.99 <= y && y <= this.ROW5_MAX*.98)
 			this.rom.matrixPressed();
-		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW6_MIN-this.ROWOFFSET <= y && y <= this.ROW6_MAX-this.ROWOFFSET)
+		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW6_MIN*.98 <= y && y <= this.ROW6_MAX*.97)
 			this.rom.xSquaredPressed();
-		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW7_MIN-this.ROWOFFSET <= y && y <= this.ROW7_MAX-this.ROWOFFSET)
+		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW7_MIN*.97 <= y && y <= this.ROW7_MAX*.96)
 			this.rom.logPressed();
-		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW8_MIN-this.ROWOFFSET <= y && y <= this.ROW8_MAX-this.ROWOFFSET)
+		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW8_MIN*.96 <= y && y <= this.ROW8_MAX*.95)
 			this.rom.lnPressed();
-		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW10_MIN-this.ROWOFFSET <= y && y <= this.ROW10_MAX-this.ROWOFFSET)
+		else if(this.COL1_MIN <= x &&  x <= this.COL1_MAX  && this.ROW10_MIN*.95 <= y && y <= this.ROW10_MAX*.94)
 			alert("Calculator is always on!");
 		else if(this.COL2_MIN <= x &&  x <= this.COL2_MAX  && this.ROW1_MIN <= y && y <= this.ROW1_MAX)
 			this.rom.windowPressed();
@@ -153,27 +152,27 @@ Keypad.prototype.mouseClicked = function( evt )
 			this.rom.negativePressed();
 		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW1_MIN <= y && y <= this.ROW1_MAX)
 			this.rom.graphPressed();
-		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW4_MIN-this.ROWOFFSET <= y && y <= this.ROW4_MAX-this.ROWOFFSET)
+		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW4_MIN*.99 <= y && y <= this.ROW4_MAX*.99)
 			this.rom.clearPressed();
-		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW5_MIN-this.ROWOFFSET  <= y && y <= this.ROW5_MAX-this.ROWOFFSET )
+		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW5_MIN*.99  <= y && y <= this.ROW5_MAX*.98 )
 			this.rom.powerOfPressed();
-		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW6_MIN-this.ROWOFFSET  <= y && y <= this.ROW6_MAX-this.ROWOFFSET )
+		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW6_MIN*.98  <= y && y <= this.ROW6_MAX*.97 )
 			this.rom.dividePressed();
-		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW7_MIN-this.ROWOFFSET  <= y && y <= this.ROW7_MAX-this.ROWOFFSET )
+		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW7_MIN*.97  <= y && y <= this.ROW7_MAX*.96 )
 			this.rom.operatorPressed("*");
-		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW8_MIN-this.ROWOFFSET <= y && y <= this.ROW8_MAX-this.ROWOFFSET )
+		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW8_MIN*.96 <= y && y <= this.ROW8_MAX*.95 )
 			this.rom.operatorPressed("-");
 		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ENTER_MIN <= y && y <= this.ENTER_MAX)
 			this.rom.enterPressed();
-		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW9_MIN-this.ROWOFFSET <= y && y <= this.ROW9_MAX-this.ROWOFFSET)
+		else if( this.COL5_MIN <= x &&  x <= this.COL5_MAX  && this.ROW9_MIN*.95 <= y && y <= this.ROW9_MAX*.96)
 			this.rom.operatorPressed("+");
-		else if ( this.COL4_MIN <= x && x <= this.COL4_MAX && this.ROW2_MIN <= y && y <= this.ROW2_MAX)
+		else if ( this.ARROWL_X <= x && x <= this.ARROWL_X + this.ARROWW && this.ARROWL_Y <= y && y <= this.ARROWL_Y + this.ARROWH)
 			this.rom.arrowPressed(Keypad.A_LEFT);
-		else if ( this.ARROWR_MIN <= x && x <= this.ARROWR_MAX && this.ROW2_MIN <= y && y <= this.ROW2_MAX)
+		else if ( this.ARROWR_X <= x && x <= this.ARROWR_X + this.ARROWW && this.ARROWR_Y <= y && y <= this.ARROWR_Y + this.ARROWH)
 			this.rom.arrowPressed(Keypad.A_RIGHT);
-		else if ( this.ARROWU_MIN <= x && x <= this.ARROWU_MAX && this.ARROWUP_MIN  <= y && y <= this.ARROWUP_MAX )
+		else if ( this.ARROWU_X <= x && x <= this.ARROWU_X + this.ARROWW && this.ARROWU_Y <= y && y <= this.ARROWU_Y + this.ARROWH)
 			this.rom.arrowPressed(Keypad.A_UP);
-		else if ( this.ARROWU_MIN <= x && x <= this.ARROWU_MAX && this.ARROWDN_MIN <= y && y <= this.ARROWDN_MAX)
+		else if ( this.ARROWD_X <= x && x <= this.ARROWD_X + this.ARROWW && this.ARROWD_Y <= y && y <= this.ARROWD_Y + this.ARROWH)
 			this.rom.arrowPressed(Keypad.A_DOWN);
 	}
 	catch(err)
@@ -192,8 +191,8 @@ Keypad.prototype.mouseClicked = function( evt )
 			ctx.rect(this.COL5_MIN,this.ENTER_MIN,this.COL5_MAX-this.COL5_MIN, this.ENTER_MAX-this.ENTER_MIN);
 
 			ctx.rect(this.COL1_MIN,this.ROW1_MIN,this.COL5_MAX-this.COL5_MIN, this.ROW1_MAX-this.ROW1_MIN);
-			ctx.rect(this.COL2_MIN,this.ROW2_MIN,this.COL4_MAX-this.COL2_MIN, this.ROW2_MAX-this.ROW2_MIN);
-			ctx.rect(this.COL2_MIN,this.ROW3_MIN,this.COL4_MAX-this.COL2_MIN, this.ROW3_MAX-this.ROW3_MIN);
+			ctx.rect(this.COL2_MIN,this.ROW2_MIN,this.COL3_MAX-this.COL2_MIN, this.ROW2_MAX-this.ROW2_MIN);
+			ctx.rect(this.COL2_MIN,this.ROW3_MIN,this.COL3_MAX-this.COL2_MIN, this.ROW3_MAX-this.ROW3_MIN);
 			ctx.rect(this.COL2_MIN,this.ROW4_MIN,this.COL4_MAX-this.COL2_MIN, this.ROW4_MAX-this.ROW4_MIN);
 			ctx.rect(this.COL2_MIN,this.ROW5_MIN,this.COL4_MAX-this.COL2_MIN, this.ROW5_MAX-this.ROW5_MIN);
 			ctx.rect(this.COL2_MIN,this.ROW6_MIN,this.COL4_MAX-this.COL2_MIN, this.ROW6_MAX-this.ROW6_MIN);
@@ -205,27 +204,35 @@ Keypad.prototype.mouseClicked = function( evt )
 			ctx.rect(this.COL1_MIN,this.ROW1_MIN,this.COL1_MAX-this.COL1_MIN, this.ROW10_MAX-this.ROW1_MIN);
 			ctx.rect(this.COL2_MIN,this.ROW1_MIN,this.COL2_MAX-this.COL2_MIN, this.ROW10_MAX-this.ROW1_MIN);
 			ctx.rect(this.COL3_MIN,this.ROW1_MIN,this.COL3_MAX-this.COL3_MIN, this.ROW10_MAX-this.ROW1_MIN);
-			ctx.rect(this.COL4_MIN,this.ROW1_MIN,this.COL4_MAX-this.COL4_MIN, this.ROW10_MAX-this.ROW1_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW1_MIN,this.COL5_MAX-this.COL5_MIN, this.ROW10_MAX-this.ROW1_MIN);
+			ctx.rect(this.COL4_MIN,this.ROW4_MIN,this.COL4_MAX-this.COL4_MIN, this.ROW10_MAX-this.ROW1_MIN);
+			ctx.rect(this.COL5_MIN,this.ROW4_MIN,this.COL5_MAX-this.COL5_MIN, this.ROW10_MAX-this.ROW1_MIN);
 
-			ctx.rect(this.COL1_MIN,this.ROW2_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW2_MAX-this.ROW2_MIN);
-			ctx.rect(this.COL1_MIN,this.ROW3_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW3_MAX-this.ROW3_MIN);
-			ctx.rect(this.COL1_MIN,this.ROW4_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW4_MAX-this.ROW4_MIN);
-			ctx.rect(this.COL1_MIN,this.ROW5_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW5_MAX-this.ROW5_MIN);
-			ctx.rect(this.COL1_MIN,this.ROW6_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW6_MAX-this.ROW6_MIN);
-			ctx.rect(this.COL1_MIN,this.ROW7_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW7_MAX-this.ROW7_MIN);
-			ctx.rect(this.COL1_MIN,this.ROW8_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW8_MAX-this.ROW8_MIN);
-			ctx.rect(this.COL1_MIN,this.ROW9_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW9_MAX-this.ROW9_MIN);
-			ctx.rect(this.COL1_MIN,this.ROW10_MIN-this.ROWOFFSET,this.COL1_MAX-this.COL1_MIN, this.ROW10_MAX-this.ROW10_MIN);
+			// Draw Left Column
+			ctx.rect(this.COL1_MIN,this.ROW2_MIN,this.COL1_MAX-this.COL1_MIN, this.ROW2_MAX-this.ROW2_MIN);
+			ctx.rect(this.COL1_MIN,this.ROW3_MIN,this.COL1_MAX-this.COL1_MIN, this.ROW3_MAX-this.ROW3_MIN);
+			ctx.rect(this.COL1_MIN,this.ROW4_MIN*.99,this.COL1_MAX-this.COL1_MIN, this.ROW4_MAX*.99-this.ROW4_MIN*.99);
+			ctx.rect(this.COL1_MIN,this.ROW5_MIN*.99,this.COL1_MAX-this.COL1_MIN, this.ROW5_MAX*.98-this.ROW5_MIN*.99);
+			ctx.rect(this.COL1_MIN,this.ROW6_MIN*.98,this.COL1_MAX-this.COL1_MIN, this.ROW6_MAX*.97-this.ROW6_MIN*.98);
+			ctx.rect(this.COL1_MIN,this.ROW7_MIN*.97,this.COL1_MAX-this.COL1_MIN, this.ROW7_MAX*.96-this.ROW7_MIN*.97);
+			ctx.rect(this.COL1_MIN,this.ROW8_MIN*.96,this.COL1_MAX-this.COL1_MIN, this.ROW8_MAX*.95-this.ROW8_MIN*.96);
+			ctx.rect(this.COL1_MIN,this.ROW9_MIN*.95,this.COL1_MAX-this.COL1_MIN, this.ROW9_MAX*.96-this.ROW9_MIN*.97);
+			ctx.rect(this.COL1_MIN,this.ROW10_MIN*.94,this.COL1_MAX-this.COL1_MIN, this.ROW10_MAX*.95-this.ROW10_MIN*.95);
 
-			ctx.rect(this.COL5_MIN,this.ROW2_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW2_MAX-this.ROW2_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW3_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW3_MAX-this.ROW3_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW4_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW4_MAX-this.ROW4_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW5_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW5_MAX-this.ROW5_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW6_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW6_MAX-this.ROW6_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW7_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW7_MAX-this.ROW7_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW8_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW8_MAX-this.ROW8_MIN);
-			ctx.rect(this.COL5_MIN,this.ROW9_MIN-this.ROWOFFSET,this.COL5_MAX-this.COL5_MIN, this.ROW9_MAX-this.ROW9_MIN);
+			// Draw Right Column
+//			ctx.rect(this.COL5_MIN,this.ROW2_MIN,this.COL5_MAX-this.COL5_MIN, this.ROW2_MAX-this.ROW2_MIN);
+//			ctx.rect(this.COL5_MIN,this.ROW3_MIN,this.COL5_MAX-this.COL5_MIN, this.ROW3_MAX-this.ROW3_MIN);
+			ctx.rect(this.COL5_MIN,this.ROW4_MIN*.99,this.COL5_MAX-this.COL5_MIN, this.ROW4_MAX*.99-this.ROW4_MIN*.99);
+			ctx.rect(this.COL5_MIN,this.ROW5_MIN*.99,this.COL5_MAX-this.COL5_MIN, this.ROW5_MAX*.98-this.ROW5_MIN*.99);
+			ctx.rect(this.COL5_MIN,this.ROW6_MIN*.98,this.COL5_MAX-this.COL5_MIN, this.ROW6_MAX*.97-this.ROW6_MIN*.98);
+			ctx.rect(this.COL5_MIN,this.ROW7_MIN*.97,this.COL5_MAX-this.COL5_MIN, this.ROW7_MAX*.96-this.ROW7_MIN*.97);
+			ctx.rect(this.COL5_MIN,this.ROW8_MIN*.96,this.COL5_MAX-this.COL5_MIN, this.ROW8_MAX*.95-this.ROW8_MIN*.96);
+			ctx.rect(this.COL5_MIN,this.ROW9_MIN*.95,this.COL5_MAX-this.COL5_MIN, this.ROW9_MAX*.96-this.ROW9_MIN*.97);
+
+			// Draw Arrows
+			ctx.rect(this.ARROWU_X, this.ARROWU_Y,this.ARROWW, this.ARROWH);
+			ctx.rect(this.ARROWD_X, this.ARROWD_Y,this.ARROWW, this.ARROWH);
+			ctx.rect(this.ARROWL_X, this.ARROWL_Y,this.ARROWW, this.ARROWH);
+			ctx.rect(this.ARROWR_X, this.ARROWR_Y,this.ARROWW, this.ARROWH);
+			
 			ctx.stroke();
-	 
 };
