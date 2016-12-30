@@ -3,7 +3,7 @@
 //Set up App!
 var canvas = document.getElementById("theCanvas");
 canvas.addEventListener("click", mouseClicked, false);
-canvas.addEventListener("touchend", touchEnd, false);
+canvas.addEventListener("touchend",   touchEnd, false);
 
 // Create instance of ROM and Keypad (this maps the image to mouse clicks) 
 var ROM 	= new Rom(canvas.clientWidth, canvas.clientHeight);
@@ -112,6 +112,6 @@ function keyPressed(event)
 	}
 	catch(err)
 	{
-		alert(err.stack);
+		console.log(err.stack);
 	}
 };

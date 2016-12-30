@@ -12,7 +12,7 @@ function StateYEquals(aCanvas, aRom)
 StateYEquals.prototype.clearPressed = function()
 {
 	this.EDITOR.setCol(0);
-	this._equations[this.EDITOR._row]="";
+	this._equations[this.EDITOR._row]=new Array();
 	this.repaint();
 };
 
