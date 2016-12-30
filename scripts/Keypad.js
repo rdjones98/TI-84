@@ -206,7 +206,7 @@ Keypad.prototype.mouseClicked = function( evt )
 			vibrate = false;
 		
 		if(vibrate)
-			window.navigator.vibrate(200);
+			window.navigator.vibrate(20);
 	}
 	catch(err)
 	{
