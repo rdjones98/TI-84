@@ -40,12 +40,12 @@ function Keypad( aRom, aWidth, aHeight )
 	this.ROW5_MAX=Math.round(.62*aHeight);
 
 	this.ROW6_MIN=Math.round(.62*aHeight);
-	this.ROW6_MAX=Math.round(.67*aHeight);
+	this.ROW6_MAX=Math.round(.675*aHeight);
 
-	this.ROW7_MIN=Math.round(.67*aHeight);
-	this.ROW7_MAX=Math.round(.735*aHeight);
+	this.ROW7_MIN=Math.round(.675*aHeight);
+	this.ROW7_MAX=Math.round(.74*aHeight);
 
-	this.ROW8_MIN=Math.round(.735*aHeight);
+	this.ROW8_MIN=Math.round(.74*aHeight);
 	this.ROW8_MAX=Math.round(.805*aHeight);
 
 	this.ROW9_MIN=Math.round(.805*aHeight);
@@ -59,12 +59,12 @@ function Keypad( aRom, aWidth, aHeight )
 
 	this.ARROWH = Math.round(.04*aHeight);
 	this.ARROWW = Math.round(.055*aHeight);
-	this.ARROWU_X = Math.round(.64*aWidth);
+	this.ARROWU_X = Math.round(.645*aWidth);
 	this.ARROWU_Y = Math.round(.39*aHeight);
 	this.ARROWD_X = this.ARROWU_X;
 	this.ARROWD_Y = Math.round(.47*aHeight);
 	this.ARROWL_X = Math.round(.54*aWidth);
-	this.ARROWL_Y = Math.round(.43*aHeight);
+	this.ARROWL_Y = Math.round(.435*aHeight);
 	this.ARROWR_X = Math.round(.74*aWidth);
 	this.ARROWR_Y = this.ARROWL_Y;
 
