@@ -109,7 +109,9 @@ Digit.prototype.getMathStr  = function(pCount)
 	// We need to end with closers for each opener
 	if( this._val.toString().indexOf("(" ) > -1 )
 		pCount++;
-	
+	else if( this._val == ")")
+		pCount--;
+
 	// If we have 2(3+4) we need 2*(3+4)
 	if( this._val == "(" && this._prevDigit != null && this._prevDigit.isDigit() )
 		retStr = "*" + retStr;

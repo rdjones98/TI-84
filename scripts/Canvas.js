@@ -24,7 +24,7 @@ function Canvas(aCanvas, aWidth, aHeight)
 	this.SUPER_FONT 	= Math.round((.048 * aWidth)*4.0/5.0) + "px Courier";
 	this.SUPER_OFFSET 	= Math.round(Canvas.DIGIT_H/2.0);
 	this.CONTEXT.font 	= this.FONT;
-	Canvas.DEBUG = true;
+	Canvas.DEBUG = false;
 
 	if( ! Canvas.DEBUG)
 		this.clipDisplay();
