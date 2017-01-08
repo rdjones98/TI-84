@@ -90,19 +90,25 @@ StateGraphing.prototype.repaint = function()
 			for( var xCoord=Number(this.X_MIN); xCoord<this.X_MAX; xCoord=this.ROM.fixRoundingError(xCoord + step))
 			{
 				var yCoord1 = this.ROM.evaluate(equ, xCoord) ;
-				yCoord1 = this.CENTER_Y + yCoord1 * -1 * this.STEP_Y;
 				var yCoord2 = this.ROM.evaluate(equ, xCoord+step);
-				yCoord2 = this.CENTER_Y + yCoord2 * -1 * this.STEP_Y;
-
-				var x1 = this.CENTER_X + xCoord * this.STEP_X;
-				var x2 = this.CENTER_X + (xCoord+step) * this.STEP_X;
-				this.CANVAS.drawLn(x1,yCoord1,x2,yCoord2, Canvas.GRAPHCOLORS[equ]);
+				this.graphLine(xCoord, yCoord1, xCoord+step, yCoord2 ,equ);
 			}
 		}
 	}
 	if(this.ROM.is2ndPressed())
 		this.CANVAS.draw2ndButton();
 
+};
+// Graph a line
+StateGraphing.prototype.graphLine = function(x1,y1,x2,y2,equIdx)
+{
+	var yCoord1 = this.CENTER_Y + y1 * -1 * this.STEP_Y;
+	var yCoord2 = this.CENTER_Y + y2 * -1 * this.STEP_Y;
+
+	var xCoord1 = this.CENTER_X + x1 * this.STEP_X;
+	var xCoord2 = this.CENTER_X + x2 * this.STEP_X;
+	this.CANVAS.drawLn(xCoord1,yCoord1,xCoord2,yCoord2, Canvas.GRAPHCOLORS[equIdx]);
+	
 };
 
 StateGraphing.prototype.arrowPressed = function(anArrow)

@@ -23,10 +23,10 @@ function StateTrace( aCanvas, aGraph, aRom )
 	this._col = 0;
 
 }
-StateTrace.prototype.setCol = function(aNum){	this._col = aNum; };
+StateTrace.prototype.setCol = function(aNum){ this._col = aNum; };
+StateTrace.prototype.getRow = function()	{ return this._row; };
+StateTrace.prototype.getCol = function()	{ return this._col; };
 StateTrace.prototype.getDataArray = function(){	return this._trace;  };
-StateTrace.prototype.getRow = function(){	return this._row;  };
-StateTrace.prototype.getCol = function(){	return this._col;};
 StateTrace.prototype.incrCol = function(aNum)
 {
 	this._col += aNum;

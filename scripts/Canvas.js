@@ -18,6 +18,7 @@ function Canvas(aCanvas, aWidth, aHeight)
 	Canvas.PI       	= String.fromCharCode(parseInt("03C0", 16));
 	Canvas.SQRROOT  	= String.fromCharCode(parseInt("221A", 16));
 	Canvas.DELTA    	= String.fromCharCode(parseInt("0394", 16));
+	Canvas.INTEGRAL     = String.fromCharCode(parseInt("222B", 16));
 	Canvas.GRAPHCOLORS 	= new Array("blue", "red", "yellow", "green", "pink", "orange", "black");
 
 	this.FONT 			= Math.round(.048 * aWidth) + "px Courier";

@@ -252,13 +252,14 @@ Rom.prototype.setStateCalculator = function()
 	this._state.repaint();
 	return this._state;
 };
-Rom.prototype.setTraceState = function(aZoom)
+Rom.prototype.setTraceState = function(aZoom, repaint)
 {
 	this._state = this.STATE_TRACE;
-	if( typeof aZoom != "undefined")
+	if( typeof aZoom != "undefined" && aZoom != null)
 		this._state.zoom(aZoom);
 	this._secondButtonPressed = false;
-	this._state.repaint();
+	if( typeof repaint == "undefined" || repaint == true)
+		this._state.repaint();
 	return this._state;
 };
 Rom.prototype.setStatEditState = function()

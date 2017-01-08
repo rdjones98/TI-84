@@ -14,6 +14,8 @@ function StateTraceCalc(aCanvas, aYEquals, aGraph, aTrace, aRom)
 	this.MIN=3;
 	this.MAX=4;
 	this.INTERSECT=5;
+	this.DYDX=6;
+	this.INTEGRAL=7;
 
 	this._equ1=null;
 	this._equ2=null;
@@ -42,7 +44,7 @@ StateTraceCalc.prototype.arrowPressed = function(anArrow)
 	}
 	else if(this._calculate == 0 && anArrow == Keypad.A_DOWN )
 	{
-		if( this._row < 5 )
+		if( this._row < 7 )
 			this._row ++;
 	}
 	else
@@ -50,7 +52,13 @@ StateTraceCalc.prototype.arrowPressed = function(anArrow)
 };
 StateTraceCalc.prototype.numberPressed = function(aNum)
 {
-	this.enterPressed(aNum);
+	if( this._calculate == 0)
+		this.enterPressed(aNum);
+	else
+	{
+		this.TRACE.numberPressed(aNum);
+		this.TRACE.enterPressed();
+	}
 };
 
 StateTraceCalc.prototype.enterPressed = function(aNum)
@@ -83,6 +91,18 @@ StateTraceCalc.prototype.enterPressed = function(aNum)
 			this._equ2 = this.TRACE._curEquationIDX;
 		else if (this._guess == null)
 			this._guess = this.TRACE.TRACE_X;
+	}
+	else if( this._calculate == this.DYDX)
+	{
+		if (this._guess == null)
+			this._guess = this.TRACE.TRACE_X;
+	}
+	else if( this._calculate == this.INTEGRAL)
+	{
+		if(this._leftBound == null)
+			this._leftBound = this.TRACE.TRACE_X;
+		else if(this._rightBound == null)
+			this._rightBound = this.TRACE.TRACE_X;
 	}
 	this.TRACE.tracePressed();
 };
@@ -121,6 +141,16 @@ StateTraceCalc.prototype.repaint = function()
 		this.paintIntersection();
 		return;
 	}
+	else if( this._calculate == this.DYDX)
+	{
+		this.paintDYDX();
+		return;
+	}
+	else if( this._calculate == this.INTEGRAL)
+	{
+		this.paintIntegral();
+		return;
+	}
 	else if(this._calculate  != 0)
 		return;
 
@@ -135,11 +165,55 @@ StateTraceCalc.prototype.repaint = function()
 	this.CANVAS.print("3:minimum",  x, y += Canvas.DIGIT_H);
 	this.CANVAS.print("4:maximum",  x, y += Canvas.DIGIT_H);
 	this.CANVAS.print("5:intersect",x, y += Canvas.DIGIT_H );
-	this.CANVAS.print("6:dy/dx",    x, y += Canvas.DIGIT_H, null, "gray" );
-	this.CANVAS.print("7:Sf(x)dx",  x, y += Canvas.DIGIT_H, null, "gray" );
+	this.CANVAS.print("6:dy/dx",    x, y += Canvas.DIGIT_H );
+	this.CANVAS.print("7:" + Canvas.INTEGRAL + "f(x)dx",  x, y += Canvas.DIGIT_H );
 
 	if(this.ROM.is2ndPressed())
 		this.CANVAS.draw2ndButton();
+};
+// Paint DYDX
+StateTraceCalc.prototype.paintDYDX = function()
+{
+	this.TRACE.repaint();
+	var x = Canvas.X;
+	if( this._guess != null)
+	{
+		var equ = this.YEQUALS.getEquations()[this.TRACE._curEquationIDX];
+		var yCoord1 = this.evaluate(equ, this._guess) ;
+		var yCoord2 = this.evaluate(equ, this._guess+.00001) ;
+		var m = (yCoord2 - yCoord1)/.00001;
+		this.CANVAS.print( "dy/dx=" + m, x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
+		this.traceCalcFinished();
+	}
+};
+
+//Paint Integral
+StateTraceCalc.prototype.paintIntegral= function()
+{
+	var x = Canvas.X;
+
+	if( this._leftBound == null)
+		this.CANVAS.print( "LeftBound?", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
+	else if( this._rightBound == null )
+	{
+		this.CANVAS.drawLeftBound(this.ROM.getStateGraph().CENTER_X + this._leftBound*this.ROM.getStateGraph().STEP_X);
+		this.CANVAS.print( "RightBound?", x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
+	}
+	else
+	{
+		var equ = this.YEQUALS.getEquations()[this.TRACE._curEquationIDX];
+		var sum = 0;
+		for(var idx=this._leftBound; idx<this._rightBound; idx+=.001)
+		{
+			var y1 = this.evaluate(equ, idx);
+			var y2 = this.evaluate(equ, idx+.001);
+			var area = (y1+y2)*.001/2;
+			sum += area;
+			this.GRAPH.graphLine(idx,y1,idx,0, this.TRACE._curEquationIDX);
+		}
+		this.CANVAS.print( Canvas.INTEGRAL + "f(x)dx=" + sum, x, Canvas.HEIGHT-Canvas.DIGIT_H, Canvas.SMALL_FONT );
+		this.traceCalcFinished();
+	}
 };
 
 // Paint Mix/Max
@@ -330,5 +404,5 @@ StateTraceCalc.prototype.traceCalcFinished = function()
 	this._equ1=null;
 	this._equ2=null;
 	this._guess = null;
-	this.ROM.setTraceState();
+	this.ROM.setTraceState(null, false);
 };
